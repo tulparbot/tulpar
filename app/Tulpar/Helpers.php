@@ -292,6 +292,6 @@ class Helpers
             $discord = Tulpar::getInstance()->getDiscord();
         }
 
-        return collect($discord->guilds->toArray())->where('id', $id)->first();
+        return $discord->guilds->get('id', $id);
     }
 }
