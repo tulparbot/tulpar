@@ -6,13 +6,14 @@ namespace App\Tulpar\Commands\Basic;
 
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
+use App\Tulpar\Log;
 use Discord\Parts\Guild\Emoji;
 use Discord\Parts\Guild\Guild;
 use Discord\Repository\Guild\EmojiRepository;
 
 class EmoticonsCommand extends BaseCommand implements CommandInterface
 {
-    public static string $command = 'emojis';
+    public static string $command = 'emoji';
 
     public static string $description = 'Show all emojis in this server.';
 
@@ -20,25 +21,34 @@ class EmoticonsCommand extends BaseCommand implements CommandInterface
 
     public static array $permissions = ['administrator'];
 
+    public static string $version = '1.1';
+
     public function run(): void
     {
-        $this->discord->guilds->fetch($this->message->guild_id)->then(function (Guild $guild) {
-            $guild->emojis->freshen()->then(function (EmojiRepository $repository) {
-                if ($repository->count() > 0) {
-                    $message = '';
+        /** @var Guild $guild */
+        $guild = $this->discord->guilds->get('id', $this->message->guild_id);
 
-                    /** @var Emoji $emoji */
-                    foreach ($repository->toArray() as $emoji) {
-                        $message .= '<' . $emoji->toReactionString() . '>' . ' ';
-                    }
+        $guild->emojis->freshen()->done(function (EmojiRepository $emojiRepository) use ($guild) {
+            if ($emojiRepository->count() < 1) {
+                $this->message->reply('No any emojis exists on this server.');
+                return;
+            }
 
-                    $this->message->channel->sendMessage('There is all emoticons of your server:')->then(function () use ($message) {
-                        $this->message->channel->sendMessage($message);
-                    });
-                } else {
-                    $this->message->channel->sendMessage('No any emojis exists on this server.');
-                }
-            });
+            $message = '';
+
+            /** @var Emoji $emoji */
+            foreach ($emojiRepository as $emoji) {
+                $icon = $emoji->animated ?
+                    sprintf('<a:%s:%s>', $emoji->name, $emoji->id) :
+                    sprintf('<%s>', $emoji->toReactionString());
+
+                $message .= $icon . ' ';
+            }
+
+            $this->message->reply($message);
+        }, function ($exception) {
+            Log::error($exception);
+            $this->message->reply('An error occurred on fetching emojis.');
         });
     }
 }
