@@ -138,4 +138,35 @@ return [
 
         RankCommand::class,
     ],
+
+    'requires' => [
+        'guild' => [
+            'permissions' => (array)[
+                'connect',
+                'speak',
+                'mute_members',
+                'deafen_members',
+                'move_members',
+
+                'add_reactions',
+                'send_messages',
+                'manage_messages',
+                'embed_links',
+                'attach_files',
+                'read_message_history',
+                'mention_everyone',
+                'use_external_emojis',
+
+                'kick_members',
+                'ban_members',
+                'change_nickname',
+                'manage_nicknames',
+                'manage_emojis',
+
+                'create_instant_invite',
+                'manage_channels',
+                'view_channel',
+            ],
+        ],
+    ],
 ];
