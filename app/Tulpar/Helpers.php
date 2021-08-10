@@ -14,6 +14,8 @@ use Discord\Parts\Guild\Guild;
 use Discord\Parts\User\Member;
 use Discord\Parts\User\User;
 use Exception;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use JetBrains\PhpStorm\Pure;
 use React\Promise\PromiseInterface;
 
@@ -94,6 +96,44 @@ class Helpers
         }
 
         return false;
+    }
+
+    /**
+     * @param User|Member|string $user
+     * @return array
+     */
+    public static function getUserGuilds(User|Member|string $user = '@me'): array
+    {
+        if ($user instanceof User) {
+            $user = $user->username;
+        }
+        else if ($user instanceof Member) {
+            $user = $user->user->username;
+        }
+
+        try {
+            $request = (new Client(['verify' => false]))
+                ->request('get', 'https://discordapp.com/api/v6/users/' . $user . '/guilds', [
+                    'headers' => [
+                        'Authorization' => 'Bot ' . config('discord.token'),
+                    ],
+                    'config' => [
+                        'curl' => [
+                            CURLOPT_RETURNTRANSFER => 1,
+                            CURLOPT_FOLLOWLOCATION => 1,
+                            CURLOPT_SSL_VERIFYPEER => 0,
+                        ],
+                    ],
+                ]);
+
+            if ($request->getStatusCode() === 200) {
+                return json_decode($request->getBody()->getContents());
+            }
+        } catch (GuzzleException $e) {
+            // ...
+        }
+
+        return [];
     }
 
     /**
