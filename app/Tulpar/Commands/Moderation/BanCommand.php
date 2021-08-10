@@ -6,8 +6,7 @@ namespace App\Tulpar\Commands\Moderation;
 
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
-use App\Tulpar\Helpers;
-use App\Tulpar\Tulpar;
+use App\Tulpar\Log;
 use Discord\Parts\User\Member;
 
 class BanCommand extends BaseCommand implements CommandInterface
@@ -16,7 +15,7 @@ class BanCommand extends BaseCommand implements CommandInterface
 
     public static string $description = 'Ban the user.';
 
-    public static array $permissions = ['administrator'];
+    public static array $permissions = ['ban_members'];
 
     public static array $usages = [
         'user-id',
@@ -27,26 +26,30 @@ class BanCommand extends BaseCommand implements CommandInterface
 
     public static array $requires = [0];
 
+    public static string $version = '1.1';
+
     public function run(): void
     {
-        $user_id = $this->userCommand->getArgument(0);
-        $user = Helpers::userTag($user_id);
+        /** @var Member $member */
+        $member = $this->message->channel->guild->members->get('id', $this->userCommand->getArgument(0));
         $reason = $this->userCommand->hasArgument(1) ? $this->userCommand->getArgument(1) : '';
         $daysToDeleteMessages = $this->userCommand->hasArgument(2) ? $this->userCommand->getArgument(2) : null;
 
         if (!is_int($daysToDeleteMessages) && !is_null($daysToDeleteMessages)) {
-            $this->message->channel->sendMessage(static::getUsages());
+            $this->message->reply(static::getUsages());
             return;
         }
 
-        if (mb_strlen($reason)) {
-            $this->message->channel->sendMessage('Banned user "' . $user . '" with reason: ``' . $reason . '``');
-        } else {
-            $this->message->channel->sendMessage('Banned user "' . $user . '".');
-        }
-
-        Tulpar::findGuildFrom($this->message)->members->fetch($user_id)->then(function (Member $member) use ($reason, $daysToDeleteMessages) {
-            $member->ban($daysToDeleteMessages, $reason);
+        $member->ban($daysToDeleteMessages, $reason)->done(function () use ($reason, $member) {
+            if (mb_strlen($reason)) {
+                $this->message->reply('Banned user "' . $member . '" with reason: ``' . $reason . '``');
+            }
+            else {
+                $this->message->reply('Banned user "' . $member . '".');
+            }
+        }, function ($exception) {
+            Log::error($exception);
+            $this->message->reply('An error occurred when banning the user.');
         });
     }
 }

@@ -4,9 +4,10 @@
 namespace App\Tulpar\Commands\Management;
 
 
-use App\Commands\StartCommand;
+use App\Console\Commands\StartCommand;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
+use App\Tulpar\Tulpar;
 
 class StopCommand extends BaseCommand implements CommandInterface
 {
@@ -20,17 +21,15 @@ class StopCommand extends BaseCommand implements CommandInterface
 
     public static bool $allowPm = true;
 
+    public static string $version = '1.1';
+
     public function run(): void
     {
-        $discord = $this->discord;
-        $this->message->channel->sendMessage(sprintf(
-            '%s is stopping...',
-            config('app.name'),
-        ))->then(function () use ($discord) {
+        $this->message->reply(config('app.name') . ' is stopping...')->done(function () {
             StartCommand::$restartReceived = false;
             sleep(1);
 
-            $discord->close(false);
+            Tulpar::getInstance()->getDiscord()->close(false);
             sleep(1);
 
             exit;

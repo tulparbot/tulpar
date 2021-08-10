@@ -6,6 +6,8 @@ namespace App\Tulpar\Commands\Management;
 
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
+use App\Tulpar\Guard;
+use App\Tulpar\Helpers;
 
 class RootCommand extends BaseCommand implements CommandInterface
 {
@@ -18,37 +20,54 @@ class RootCommand extends BaseCommand implements CommandInterface
         'remove @username',
         'add user-id',
         'remove user-id',
+        'list',
     ];
 
     public static array $permissions = ['root'];
 
     public static bool $allowPm = true;
 
-    public static array $requires = [0, 1];
+    public static array $requires = [0];
 
     public function run(): void
     {
-        $action = $this->userCommand->getArgument(0);
-        $id = $this->userCommand->getArgument(1);
+        $action = mb_strtolower($this->userCommand->getArgument(0));
 
-        if ($action != 'add' && $action != 'remove') {
+        if ($action != 'add' && $action != 'remove' && $action != 'list') {
             $this->message->channel->sendMessage(static::getHelp());
             return;
         }
 
-        if ($action == 'add') {
-            file_put_contents(base_path('administrators.txt'), PHP_EOL . $id, FILE_APPEND);
-            $this->message->channel->sendMessage('Added root user.');
-        } else {
-            $administrators = '';
-            $contents = file_get_contents(base_path('administrators.txt'));
-            foreach (preg_split("/((\r?\n)|(\r\n?))/", $contents) as $administrator) {
-                if ($administrator != $id) {
-                    $administrators .= $administrator . PHP_EOL;
-                }
+        if ($action != 'list') {
+            if (!$this->userCommand->hasArgument(0)) {
+                $this->message->channel->sendMessage(static::getHelp());
+                return;
             }
-            file_put_contents(base_path('administrators.txt'), $administrators);
-            $this->message->channel->sendMessage('Removed root user.');
+
+            $id = $this->message->channel->guild->members->get('id', $this->userCommand->getArgument(1))->id;
+        }
+
+        switch ($action) {
+            case 'add':
+                Guard::addRoot($id);
+                $this->message->reply('Added root permissions to user: ' . Helpers::userTag($id));
+                break;
+
+            case 'remove':
+                Guard::removeRoot($id);
+                $this->message->reply('Removed root permissions from user: ' . Helpers::userTag($id));
+                break;
+
+            case 'list':
+                $text = '';
+                foreach (Guard::getPermissions() as $permission) {
+                    $text .= ' ' . Helpers::userTag($permission);
+                }
+
+                $text = "Roots:$text";
+
+                $this->message->channel->sendMessage($text);
+                break;
         }
     }
 }

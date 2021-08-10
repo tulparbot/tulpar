@@ -6,7 +6,6 @@ namespace App\Tulpar\Commands\Basic;
 
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
-use Discord\Http\Http;
 use JJG\Ping;
 
 class PingCommand extends BaseCommand implements CommandInterface
@@ -15,11 +14,17 @@ class PingCommand extends BaseCommand implements CommandInterface
 
     public static string $description = 'Show the bot\'s ping.';
 
-    public static array $permissions = ['root'];
+    public static array $permissions = [];
 
-    public function ping(): float
+    public static string $version = '1.1';
+
+    public static array $usages = [];
+
+    public static bool $allowPm = true;
+
+    public static function ping(): float
     {
-        $ping = new Ping(Http::BASE_URL);
+        $ping = new Ping('discord.com');
         $ping->setTtl(128);
         $ping->setTimeout(5);
         $ms = $ping->ping();
@@ -33,6 +38,10 @@ class PingCommand extends BaseCommand implements CommandInterface
 
     public function run(): void
     {
-        $this->message->channel->sendMessage(sprintf('The %s\'s ping is: %sms', config('app.name'), $this->ping()));
+        $this->message->reply(sprintf(
+            'The %s\'s ping is: %sms',
+            config('app.name'),
+            static::ping(),
+        ));
     }
 }

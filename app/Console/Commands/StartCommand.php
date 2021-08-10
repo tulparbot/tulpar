@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Commands;
+namespace App\Console\Commands;
 
 use App\Models\Job;
 use App\Tulpar\Tulpar;
@@ -45,7 +45,7 @@ class StartCommand extends Command
             static::$restartReceived = false;
 
             $tulpar = Tulpar::newInstance();
-            $tulpar->options['token'] = (string)env('DISCORD_TOKEN');
+            $tulpar->options['token'] = (string)config('discord.token');
             $tulpar->options['loadAllMembers'] = true;
             $tulpar->options['intents'] = Intents::getAllIntents();
 

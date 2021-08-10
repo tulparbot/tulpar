@@ -4,82 +4,32 @@
 namespace App\Tulpar;
 
 
-use App\Tulpar\Commands\Authorization\RegisterCommand;
-use App\Tulpar\Commands\Basic\AboutCommand;
-use App\Tulpar\Commands\Basic\EmoticonsCommand;
-use App\Tulpar\Commands\Basic\HelloCommand;
-use App\Tulpar\Commands\Basic\HelpCommand;
-use App\Tulpar\Commands\Basic\InviteCommand;
-use App\Tulpar\Commands\Basic\PingCommand;
-use App\Tulpar\Commands\Chat\ClearChannelCommand;
-use App\Tulpar\Commands\Development\TestCommand;
-use App\Tulpar\Commands\Game\HangmanCommand;
-use App\Tulpar\Commands\Management\BotCommand;
-use App\Tulpar\Commands\Management\CheckAuthorizationCommand;
-use App\Tulpar\Commands\Management\LogCommand;
-use App\Tulpar\Commands\Management\RestartCommand;
-use App\Tulpar\Commands\Management\RootCommand;
-use App\Tulpar\Commands\Management\StatisticsCommand;
-use App\Tulpar\Commands\Management\StopCommand;
-use App\Tulpar\Commands\Moderation\BanCommand;
-use App\Tulpar\Commands\Moderation\UnbanCommand;
-use App\Tulpar\Commands\Music\MusicCommand;
-use App\Tulpar\Commands\Rank\RankCommand;
 use App\Tulpar\Events;
+use DateTime;
+use DateTimeZone;
 use Discord\Discord;
 use Discord\Exceptions\IntentException;
 use Discord\Parts\Channel\Channel;
-use Discord\Parts\Channel\Message;
 use Discord\Parts\Guild\Guild;
+use Discord\Parts\Permissions\RolePermission;
 use Discord\Parts\User\Member;
-use Discord\Repository\Guild\ChannelRepository;
 use Discord\Slash\Client;
 use Discord\WebSockets\Event;
+use Exception;
 use Illuminate\Console\OutputStyle;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class Tulpar
 {
+    const MAJOR = 1;
+    const MINOR = 0;
+    const PATCH = 2;
+
     /**
      * @var Tulpar|null $instance
      */
     private static Tulpar|null $instance = null;
-
-    /**
-     * @var array $commands
-     */
-    public static array $commands = [
-        TestCommand::class,
-        CheckAuthorizationCommand::class,
-        StatisticsCommand::class,
-        StopCommand::class,
-        RestartCommand::class,
-        RootCommand::class,
-        LogCommand::class,
-        BotCommand::class,
-
-        RegisterCommand::class,
-        HelloCommand::class,
-        AboutCommand::class,
-        EmoticonsCommand::class,
-        InviteCommand::class,
-        ClearChannelCommand::class,
-        HelpCommand::class,
-        PingCommand::class,
-
-        MusicCommand::class,
-
-        BanCommand::class,
-        UnbanCommand::class,
-
-        HangmanCommand::class,
-
-        RankCommand::class,
-    ];
-
-    /**
-     * @var array $filters
-     */
-    public static array $filters = [];
 
     /**
      * @var array $voiceChannels
@@ -107,191 +57,26 @@ class Tulpar
     }
 
     /**
-     * @return string[]
-     */
-    public static function emojis(): array
-    {
-        return [
-            'laughing' => '😆',
-            'relaxed' => '☺️',
-            'blush' => '😊',
-            'upside_down' => '🙃',
-            'heart_eyes' => '😍',
-            'smiling_face_with_3_hearts' => '🥰',
-            'zany_face' => '🤪',
-            'stuck_out_tongue_winking_eye' => '😜',
-            'stuck_out_tongue_closed_eyes' => '😝',
-            'stuck_out_tongue' => '😛',
-            'yum' => '😋',
-            'face_with_raised_eyebrow' => '🤨',
-            'face_with_monocle' => '🧐',
-            'nerd' => '🤓',
-            'sunglasses' => '🧐',
-            'star_struck' => '🤓',
-            'partying_face' => '🥳',
-            'smirk' => '😏',
-            'flushed' => '😳',
-            'scream' => '😱',
-            'hugging' => '🤗',
-            'grimacing' => '😬',
-            'dizzy_face' => '😵',
-            'cowboy' => '🤠',
-            'skull_crossbones' => '☠️',
-            'poop' => '💩',
-            'heart_eyes_cat' => '😻',
-            'thumbsup' => '👍',
-            'metal' => '🤘',
-            'tongue' => '👅',
-            'kiss' => '💋',
-            'anatomical_heart' => '🫀',
-            'dart' => '🎯',
-            'computer' => '💻',
-            'heart' => '❤️',
-            'black_heart' => '🖤',
-            'revolving_hearts' => '💞',
-            'sparkling_heart' => '💖',
-            'gift_heart' => '💝',
-            'heart_on_fire' => '❤️‍🔥',
-        ];
-    }
-
-    /**
      * @return string
      */
     public static function getPrefix(): string
     {
-        return env('COMMAND_PREFIX', '!');
-    }
-
-    /**
-     * @param Message|Guild|string $from
-     * @param Discord|null         $discord
-     * @return Guild|null
-     * @throws IntentException
-     */
-    public static function findGuildFrom(Message|Guild|string $from, Discord $discord = null): Guild|null
-    {
-        if ($discord == null) {
-            $discord = static::$instance->getDiscord();
-        }
-
-        if ($from instanceof Message) {
-            $from = $from->guild_id;
-        }
-        else if ($from instanceof Guild) {
-            $from = $from->id;
-        }
-
-        return collect($discord->guilds->toArray())->where('id', $from)->first();
-    }
-
-    /**
-     * @param string       $id
-     * @param Discord|null $discord
-     * @return Guild|null
-     * @throws IntentException
-     */
-    public static function findGuild(string $id, Discord $discord = null): Guild|null
-    {
-        if ($discord == null) {
-            $discord = static::$instance->getDiscord();
-        }
-
-        return collect($discord->guilds->toArray())->where('id', $id)->first();
-    }
-
-    /**
-     * @param Channel      $channel
-     * @param Discord|null $discord
-     * @return Channel
-     * @throws IntentException
-     */
-    public static function copyChannel(Channel $channel, Discord $discord = null): Channel
-    {
-        if ($discord == null) {
-            $discord = static::$instance->getDiscord();
-        }
-
-        $new = new Channel($discord);
-        $new->name = $channel->name;
-        $new->type = $channel->type;
-        $new->topic = $channel->topic;
-        $new->guild_id = $channel->guild_id;
-        $new->position = $channel->position;
-        $new->is_private = $channel->is_private;
-        $new->bitrate = $channel->bitrate;
-        $new->recipients = $channel->recipients;
-        $new->nsfw = $channel->nsfw;
-        $new->user_limit = $channel->user_limit;
-        $new->rate_limit_per_user = $channel->rate_limit_per_user;
-        $new->icon = $channel->icon;
-        $new->owner_id = $channel->owner_id;
-        $new->application_id = $channel->application_id;
-        $new->parent_id = $channel->parent_id;
-        $new->last_pin_timestamp = $channel->last_pin_timestamp;
-        $new->rtc_region = $channel->rtc_region;
-        $new->video_quality_mode = $channel->video_quality_mode;
-
-        return $new;
-    }
-
-    /**
-     * @param Member|string $member_id
-     * @return Channel|null
-     * @throws IntentException
-     */
-    public static function getMemberVoiceChannel(Member|string $member_id): Channel|null
-    {
-        if ($member_id instanceof Member) {
-            $member_id = $member_id->id;
-        }
-
-        foreach (static::$voiceChannels as $channelId => $channel) {
-            foreach ($channel as $memberId => $member) {
-                if ($member_id == $memberId) {
-                    return static::getInstance()->getDiscord()->getChannel($channelId);
-                }
-            }
-        }
-
-        return null;
-    }
-
-    public static function freshChannelsMembers(): void
-    {
-        /** @var Guild $guild */
-        foreach (Tulpar::getInstance()->getDiscord()->guilds as $guild) {
-            $guild->channels->freshen()->done(function (ChannelRepository $channelRepository) {
-            });
-        }
-    }
-
-    public static function freshFindMemberInChannels(string $member_id, callable|null $callback = null): void
-    {
-        /** @var Guild $guild */
-        foreach (static::getInstance()->getDiscord()->guilds as $guild) {
-            $guild->channels->freshen()->done(function (ChannelRepository $channelRepository) use ($member_id, $callback) {
-                /** @var Channel $channel */
-                foreach ($channelRepository as $channel) {
-//                    dump($member_id);
-//                    dd($channel->members->fresh(''));
-                    $channel->members->fetch($member_id)->done(function (Member $member) use ($channel, $callback) {
-                        return $callback($channel, $member);
-                    });
-
-
-//                    dd($channel->);
-                }
-            });
-        }
+        return config('tulpar.command.prefix', '!');
     }
 
     /**
      * @return string
      */
-    public static function getRandomEmoticon(): string
+    public static function getVersion(): string
     {
-        return static::emojis()[array_rand(static::emojis())];
+        try {
+            $commitHash = trim(exec('git log --pretty="%h" -n1 HEAD'));
+            $commitDate = new DateTime(trim(exec('git log -n1 --pretty=%ci HEAD')));
+            $commitDate->setTimezone(new DateTimeZone('UTC'));
+            return sprintf('v%s.%s.%s-dev.%s (%s)', self::MAJOR, self::MINOR, self::PATCH, $commitHash, $commitDate->format('Y-m-d H:i:s'));
+        } catch (Exception $exception) {
+            return 'unreleased';
+        }
     }
 
     /**
@@ -330,7 +115,7 @@ class Tulpar
     {
         if ($this->client === null) {
             $this->client = new Client([
-                'public_key' => env('DISCORD_PUBLIC_KEY'),
+                'public_key' => config('discord.public_key'),
                 'loop' => $this->getDiscord()->getLoop(),
             ]);
         }
@@ -344,7 +129,72 @@ class Tulpar
      */
     public function getLogChannel(): Channel|null
     {
-        return $this->getDiscord()->getChannel(env('LOG_CHANNEL')) ?? null;
+        return $this->getDiscord()->getChannel(config('tulpar.server.channel.log')) ?? null;
+    }
+
+    /**
+     * @param Guild|string $guild
+     * @param bool         $fresh
+     * @return RolePermission|null
+     * @throws IntentException
+     */
+    public function getPermissions(Guild|string $guild, bool $fresh = false): RolePermission|null
+    {
+        if (!$guild instanceof Guild) {
+            $guild = $this->getDiscord()->guilds->get('id', $guild);
+        }
+
+        if ($guild === null) {
+            return null;
+        }
+
+        $call = function () use ($guild) {
+            /** @var Member $member */
+            $member = $guild->members->get('id', $this->getDiscord()->id);
+
+            if ($member === null) {
+                return null;
+            }
+
+            return $member->getPermissions();
+        };
+
+        if ($fresh === true) {
+            return $call();
+        }
+
+        return Cache::remember($guild->id . '-permissions', Carbon::make('+1 hours'), $call);
+    }
+
+    /**
+     * @param Guild|string $guild
+     * @param string       $permission
+     * @param bool         $fresh
+     * @return bool
+     * @throws IntentException
+     */
+    public function checkPermission(Guild|string $guild, string $permission, bool $fresh = false): bool
+    {
+        return $this->getPermissions($guild, $fresh)?->{$permission} === true;
+    }
+
+    /**
+     * @param Guild|string $guild
+     * @param bool         $fresh
+     * @return bool
+     * @throws IntentException
+     */
+    public function checkPermissions(Guild|string $guild, bool $fresh = false): bool
+    {
+        $permissions = config('tulpar.guild.permissions', []);
+
+        foreach ($permissions as $permission) {
+            if (!$this->checkPermission($guild, $permission, $fresh)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

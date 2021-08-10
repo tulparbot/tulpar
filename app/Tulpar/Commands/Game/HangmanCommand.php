@@ -18,6 +18,16 @@ class HangmanCommand extends BaseCommand implements CommandInterface
 
     public static array $permissions = [];
 
+    public static string $version = '1.0';
+
+    public static bool $allowPm = true;
+
+    public static array $usages = [
+        'create',
+        'restart',
+        'try {letter}',
+    ];
+
     public static array $steps = [
         ' ------
  |/    |
@@ -60,7 +70,7 @@ class HangmanCommand extends BaseCommand implements CommandInterface
  |     o
  |   --|--
  |    / \
-/|\\'
+/|\\',
     ];
 
     public static array $games = [];
@@ -159,7 +169,8 @@ class HangmanCommand extends BaseCommand implements CommandInterface
                 if ($game->attemps >= 6) {
                     $gameOver = true;
                 }
-            } else {
+            }
+            else {
                 $game->found .= $character;
             }
 
@@ -182,7 +193,8 @@ class HangmanCommand extends BaseCommand implements CommandInterface
                     if ($gameOver) {
                         $message->channel->sendMessage('Game Over!');
                         unset(static::$games[$this->message->channel->id]);
-                    } else if ($winner) {
+                    }
+                    else if ($winner) {
                         $message->channel->sendMessage('Congratulations!');
                         unset(static::$games[$this->message->channel->id]);
                     }

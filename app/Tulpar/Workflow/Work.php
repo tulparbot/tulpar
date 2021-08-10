@@ -3,7 +3,6 @@
 namespace App\Tulpar\Workflow;
 
 use App\Enums\WorkAction;
-use App\Tulpar\Tulpar;
 use Closure;
 use Discord\Discord;
 use Discord\Parts\Channel\Channel;
@@ -49,7 +48,7 @@ class Work
         $content = $this->data['message'] ?? 'Please set the message in your control panel.';
 
         if ($channel_id !== null) {
-            return Tulpar::findGuildFrom($message, $discord)->channels->fetch($channel_id, true)->then(function (Channel $channel) use ($content) {
+            return $message->channel->guild->channels->fetch($channel_id, true)->then(function (Channel $channel) use ($content) {
                 $channel->sendMessage($content);
             });
         }

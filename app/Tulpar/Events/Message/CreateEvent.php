@@ -38,7 +38,7 @@ class CreateEvent
             static::$commandHistory[$message->id]->content = $message->content;
 
             /** @var CommandInterface $command */
-            foreach (Tulpar::$commands as $command) {
+            foreach (config('tulpar.commands', []) as $command) {
                 Helpers::call(function () use ($command, $message, $discord) {
                     /** @var BaseCommand $instance */
                     $instance = new $command($message, $discord);
@@ -65,7 +65,7 @@ class CreateEvent
                         }
                         else {
                             Log::info('Running command: ' . $instance::class);
-                            $message->react(Tulpar::getRandomEmoticon())->done(function () use ($instance) {
+                            $message->react(Helpers::getRandomEmoticon())->done(function () use ($instance) {
                                 Helpers::call(fn () => $instance->run());
                             });
                             return;
@@ -87,8 +87,9 @@ class CreateEvent
             }
         }
         else {
+            /** @todo make here.. */
             /** @var FilterInterface $filter */
-            foreach (Tulpar::$filters as $filter) {
+            foreach ([] as $filter) {
                 $instance = new $filter($message, $discord);
                 $instance->run();
             }

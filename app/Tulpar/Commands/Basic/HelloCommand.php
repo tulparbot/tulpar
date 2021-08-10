@@ -7,33 +7,36 @@ namespace App\Tulpar\Commands\Basic;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Helpers;
-use App\Tulpar\Translator;
 
 class HelloCommand extends BaseCommand implements CommandInterface
 {
     public static string $command = 'hello';
 
-    public static string $description = 'Say hello to given user id.';
+    public static string $description = 'Say hello to user(s).';
 
     public static array $usages = [
         '',
         'user-id',
         '@username',
+        '@user1 @user2 @user3....',
     ];
 
     public static array $permissions = [];
 
+    public static string $version = '1.1';
+
     public function run(): void
     {
-        $user = Helpers::userTag($this->userCommand->hasArgument(0) ?
-            $this->userCommand->getArgument(0) :
-            $this->message->user->id
-        );
+        if (!$this->userCommand->hasArgument(0)) {
+            $this->message->reply('Hi!');
+            return;
+        }
 
-        $this->message->channel->sendMessage(__translate(
-            'Hi, :username!',
-            Translator::findLocale($this->message, $this->discord),
-            [':username' => $user],
-        ));
+        $users = [];
+        foreach ($this->userCommand->arguments as $argument) {
+            $users[] = Helpers::userTag($argument);
+        }
+
+        $this->message->reply('Hi; ' . implode(', ', $users) . '!');
     }
 }

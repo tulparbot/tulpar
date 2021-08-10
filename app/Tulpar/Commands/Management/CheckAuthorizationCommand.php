@@ -6,33 +6,42 @@ namespace App\Tulpar\Commands\Management;
 
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
-use App\Tulpar\Helpers;
-use App\Tulpar\Tulpar;
+use App\Tulpar\Guard;
+use Discord\Parts\User\Member;
 
 class CheckAuthorizationCommand extends BaseCommand implements CommandInterface
 {
     public static string $command = 'whoami';
 
-    public static string $description = 'Get the role in bot.';
+    public static string $description = 'Get your role in bot level.';
 
     public static array $permissions = [];
-    
+
     public static bool $allowPm = true;
+
+    public static array $usages = ['', '@user'];
+
+    public static string $version = '1.1';
 
     public function run(): void
     {
-        $user = $this->message->user;
-        $guild = Tulpar::findGuild($this->message->guild_id, $this->discord);
-        $channel = $this->message->channel;
+        /** @var Member $member */
+        $member = $this->message->member;
 
-        if (Helpers::isRoot($user)) {
-            $channel->sendMessage('Your role is: Root!');
-        } else {
-            Helpers::whenAdmin($user, $guild, function () use ($channel) {
-                $channel->sendMessage('Your role is: Administrator');
-            }, function () use ($channel) {
-                $channel->sendMessage('Your role is: Member');
-            });
+        if ($this->userCommand->hasArgument(0)) {
+            $member = $this->message->channel->guild->members->get('id', $this->userCommand->getArgument(0));
         }
+
+        if (Guard::isRoot($member)) {
+            $this->message->reply('You are ``ROOT`` ' . $member . ' ☠️');
+            return;
+        }
+
+        if ($this->message->channel->guild->members->get('id', $member->id)->getPermissions($this->message->channel)->administrator === true) {
+            $this->message->reply('You are ``Server Administrator`` ' . $member . ' 💣');
+            return;
+        }
+
+        $this->message->reply('You are ``Member`` ' . $member . ' 💖');
     }
 }
