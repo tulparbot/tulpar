@@ -23,7 +23,13 @@ class Translator
      */
     public static function findLocale(Message|Guild $from, Discord $discord): string
     {
-        $guild = Helpers::findGuildFrom($from, $discord);
+        if ($from instanceof Message) {
+            $guild = $from->channel->guild;
+        }
+        else {
+            $guild = $from;
+        }
+
         if ($guild !== null) {
             return $guild->preferred_locale;
         }

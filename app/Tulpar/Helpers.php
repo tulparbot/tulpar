@@ -10,7 +10,6 @@ use Closure;
 use Discord\Discord;
 use Discord\Exceptions\IntentException;
 use Discord\Parts\Channel\Channel;
-use Discord\Parts\Channel\Message;
 use Discord\Parts\Guild\Guild;
 use Discord\Parts\User\Member;
 use Discord\Parts\User\User;
@@ -294,27 +293,5 @@ class Helpers
         }
 
         return collect($discord->guilds->toArray())->where('id', $id)->first();
-    }
-
-    /**
-     * @param Message|Guild|string $from
-     * @param Discord|null         $discord
-     * @return Guild|null
-     * @throws IntentException
-     */
-    public static function findGuildFrom(Message|Guild|string $from, Discord $discord = null): Guild|null
-    {
-        if ($discord == null) {
-            $discord = Tulpar::getInstance()->getDiscord();
-        }
-
-        if ($from instanceof Message) {
-            $from = $from->guild_id;
-        }
-        else if ($from instanceof Guild) {
-            $from = $from->id;
-        }
-
-        return collect($discord->guilds->toArray())->where('id', $from)->first();
     }
 }
