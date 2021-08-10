@@ -5,6 +5,8 @@ namespace App\Tulpar;
 
 
 use App\Tulpar\Events;
+use DateTime;
+use DateTimeZone;
 use Discord\Discord;
 use Discord\Exceptions\IntentException;
 use Discord\Parts\Channel\Channel;
@@ -13,12 +15,17 @@ use Discord\Parts\Permissions\RolePermission;
 use Discord\Parts\User\Member;
 use Discord\Slash\Client;
 use Discord\WebSockets\Event;
+use Exception;
 use Illuminate\Console\OutputStyle;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 
 class Tulpar
 {
+    const MAJOR = 1;
+    const MINOR = 0;
+    const PATCH = 2;
+
     /**
      * @var Tulpar|null $instance
      */
@@ -55,6 +62,21 @@ class Tulpar
     public static function getPrefix(): string
     {
         return config('tulpar.command.prefix', '!');
+    }
+
+    /**
+     * @return string
+     */
+    public static function getVersion(): string
+    {
+        try {
+            $commitHash = trim(exec('git log --pretty="%h" -n1 HEAD'));
+            $commitDate = new DateTime(trim(exec('git log -n1 --pretty=%ci HEAD')));
+            $commitDate->setTimezone(new DateTimeZone('UTC'));
+            return sprintf('v%s.%s.%s-dev.%s (%s)', self::MAJOR, self::MINOR, self::PATCH, $commitHash, $commitDate->format('Y-m-d H:i:s'));
+        } catch (Exception $exception) {
+            return 'unreleased';
+        }
     }
 
     /**

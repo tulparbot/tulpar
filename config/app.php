@@ -1,6 +1,7 @@
 <?php
 
 use App\Providers\EventServiceProvider;
+use App\Tulpar\Tulpar;
 use SocialiteProviders\Manager\ServiceProvider;
 
 return [
@@ -29,7 +30,7 @@ return [
     |
     */
 
-    'version' => 'unreleased',
+    'version' => Tulpar::getVersion(),
 
     /*
     |--------------------------------------------------------------------------
