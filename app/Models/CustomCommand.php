@@ -32,12 +32,16 @@ class CustomCommand extends Model
     }
 
     /**
-     * @param Guild|string $guild
-     * @param string       $command
+     * @param Guild|string|null $guild
+     * @param string            $command
      * @return CustomCommand|null
      */
-    public static function find(Guild|string $guild, string $command): CustomCommand|null
+    public static function find(Guild|string|null $guild, string $command): CustomCommand|null
     {
+        if ($guild === null) {
+            return null;
+        }
+
         if ($guild instanceof Guild) {
             $guild = $guild->id;
         }
