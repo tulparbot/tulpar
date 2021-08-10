@@ -1,0 +1,10 @@
+/node_modules
+/vendor
+/.idea
+/.vscode
+/.vagrant
+/database/database.sqlite
+.phpunit.result.cache
+.env
+composer.lock
+package-lock.json
