@@ -4,9 +4,10 @@
 namespace App\Tulpar\Commands\Management;
 
 
-use App\Commands\StartCommand;
+use App\Console\Commands\StartCommand;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
+use App\Tulpar\Tulpar;
 
 class RestartCommand extends BaseCommand implements CommandInterface
 {
@@ -20,26 +21,23 @@ class RestartCommand extends BaseCommand implements CommandInterface
 
     public static bool $allowPm = true;
 
+    public static string $version = '1.1';
+
     private function restart()
     {
-        $discord = $this->discord;
-        $this->message->channel->sendMessage(sprintf(
-            '%s is restarting...',
-            config('app.name'),
-        ))->then(function () use ($discord) {
-            StartCommand::$restartReceived = true;
-            sleep(1);
+        StartCommand::$restartReceived = true;
+        sleep(1);
 
-            $discord->close(false);
-            sleep(1);
+        Tulpar::getInstance()->getDiscord()->close(false);
+        sleep(1);
 
-            proc_open(
-                PHP_BINARY . ' ' . base_path('tulpar') . ' start',
-                [STDIN, STDOUT, STDERR],
-                $pipes
-            );
-            exit;
-        });
+        proc_open(
+            PHP_BINARY . ' ' . base_path('tulpar') . ' start',
+            [STDIN, STDOUT, STDERR],
+            $pipes
+        );
+
+        exit;
     }
 
     public function run(): void
@@ -50,13 +48,15 @@ class RestartCommand extends BaseCommand implements CommandInterface
 
         if ($time > 0 && $reason != '') {
             $message = config('app.name') . ' is restarting in ' . $time . ' seconds because: ' . $reason;
-        } else if ($time > 0) {
+        }
+        else if ($time > 0) {
             $message = config('app.name') . ' is restarting in ' . $time . ' seconds';
-        } else if ($reason != '') {
+        }
+        else if ($reason != '') {
             $message = config('app.name') . ' is restarting because: ' . $reason;
         }
 
-        $this->message->channel->sendMessage($message)->done(function () use ($time) {
+        $this->message->reply($message)->done(function () use ($time) {
             sleep($time);
             $this->restart();
         });
