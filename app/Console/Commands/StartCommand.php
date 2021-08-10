@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Commands;
+namespace App\Console\Commands;
 
 use App\Models\Job;
 use App\Tulpar\Tulpar;
