@@ -22,9 +22,9 @@ class LogCommand extends BaseCommand implements CommandInterface
 
     public static array $requires = [0, 1];
 
-    public static bool $short = false;
-
     public static bool $allowPm = true;
+
+    public static string $version = '1.1';
 
     public function run(): void
     {
@@ -33,11 +33,11 @@ class LogCommand extends BaseCommand implements CommandInterface
         $message = $this->userCommand->getArgument(1);
 
         if (!in_array($level, $levels)) {
-            $this->message->channel->sendMessage(static::getHelp());
+            $this->message->reply(static::getHelp());
             return;
         }
 
-        $this->message->channel->sendMessage('Log sent.');
+        $this->message->reply('Log sent.');
         Log::log($level, $message);
     }
 }
