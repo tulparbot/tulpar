@@ -160,7 +160,7 @@ class Tulpar
      */
     public static function getPrefix(): string
     {
-        return env('COMMAND_PREFIX', '!');
+        return config('tulpar.command.prefix', '!');
     }
 
     /**
@@ -330,7 +330,7 @@ class Tulpar
     {
         if ($this->client === null) {
             $this->client = new Client([
-                'public_key' => env('DISCORD_PUBLIC_KEY'),
+                'public_key' => config('discord.public_key'),
                 'loop' => $this->getDiscord()->getLoop(),
             ]);
         }
@@ -344,7 +344,7 @@ class Tulpar
      */
     public function getLogChannel(): Channel|null
     {
-        return $this->getDiscord()->getChannel(env('LOG_CHANNEL')) ?? null;
+        return $this->getDiscord()->getChannel(config('tulpar.server.channel.log')) ?? null;
     }
 
     /**
