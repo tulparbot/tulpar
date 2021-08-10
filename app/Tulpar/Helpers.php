@@ -82,25 +82,6 @@ class Helpers
 
     /**
      * @param User|Member|string $user
-     * @return bool
-     * @todo replace this to Root class
-     */
-    public static function isRoot(User|Member|string $user): bool
-    {
-        return true;
-
-        $id = $user instanceof User ? $user->id : ($user instanceof Member ? $user->user->id : $user);
-        foreach (preg_split("/((\r?\n)|(\r\n?))/", file_get_contents(base_path('administrators.txt'))) as $administrator) {
-            if ($administrator == $id) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @param User|Member|string $user
      * @return array
      */
     public static function getUserGuilds(User|Member|string $user = '@me'): array

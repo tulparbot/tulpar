@@ -6,7 +6,7 @@ namespace App\Tulpar\Commands;
 
 use App\Enums\CommandValidation;
 use App\Tulpar\Contracts\CommandInterface;
-use App\Tulpar\Helpers;
+use App\Tulpar\Guard;
 use App\Tulpar\Tulpar;
 use Discord\Discord;
 use Discord\Parts\Channel\Message;
@@ -137,13 +137,10 @@ HELP;
 
     /**
      * @inheritDoc
-     * @todo make this
      */
     public function checkAccess(bool $messages = false): bool
     {
-        return true;
-
-        if (Helpers::isRoot($this->message->user)) {
+        if (Guard::isRoot($this->message->member)) {
             return true;
         }
 
@@ -151,7 +148,7 @@ HELP;
         foreach (static::getPermissions() as $permission) {
             if ($permission == 'root') {
                 if ($messages == true) {
-                    $this->message->channel->sendMessage('nabıyon aq :D?');
+                    $this->message->reply('You are not authorized to use this command.');
                 }
 
                 return false;
@@ -159,7 +156,7 @@ HELP;
 
             if ($permissions[$permission] == false) {
                 if ($messages == true) {
-                    $this->message->channel->sendMessage('You are not authorized to use this command.');
+                    $this->message->reply('You are not authorized to use this command.');
                 }
 
                 return false;
