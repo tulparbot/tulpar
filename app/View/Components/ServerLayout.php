@@ -26,7 +26,7 @@ class ServerLayout extends Component
      */
     public function render()
     {
-        $_own_servers = auth()->user()->servers;
+        $_own_servers = auth()->user()->joinedservers;
         $server = $this->server;
         $nav_links = [
             'General' => [

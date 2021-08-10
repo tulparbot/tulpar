@@ -5,6 +5,7 @@ namespace App\Tulpar;
 
 
 use App\Enums\Align;
+use App\Models\Server;
 use Closure;
 use Discord\Discord;
 use Discord\Exceptions\IntentException;
@@ -127,7 +128,17 @@ class Helpers
                 ]);
 
             if ($request->getStatusCode() === 200) {
-                return json_decode($request->getBody()->getContents());
+                $servers = [];
+                foreach (json_decode($request->getBody()->getContents()) as $server) {
+                    $server->extra = (object)[
+                        'icon' => 'https://cdn.discordapp.com/icons/' . $server->id . '/' . $server->icon . '.webp',
+                    ];
+                    $server->joinned = ($_ = Server::where('server_id', $server->id)->first()) != null;
+                    $server->model = $_;
+                    $servers[] = $server;
+                }
+
+                return $servers;
             }
         } catch (GuzzleException $e) {
             // ...
