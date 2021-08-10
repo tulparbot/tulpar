@@ -6,7 +6,6 @@ namespace App\Tulpar\Commands\Basic;
 
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
-use App\Tulpar\Tulpar;
 use Discord\Parts\Embed\Embed;
 
 class HelpCommand extends BaseCommand implements CommandInterface
@@ -23,7 +22,7 @@ class HelpCommand extends BaseCommand implements CommandInterface
         $embed->title = config('app.name') . ' - ' . config('app.version');
 
         /** @var BaseCommand $command */
-        foreach (Tulpar::$commands as $command) {
+        foreach (config('tulpar.commands', []) as $command) {
             if ((new $command($this->message, $this->discord))->checkAccess()) {
                 $embed->addFieldValues($command::getCommand(), $command::getHelp());
             }

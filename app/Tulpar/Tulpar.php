@@ -4,27 +4,6 @@
 namespace App\Tulpar;
 
 
-use App\Tulpar\Commands\Authorization\RegisterCommand;
-use App\Tulpar\Commands\Basic\AboutCommand;
-use App\Tulpar\Commands\Basic\EmoticonsCommand;
-use App\Tulpar\Commands\Basic\HelloCommand;
-use App\Tulpar\Commands\Basic\HelpCommand;
-use App\Tulpar\Commands\Basic\InviteCommand;
-use App\Tulpar\Commands\Basic\PingCommand;
-use App\Tulpar\Commands\Chat\ClearChannelCommand;
-use App\Tulpar\Commands\Development\TestCommand;
-use App\Tulpar\Commands\Game\HangmanCommand;
-use App\Tulpar\Commands\Management\BotCommand;
-use App\Tulpar\Commands\Management\CheckAuthorizationCommand;
-use App\Tulpar\Commands\Management\LogCommand;
-use App\Tulpar\Commands\Management\RestartCommand;
-use App\Tulpar\Commands\Management\RootCommand;
-use App\Tulpar\Commands\Management\StatisticsCommand;
-use App\Tulpar\Commands\Management\StopCommand;
-use App\Tulpar\Commands\Moderation\BanCommand;
-use App\Tulpar\Commands\Moderation\UnbanCommand;
-use App\Tulpar\Commands\Music\MusicCommand;
-use App\Tulpar\Commands\Rank\RankCommand;
 use App\Tulpar\Events;
 use Discord\Discord;
 use Discord\Exceptions\IntentException;
@@ -43,38 +22,6 @@ class Tulpar
      * @var Tulpar|null $instance
      */
     private static Tulpar|null $instance = null;
-
-    /**
-     * @var array $commands
-     */
-    public static array $commands = [
-        TestCommand::class,
-        CheckAuthorizationCommand::class,
-        StatisticsCommand::class,
-        StopCommand::class,
-        RestartCommand::class,
-        RootCommand::class,
-        LogCommand::class,
-        BotCommand::class,
-
-        RegisterCommand::class,
-        HelloCommand::class,
-        AboutCommand::class,
-        EmoticonsCommand::class,
-        InviteCommand::class,
-        ClearChannelCommand::class,
-        HelpCommand::class,
-        PingCommand::class,
-
-        MusicCommand::class,
-
-        BanCommand::class,
-        UnbanCommand::class,
-
-        HangmanCommand::class,
-
-        RankCommand::class,
-    ];
 
     /**
      * @var array $filters
