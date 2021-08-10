@@ -293,6 +293,9 @@ class Helpers
         $new->last_pin_timestamp = $channel->last_pin_timestamp;
         $new->rtc_region = $channel->rtc_region;
         $new->video_quality_mode = $channel->video_quality_mode;
+        $new->overwrites = $channel->overwrites;
+        $new->webhooks = $channel->webhooks;
+        $new->scriptData = $channel->scriptData;
 
         return $new;
     }
