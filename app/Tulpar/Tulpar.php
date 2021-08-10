@@ -20,11 +20,6 @@ class Tulpar
     private static Tulpar|null $instance = null;
 
     /**
-     * @var array $filters
-     */
-    public static array $filters = [];
-
-    /**
      * @var array $voiceChannels
      */
     public static array $voiceChannels = [];

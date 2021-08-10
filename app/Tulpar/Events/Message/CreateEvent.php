@@ -87,8 +87,9 @@ class CreateEvent
             }
         }
         else {
+            /** @todo make here.. */
             /** @var FilterInterface $filter */
-            foreach (Tulpar::$filters as $filter) {
+            foreach ([] as $filter) {
                 $instance = new $filter($message, $discord);
                 $instance->run();
             }
