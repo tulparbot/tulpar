@@ -15,6 +15,8 @@ class InviteCommand extends BaseCommand implements CommandInterface
 
     public static array $permissions = [];
 
+    public static bool $allowPm = true;
+
     public function run(): void
     {
         $this->message->channel->sendMessage('There is my invite link: ' . $this->discord->application->invite_url);
