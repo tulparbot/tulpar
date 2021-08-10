@@ -7,6 +7,7 @@ use App\Tulpar\Commands\Basic\HelloCommand;
 use App\Tulpar\Commands\Basic\HelpCommand;
 use App\Tulpar\Commands\Basic\InviteCommand;
 use App\Tulpar\Commands\Basic\PingCommand;
+use App\Tulpar\Commands\Basic\VersionCommand;
 use App\Tulpar\Commands\Chat\ClearChannelCommand;
 use App\Tulpar\Commands\Development\TestCommand;
 use App\Tulpar\Commands\Game\HangmanCommand;
@@ -123,6 +124,7 @@ return [
         RegisterCommand::class,
         HelloCommand::class,
         AboutCommand::class,
+        VersionCommand::class,
         EmoticonsCommand::class,
         InviteCommand::class,
         ClearChannelCommand::class,
