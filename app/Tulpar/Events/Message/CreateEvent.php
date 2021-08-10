@@ -79,7 +79,9 @@ class CreateEvent
 
                 if ($customCommand == null) {
                     Log::notice('Unknown command requested: "' . $message->content . '"');
-                    $message->channel->sendMessage('Sorry unknown command requested. :(');
+                    if (config('tulpar.command.unknown_alert') == true) {
+                        $message->reply('Sorry unknown command requested. :(');
+                    }
                 }
                 else {
                     $customCommand->execute($message, $discord);
