@@ -32,7 +32,7 @@ class CreateEvent
             return;
         }
 
-        if (str_starts_with($message->content, Tulpar::getPrefix())) {
+        if (str_starts_with($message->content, Tulpar::getPrefix()) && mb_strlen($message->content) > mb_strlen(Tulpar::getPrefix())) {
             static::$commandHistory[$message->id] = new stdClass;
             static::$commandHistory[$message->id]->check = CommandValidation::NotCommand;
             static::$commandHistory[$message->id]->content = $message->content;
