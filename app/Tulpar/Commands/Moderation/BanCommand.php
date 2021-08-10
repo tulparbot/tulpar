@@ -7,7 +7,6 @@ namespace App\Tulpar\Commands\Moderation;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Helpers;
-use App\Tulpar\Tulpar;
 use Discord\Parts\User\Member;
 
 class BanCommand extends BaseCommand implements CommandInterface
@@ -41,11 +40,12 @@ class BanCommand extends BaseCommand implements CommandInterface
 
         if (mb_strlen($reason)) {
             $this->message->channel->sendMessage('Banned user "' . $user . '" with reason: ``' . $reason . '``');
-        } else {
+        }
+        else {
             $this->message->channel->sendMessage('Banned user "' . $user . '".');
         }
 
-        Tulpar::findGuildFrom($this->message)->members->fetch($user_id)->then(function (Member $member) use ($reason, $daysToDeleteMessages) {
+        Helpers::findGuildFrom($this->message)->members->fetch($user_id)->then(function (Member $member) use ($reason, $daysToDeleteMessages) {
             $member->ban($daysToDeleteMessages, $reason);
         });
     }

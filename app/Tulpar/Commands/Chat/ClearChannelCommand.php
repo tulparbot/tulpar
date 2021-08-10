@@ -6,7 +6,7 @@ namespace App\Tulpar\Commands\Chat;
 
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
-use App\Tulpar\Tulpar;
+use App\Tulpar\Helpers;
 use Discord\Helpers\Collection;
 
 class ClearChannelCommand extends BaseCommand implements CommandInterface
@@ -26,15 +26,16 @@ class ClearChannelCommand extends BaseCommand implements CommandInterface
         if ($this->userCommand->hasOption('force') && $this->userCommand->getOption('force') === true) {
             $this->message->channel->sendMessage(sprintf('"%s" İsimli Kanal Temizleniyor...', $this->message->channel->name));
             $channel = $this->message->channel;
-            $newChannel = Tulpar::copyChannel($this->message->channel, $this->discord);
+            $newChannel = Helpers::copyChannel($this->message->channel, $this->discord);
 
-            $guild = Tulpar::findGuildFrom($this->message);
+            $guild = Helpers::findGuildFrom($this->message);
             $guild->channels->save($newChannel)->done(function () use ($guild, $channel, $newChannel) {
                 $guild->channels->delete($channel)->done(function () use ($newChannel) {
                     $newChannel->sendMessage('Cleared');
                 });
             });
-        } else {
+        }
+        else {
             $message = $this->message;
 
             $this->message->channel->sendMessage(sprintf(

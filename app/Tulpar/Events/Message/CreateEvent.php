@@ -65,7 +65,7 @@ class CreateEvent
                         }
                         else {
                             Log::info('Running command: ' . $instance::class);
-                            $message->react(Tulpar::getRandomEmoticon())->done(function () use ($instance) {
+                            $message->react(Helpers::getRandomEmoticon())->done(function () use ($instance) {
                                 Helpers::call(fn () => $instance->run());
                             });
                             return;

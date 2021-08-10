@@ -6,9 +6,9 @@ namespace App\Tulpar\Commands\Music;
 
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
+use App\Tulpar\Helpers;
 use App\Tulpar\Log;
 use App\Tulpar\MusicPlayer;
-use App\Tulpar\Tulpar;
 use Discord\Voice\VoiceClient;
 use Exception;
 
@@ -44,7 +44,7 @@ class PlayCommand extends BaseCommand implements CommandInterface
 
     public function run(): void
     {
-        $channel = Tulpar::getMemberVoiceChannel($this->message->member);
+        $channel = Helpers::getMemberVoiceChannel($this->message->member);
 
         if ($channel == null) {
             $this->message->channel->sendMessage('You are not in the voice channel.');

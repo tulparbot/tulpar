@@ -18,12 +18,12 @@ class Translator
 
     /**
      * @param Message|Guild $from
-     * @param Discord $discord
+     * @param Discord       $discord
      * @return string
      */
     public static function findLocale(Message|Guild $from, Discord $discord): string
     {
-        $guild = Tulpar::findGuildFrom($from, $discord);
+        $guild = Helpers::findGuildFrom($from, $discord);
         if ($guild !== null) {
             return $guild->preferred_locale;
         }
@@ -35,7 +35,7 @@ class Translator
     {
         $translation_file = resource_path('lang/' . $locale . '.json');
         if (file_exists($translation_file)) {
-            if (! array_key_exists($translation, static::$translations)) {
+            if (!array_key_exists($translation, static::$translations)) {
                 static::$translations = json_decode(file_get_contents(resource_path('lang/' . $locale . '.json')), true);
             }
 

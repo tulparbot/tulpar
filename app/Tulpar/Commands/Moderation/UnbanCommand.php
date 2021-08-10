@@ -7,7 +7,6 @@ namespace App\Tulpar\Commands\Moderation;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Helpers;
-use App\Tulpar\Tulpar;
 use Discord\Parts\Guild\Ban;
 
 class UnbanCommand extends BaseCommand implements CommandInterface
@@ -31,7 +30,7 @@ class UnbanCommand extends BaseCommand implements CommandInterface
         $user = Helpers::userTag($user_id);
         $channel = $this->message->channel;
 
-        Tulpar::findGuildFrom($this->message)->unban($user_id)->then(function (Ban $ban) use ($channel, $user) {
+        Helpers::findGuildFrom($this->message)->unban($user_id)->then(function (Ban $ban) use ($channel, $user) {
             $channel->sendMessage('Unbanned: ' . $user);
         });
     }
