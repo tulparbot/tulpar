@@ -24,7 +24,7 @@ class UserRank extends Model
 
     public function getXpAttribute(): int
     {
-        return $this->getAttribute('message_count') * 0.5;
+        return $this->getAttribute('message_count') * 0.3;
     }
 
     public function getLevelAttribute(): int
