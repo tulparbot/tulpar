@@ -8,9 +8,14 @@ use App\Tulpar\Events;
 use Discord\Discord;
 use Discord\Exceptions\IntentException;
 use Discord\Parts\Channel\Channel;
+use Discord\Parts\Guild\Guild;
+use Discord\Parts\Permissions\RolePermission;
+use Discord\Parts\User\Member;
 use Discord\Slash\Client;
 use Discord\WebSockets\Event;
 use Illuminate\Console\OutputStyle;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class Tulpar
 {
@@ -103,6 +108,71 @@ class Tulpar
     public function getLogChannel(): Channel|null
     {
         return $this->getDiscord()->getChannel(config('tulpar.server.channel.log')) ?? null;
+    }
+
+    /**
+     * @param Guild|string $guild
+     * @param bool         $fresh
+     * @return RolePermission|null
+     * @throws IntentException
+     */
+    public function getPermissions(Guild|string $guild, bool $fresh = false): RolePermission|null
+    {
+        if (!$guild instanceof Guild) {
+            $guild = $this->getDiscord()->guilds->get('id', $guild);
+        }
+
+        if ($guild === null) {
+            return null;
+        }
+
+        $call = function () use ($guild) {
+            /** @var Member $member */
+            $member = $guild->members->get('id', $this->getDiscord()->id);
+
+            if ($member === null) {
+                return null;
+            }
+
+            return $member->getPermissions();
+        };
+
+        if ($fresh === true) {
+            return $call();
+        }
+
+        return Cache::remember($guild->id . '-permissions', Carbon::make('+1 hours'), $call);
+    }
+
+    /**
+     * @param Guild|string $guild
+     * @param string       $permission
+     * @param bool         $fresh
+     * @return bool
+     * @throws IntentException
+     */
+    public function checkPermission(Guild|string $guild, string $permission, bool $fresh = false): bool
+    {
+        return $this->getPermissions($guild, $fresh)?->{$permission} === true;
+    }
+
+    /**
+     * @param Guild|string $guild
+     * @param bool         $fresh
+     * @return bool
+     * @throws IntentException
+     */
+    public function checkPermissions(Guild|string $guild, bool $fresh = false): bool
+    {
+        $permissions = config('tulpar.guild.permissions', []);
+
+        foreach ($permissions as $permission) {
+            if (!$this->checkPermission($guild, $permission, $fresh)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
