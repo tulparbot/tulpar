@@ -11,7 +11,7 @@ class AboutCommand extends BaseCommand implements CommandInterface
 {
     public static string $command = 'about';
 
-    public static string $description = 'Show about page.';
+    public static string $description = 'Show about the bot.';
 
     public static array $permissions = [];
 
@@ -23,15 +23,11 @@ class AboutCommand extends BaseCommand implements CommandInterface
         $message = <<<EOF
 About
 
-$name ($version) is PHP based advanced Discord Bot created by İsa Eken.
+--------------------------
 
-Features
+$name $version is PHP based advanced Discord Bot created by İsa Eken.
 
--
--
--
-
-Connect To Me
+--------------------------
 
 https://github.com/isaeken
 hello@isaeken.com.tr
