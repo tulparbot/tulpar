@@ -15,16 +15,111 @@ use App\Tulpar\Helpers;
 use App\Tulpar\Log;
 use App\Tulpar\Tulpar;
 use Discord\Discord;
+use Discord\Parts\Channel\Channel;
 use Discord\Parts\Channel\Message;
-use stdClass;
+use Discord\Parts\Guild\Guild;
+use Exception;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
+use React\Promise\Promise;
 
 class CreateEvent
 {
     /**
-     * @var array $commandHistory
+     * @var array
      */
-    public static array $commandHistory = [];
+    private static array $commandHistory = [];
 
+    /**
+     * @var array $history
+     */
+    public static array $history = [];
+
+    /**
+     * @param bool $force
+     */
+    public static function flushCommandHistory(bool $force = false): void
+    {
+        if ($force) {
+            static::$history = [];
+            return;
+        }
+
+        $history = [];
+        foreach (static::$history as $guild => $messages) {
+            if (count($messages) < 1) {
+                continue;
+            }
+
+            $history[$guild] = collect($messages)->take(150)->toArray();
+        }
+
+        static::$history = $history;
+    }
+
+    /**
+     * @param Message $message
+     * @return Message
+     */
+    public static function addHistory(Message $message): Message
+    {
+        if (!isset(static::$history[$message->guild_id])) {
+            static::$history[$message->guild_id] = [];
+        }
+
+        static::$history[$message->guild_id][time()] = $message;
+
+        return $message;
+    }
+
+    /**
+     * @param Guild|string $guild
+     * @param Channel|null $channel
+     * @return bool
+     * @throws Exception
+     */
+    public static function isRateLimited(Guild|string $guild, Channel|null $channel = null): bool
+    {
+        if ($guild instanceof Guild) {
+            $guild = $guild->id;
+        }
+
+        if (Cache::has('rate-limited-' . $guild) == true) {
+            return true;
+        }
+
+        if (!isset(static::$history[$guild])) {
+            return false;
+        }
+
+        $count = 0;
+        foreach (collect(static::$history[$guild])->reverse() as $time => $message) {
+            $time = Carbon::createFromTimestamp($time);
+            if ($time->diffInSeconds(now()) < 10) {
+                $count++;
+                if ($count > 5) {
+                    break;
+                }
+            }
+        }
+
+        $isLimited = $count >= 5;
+
+        if ($isLimited) {
+            $seconds = 10;
+            static::$history[$guild] = [];
+            Cache::put('rate-limited-' . $guild, true, Carbon::make("+$seconds seconds"));
+            $channel?->sendMessage('Your server is rate limited! Please wait ``' . $seconds . ' seconds``.');
+        }
+
+        return $isLimited;
+    }
+
+    /**
+     * @param Message $message
+     * @param Discord $discord
+     * @throws Exception
+     */
     public function __invoke(Message $message, Discord $discord)
     {
         // do not any think if sender is bot.
@@ -32,10 +127,14 @@ class CreateEvent
             return;
         }
 
+        static::flushCommandHistory();
+
         if (str_starts_with($message->content, Tulpar::getPrefix()) && mb_strlen($message->content) > mb_strlen(Tulpar::getPrefix())) {
-            static::$commandHistory[$message->id] = new stdClass;
-            static::$commandHistory[$message->id]->check = CommandValidation::NotCommand;
-            static::$commandHistory[$message->id]->content = $message->content;
+            static::addHistory($message);
+
+            if (static::isRateLimited($message->guild_id, $message->channel)) {
+                return;
+            }
 
             /** @var CommandInterface $command */
             foreach (config('tulpar.commands', []) as $command) {
@@ -43,38 +142,32 @@ class CreateEvent
                     /** @var BaseCommand $instance */
                     $instance = new $command($message, $discord);
                     $check = $instance->check();
+                    static::$commandHistory[$message->id] = (object)['check' => $check, 'command' => $instance];
 
                     if ($check == CommandValidation::Success || $check == CommandValidation::InvalidArguments) {
-                        static::$commandHistory[$message->id]->check = $check;
-
                         if ($message->channel->is_private) {
                             if (!$instance::isAllowedPm()) {
-                                Log::info(sprintf(
-                                    'Requested not allowed in pm command from %s, "%s"',
-                                    '<@' . $message->user_id . '>',
-                                    $message->content,
-                                ));
-                                $message->channel->sendMessage('This command is not allowed in private channel.');
+                                $message->reply('This command is not allowed in private channel.');
                                 return;
                             }
                         }
 
                         if ($instance->userCommand->hasFlag('help') || $check == CommandValidation::InvalidArguments) {
                             $message->channel->sendMessage($instance->getHelp());
-                            return;
                         }
                         else {
                             Log::info('Running command: ' . $instance::class);
                             $message->react(Helpers::getRandomEmoticon())->done(function () use ($instance) {
-                                Helpers::call(fn () => $instance->run());
+                                new Promise(function () use ($instance) {
+                                    Helpers::call(fn () => $instance->run());
+                                });
                             });
-                            return;
                         }
                     }
                 });
             }
 
-            if (static::$commandHistory[$message->id]?->check == CommandValidation::NotCommand) {
+            if (isset(static::$commandHistory[$message->id]) && static::$commandHistory[$message->id]?->check == CommandValidation::NotCommand) {
                 $customCommand = CustomCommand::find($message->guild_id, mb_substr($message->content, mb_strlen(Tulpar::getPrefix())));
 
                 if ($customCommand == null) {
