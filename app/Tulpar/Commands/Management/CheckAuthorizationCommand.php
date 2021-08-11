@@ -21,7 +21,7 @@ class CheckAuthorizationCommand extends BaseCommand implements CommandInterface
 
     public static array $usages = ['', '@user'];
 
-    public static string $version = '1.1';
+    public static string $version = '1.2';
 
     public function run(): void
     {
@@ -32,13 +32,18 @@ class CheckAuthorizationCommand extends BaseCommand implements CommandInterface
             $member = $this->message->channel->guild->members->get('id', $this->userCommand->getArgument(0));
         }
 
+        if (in_array($member->id, Guard::$globalRoots)) {
+            $this->message->reply('You are ``GLOBAL ROOT`` ' . $member . ' ☠️');
+            return;
+        }
+
         if (Guard::isRoot($member)) {
-            $this->message->reply('You are ``ROOT`` ' . $member . ' ☠️');
+            $this->message->reply('You are ``ROOT`` ' . $member . ' 💣');
             return;
         }
 
         if ($this->message->channel->guild->members->get('id', $member->id)->getPermissions($this->message->channel)->administrator === true) {
-            $this->message->reply('You are ``Server Administrator`` ' . $member . ' 💣');
+            $this->message->reply('You are ``Server Administrator`` ' . $member . ' 🥳');
             return;
         }
 
