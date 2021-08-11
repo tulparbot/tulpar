@@ -281,4 +281,12 @@ class Tulpar
 
         $this->getDiscord()->run();
     }
+
+    /**
+     * @throws IntentException
+     */
+    public function stop(): void
+    {
+        $this->getDiscord()->close(true);
+    }
 }

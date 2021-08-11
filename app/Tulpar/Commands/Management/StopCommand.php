@@ -4,7 +4,6 @@
 namespace App\Tulpar\Commands\Management;
 
 
-use App\Console\Commands\StartCommand;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Tulpar;
@@ -26,13 +25,7 @@ class StopCommand extends BaseCommand implements CommandInterface
     public function run(): void
     {
         $this->message->reply(config('app.name') . ' is stopping...')->done(function () {
-            StartCommand::$restartReceived = false;
-            sleep(1);
-
-            Tulpar::getInstance()->getDiscord()->close(false);
-            sleep(1);
-
-            exit;
+            Tulpar::getInstance()->stop();
         });
     }
 }

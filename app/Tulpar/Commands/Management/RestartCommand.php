@@ -4,7 +4,7 @@
 namespace App\Tulpar\Commands\Management;
 
 
-use App\Console\Commands\StartCommand;
+use App\Console\Commands\RunCommand;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Tulpar;
@@ -23,25 +23,34 @@ class RestartCommand extends BaseCommand implements CommandInterface
 
     public static string $version = '1.1';
 
-    private function restart()
+    private function restart(bool $hard = false)
     {
-        StartCommand::$restartReceived = true;
+        if ($hard) {
+            RunCommand::$restartReceived = false;
+            Tulpar::getInstance()->stop();
+            sleep(1);
+
+            $process = proc_open(
+                PHP_BINARY . ' ' . base_path('tulpar') . ' run',
+                [STDIN, STDOUT, STDERR],
+                $pipes
+            );
+
+            if (is_resource($process)) {
+                stream_set_blocking($pipes[0], true);
+            }
+
+            return;
+        }
+
+        RunCommand::$restartReceived = true;
+        Tulpar::getInstance()->stop();
         sleep(1);
-
-        Tulpar::getInstance()->getDiscord()->close(false);
-        sleep(1);
-
-        proc_open(
-            PHP_BINARY . ' ' . base_path('tulpar') . ' start',
-            [STDIN, STDOUT, STDERR],
-            $pipes
-        );
-
-        exit;
     }
 
     public function run(): void
     {
+        $hard = $this->userCommand->hasFlag('hard');
         $time = $this->userCommand->hasOption('time') ? intval($this->userCommand->getOption('time')) : 0;
         $reason = $this->userCommand->hasOption('reason') ? $this->userCommand->getOption('reason') : '';
         $message = config('app.name') . ' is restarting...';
@@ -56,9 +65,9 @@ class RestartCommand extends BaseCommand implements CommandInterface
             $message = config('app.name') . ' is restarting because: ' . $reason;
         }
 
-        $this->message->reply($message)->done(function () use ($time) {
+        $this->message->reply($message)->done(function () use ($time, $hard) {
             sleep($time);
-            $this->restart();
+            $this->restart($hard);
         });
     }
 }
