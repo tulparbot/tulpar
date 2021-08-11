@@ -1,6 +1,7 @@
 {
     "name": "isaeken/tulpar-bot",
     "description": "Tulpar Discord Bot.",
+    "version": "v1.0.3-dev",
     "keywords": [
         "tulpar",
         "discord",

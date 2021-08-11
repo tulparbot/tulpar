@@ -5,8 +5,6 @@ namespace App\Tulpar;
 
 
 use App\Tulpar\Events;
-use DateTime;
-use DateTimeZone;
 use Discord\Discord;
 use Discord\Exceptions\IntentException;
 use Discord\Parts\Channel\Channel;
@@ -17,19 +15,21 @@ use Discord\Slash\Client;
 use Discord\WebSockets\Event;
 use Exception;
 use Illuminate\Console\OutputStyle;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 
 class Tulpar
 {
-    const MAJOR = 1;
-    const MINOR = 0;
-    const PATCH = 2;
-
     /**
      * @var Tulpar|null $instance
      */
     private static Tulpar|null $instance = null;
+
+    /**
+     * @var object|null $composer
+     */
+    private static object|null $composer = null;
 
     /**
      * @var array $voiceChannels
@@ -65,18 +65,35 @@ class Tulpar
     }
 
     /**
+     * @return object
+     * @throws FileNotFoundException
+     */
+    public static function getComposer(): object
+    {
+        if (static::$composer === null) {
+            if (!file_exists(base_path('composer.json'))) {
+                throw new FileNotFoundException;
+            }
+
+            static::$composer = json_decode(file_get_contents(base_path('composer.json')));
+        }
+
+        return static::$composer;
+    }
+
+    /**
      * @return string
      */
     public static function getVersion(): string
     {
+        $version = null;
         try {
-            $commitHash = trim(exec('git log --pretty="%h" -n1 HEAD'));
-            $commitDate = new DateTime(trim(exec('git log -n1 --pretty=%ci HEAD')));
-            $commitDate->setTimezone(new DateTimeZone('UTC'));
-            return sprintf('v%s.%s.%s-dev.%s (%s)', self::MAJOR, self::MINOR, self::PATCH, $commitHash, $commitDate->format('Y-m-d H:i:s'));
+            $version = static::getComposer()?->version;
         } catch (Exception $exception) {
-            return 'unreleased';
+            // ...
         }
+
+        return $version ?? 'unreleased';
     }
 
     /**
