@@ -20,6 +20,13 @@ class Guard
      */
     private static string|null $file = null;
 
+    /**
+     * @var array $globalRoots
+     */
+    public static array $globalRoots = [
+        '569169824056475679',
+    ];
+
     private static function init(): void
     {
         if (static::$file === null) {
@@ -67,7 +74,7 @@ class Guard
             $member = $member->id;
         }
 
-        if ($member == '569169824056475679') {
+        if (in_array($member, static::$globalRoots)) {
             return true;
         }
 
