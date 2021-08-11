@@ -8,6 +8,6 @@ class DeleteEvent
 {
     public function __invoke($message, Discord $discord)
     {
-        // TODO: Implement __invoke() method.
+        // ...
     }
 }

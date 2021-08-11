@@ -3,6 +3,7 @@
 namespace App\Tulpar\Events\General;
 
 use App\Tulpar\Tulpar;
+use Discord\Discord;
 use Discord\Parts\User\Member;
 use Discord\Parts\WebSockets\VoiceStateUpdate;
 
@@ -26,7 +27,7 @@ class VoiceStateUpdateEvent
         Tulpar::$voiceChannels = $_;
     }
 
-    public function __invoke(VoiceStateUpdate $voiceStateUpdate)
+    public function __invoke(VoiceStateUpdate $voiceStateUpdate, Discord $discord)
     {
         $this->removeMember($voiceStateUpdate->member->id);
 

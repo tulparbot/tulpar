@@ -9,6 +9,6 @@ class UpdateEvent
 {
     public function __invoke(Message $message, Discord $discord, $oldMessage)
     {
-        // TODO: Implement __invoke() method.
+        // ...
     }
 }

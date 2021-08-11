@@ -3,11 +3,12 @@
 namespace App\Tulpar\Events\Message\Reaction;
 
 use Discord\Discord;
+use Discord\Parts\WebSockets\MessageReaction;
 
 class AddEvent
 {
-    public function __invoke($messages, Discord $discord)
+    public function __invoke(MessageReaction $reaction, Discord $discord)
     {
-        // TODO: Implement __invoke() method.
+        // ...
     }
 }

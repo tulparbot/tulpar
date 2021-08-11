@@ -3,12 +3,12 @@
 namespace App\Tulpar\Events\Message\Reaction;
 
 use Discord\Discord;
-use Discord\Helpers\Collection;
+use Discord\Parts\WebSockets\MessageReaction;
 
 class RemoveAllEvent
 {
-    public function __invoke(Collection $messages, Discord $discord)
+    public function __invoke(MessageReaction $reaction, Discord $discord)
     {
-        // TODO: Implement __invoke() method.
+        // ...
     }
 }

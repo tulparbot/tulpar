@@ -3,11 +3,12 @@
 namespace App\Tulpar\Events\Message;
 
 use Discord\Discord;
+use Discord\Helpers\Collection;
 
 class DeleteBulkEvent
 {
-    public function __invoke($messages, Discord $discord)
+    public function __invoke(Collection $messages, Discord $discord)
     {
-        // TODO: Implement __invoke() method.
+        // ...
     }
 }
