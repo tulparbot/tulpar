@@ -2,6 +2,7 @@
 
 use App\Tulpar\Commands\Authorization\RegisterCommand;
 use App\Tulpar\Commands\Basic\AboutCommand;
+use App\Tulpar\Commands\Basic\AboutUserCommand;
 use App\Tulpar\Commands\Basic\EmoticonsCommand;
 use App\Tulpar\Commands\Basic\HelloCommand;
 use App\Tulpar\Commands\Basic\HelpCommand;
@@ -131,6 +132,7 @@ return [
         ClearChannelCommand::class,
         HelpCommand::class,
         PingCommand::class,
+        AboutUserCommand::class,
 
         MusicCommand::class,
 
