@@ -12,7 +12,6 @@ use Discord\Builders\Components\Button;
 use Discord\Builders\MessageBuilder;
 use Discord\Parts\Embed\Embed;
 use Discord\Parts\Guild\Guild;
-use Exception;
 use Illuminate\Support\Carbon;
 
 class AboutCommand extends BaseCommand implements CommandInterface
@@ -22,6 +21,10 @@ class AboutCommand extends BaseCommand implements CommandInterface
     public static string $description = 'Show about the bot.';
 
     public static array $permissions = [];
+
+    public static string $version = '1.0';
+
+    public static bool $allowPm = true;
 
     public function run(): void
     {
@@ -50,23 +53,17 @@ class AboutCommand extends BaseCommand implements CommandInterface
         $embed->addFieldValues('Creation Date', Carbon::make('8/12/2021')->toDateString(), true);
         $embed->addFieldValues('Author', Helpers::userTag('569169824056475679'), true);
 
-        try {
-            $builder = MessageBuilder::new();
-            $builder->addEmbed($embed);
+        $builder = MessageBuilder::new();
+        $builder->addEmbed($embed);
 
-            $builder->addComponent(ActionRow::new()
-                ->addComponent(Button::new(Button::STYLE_LINK)->setEmoji('🧑‍💻')->setLabel('Developer')->setUrl('https://isaeken.com.tr'))
-                ->addComponent(Button::new(Button::STYLE_LINK)->setEmoji('☠️')->setLabel('Tulpar Official')->setUrl('https://tulpar.xyz')));
+        $builder->addComponent(ActionRow::new()
+            ->addComponent(Button::new(Button::STYLE_LINK)->setEmoji('🧑‍💻')->setLabel('Developer')->setUrl('https://isaeken.com.tr'))
+            ->addComponent(Button::new(Button::STYLE_LINK)->setEmoji('☠️')->setLabel('Tulpar Official')->setUrl('https://tulpar.xyz')));
 
-            $builder->addComponent(ActionRow::new()
-                ->addComponent(Button::new(Button::STYLE_LINK)->setEmoji('🎩')->setLabel('Web Mafyası')->setUrl('https://webmafyasi.net'))
-                ->addComponent(Button::new(Button::STYLE_LINK)->setEmoji('🌍')->setLabel('Host Adresim')->setUrl('https://hostadresim.net')));
-
-        } catch (Exception $exception) {
-            dd($exception);
-        }
+        $builder->addComponent(ActionRow::new()
+            ->addComponent(Button::new(Button::STYLE_LINK)->setEmoji('🎩')->setLabel('Web Mafyası')->setUrl('https://webmafyasi.net'))
+            ->addComponent(Button::new(Button::STYLE_LINK)->setEmoji('🌍')->setLabel('Host Adresim')->setUrl('https://hostadresim.net')));
 
         $this->message->channel->sendMessage($builder);
-//        $this->message->channel->sendEmbed($embed);
     }
 }
