@@ -140,8 +140,12 @@ HELP;
      */
     public function checkAccess(bool $messages = false): bool
     {
-        if (Guard::isRoot($this->message->member)) {
+        if (Guard::isRoot($this->message->member ?? $this->message->user)) {
             return true;
+        }
+
+        if ($this->message->channel->is_private) {
+            return in_array('*', static::getPermissions());
         }
 
         $permissions = $this->message->member->getPermissions()->getRawAttributes();
@@ -173,6 +177,10 @@ HELP;
     {
         if (str_starts_with($this->message->content, Tulpar::getPrefix())) {
             if (mb_strtolower($this->userCommand->getCommand()) == mb_strtolower(static::getCommand())) {
+
+                if ($this->message->channel->is_private && static::$allowPm === false) {
+                    return CommandValidation::NoAccess;
+                }
 
                 if (!$this->checkAccess(true)) {
                     return CommandValidation::NoAccess;

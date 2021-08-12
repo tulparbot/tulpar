@@ -73,13 +73,16 @@ class CreateEvent
     }
 
     /**
-     * @param Guild|string $guild
-     * @param Channel|null $channel
+     * @param Guild|string|null $guild
+     * @param Channel|null      $channel
      * @return bool
-     * @throws Exception
      */
-    public static function isRateLimited(Guild|string $guild, Channel|null $channel = null): bool
+    public static function isRateLimited(Guild|string|null $guild, Channel|null $channel = null): bool
     {
+        if ($guild === null) {
+            return false;
+        }
+
         if ($guild instanceof Guild) {
             $guild = $guild->id;
         }

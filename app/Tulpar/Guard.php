@@ -6,6 +6,7 @@ use App\Enums\Permission;
 use Discord\Exceptions\IntentException;
 use Discord\Parts\Guild\Guild;
 use Discord\Parts\User\Member;
+use Discord\Parts\User\User;
 use Illuminate\Support\Facades\File;
 
 class Guard
@@ -63,14 +64,14 @@ class Guard
     }
 
     /**
-     * @param Member|string $member
+     * @param Member|User|string $member
      * @return bool
      */
-    public static function isRoot(Member|string $member): bool
+    public static function isRoot(Member|User|string $member): bool
     {
         static::init();
 
-        if ($member instanceof Member) {
+        if ($member instanceof Member || $member instanceof User) {
             $member = $member->id;
         }
 
