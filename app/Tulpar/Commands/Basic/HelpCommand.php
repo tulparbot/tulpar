@@ -6,6 +6,7 @@ namespace App\Tulpar\Commands\Basic;
 
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
+use App\Tulpar\Helpers;
 use Discord\Builders\Components\Option;
 use Discord\Builders\Components\SelectMenu;
 use Discord\Builders\MessageBuilder;
@@ -32,7 +33,7 @@ class HelpCommand extends BaseCommand implements CommandInterface
         $embed->description = 'You can use these commands in here.';
 
         $builder = MessageBuilder::new();
-        $builder->setContent('Select a command to show help.');
+        $builder->setContent('Help menu for user: ' . Helpers::userTag($this->message->member->id));
         $builder->setReplyTo($this->message);
 
         $selectMenu = SelectMenu::new();
@@ -40,11 +41,13 @@ class HelpCommand extends BaseCommand implements CommandInterface
         foreach (config('tulpar.commands', []) as $command) {
             if ((new $command($this->message, $this->discord))->checkAccess()) {
                 $selectMenu = $selectMenu->addOption(Option::new($command::getCommand(), $command::getCommand()))->setListener(function (Interaction $interaction, Collection $options) use ($command) {
-                    $embed = new Embed($this->discord);
-                    $embed->setAuthor($this->message->user->username, $this->message->user->avatar);
-                    $embed->setDescription($command::getHelp());
+                    if ($interaction->member->id == $this->message->member->id) {
+                        $embed = new Embed($this->discord);
+                        $embed->setAuthor($this->message->user->username, $this->message->user->avatar);
+                        $embed->setDescription($command::getHelp());
 
-                    $interaction->updateMessage(MessageBuilder::new()->setContent('Command details:')->addEmbed($embed));
+                        $interaction->updateMessage(MessageBuilder::new()->setContent('Command details:')->addEmbed($embed));
+                    }
                 }, $this->discord);
             }
         }
