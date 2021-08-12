@@ -19,6 +19,7 @@ use App\Tulpar\Commands\Management\RootCommand;
 use App\Tulpar\Commands\Management\StatisticsCommand;
 use App\Tulpar\Commands\Management\StopCommand;
 use App\Tulpar\Commands\Moderation\BanCommand;
+use App\Tulpar\Commands\Moderation\KickCommand;
 use App\Tulpar\Commands\Moderation\UnbanCommand;
 use App\Tulpar\Commands\Music\MusicCommand;
 use App\Tulpar\Commands\Rank\RankCommand;
@@ -135,6 +136,7 @@ return [
 
         BanCommand::class,
         UnbanCommand::class,
+        KickCommand::class,
 
         HangmanCommand::class,
 
