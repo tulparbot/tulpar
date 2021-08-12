@@ -11,7 +11,6 @@ use Discord\Parts\Channel\Channel;
 use Discord\Parts\Guild\Guild;
 use Discord\Parts\Permissions\RolePermission;
 use Discord\Parts\User\Member;
-use Discord\Slash\Client;
 use Discord\WebSockets\Event;
 use Exception;
 use Illuminate\Console\OutputStyle;
@@ -102,11 +101,6 @@ class Tulpar
     private Discord|null $discord = null;
 
     /**
-     * @var Client|null $client
-     */
-    private Client|null $client = null;
-
-    /**
      * @var array $options
      */
     public array $options = [];
@@ -122,22 +116,6 @@ class Tulpar
         }
 
         return $this->discord;
-    }
-
-    /**
-     * @return Client
-     * @throws IntentException
-     */
-    public function getClient(): Client
-    {
-        if ($this->client === null) {
-            $this->client = new Client([
-                'public_key' => config('discord.public_key'),
-                'loop' => $this->getDiscord()->getLoop(),
-            ]);
-        }
-
-        return $this->client;
     }
 
     /**

@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use App\Models\Job;
 use App\Tulpar\Tulpar;
 use Discord\Exceptions\IntentException;
+use Discord\Slash\Parts\Choices;
+use Discord\Slash\Parts\Interaction;
 use Discord\WebSockets\Intents;
 use Exception;
 use Illuminate\Console\Command;
@@ -51,7 +53,6 @@ class RunCommand extends Command
                 $job->run();
             }
         });
-        static::$instance->getClient()->linkDiscord(static::$instance->getDiscord());
     }
 
     /**

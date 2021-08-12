@@ -22,7 +22,6 @@
         "php": "^8.0",
         "ext-curl": "*",
         "bensampo/laravel-enum": "^3.4",
-        "discord-php/slash": "^1.0",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "geerlingguy/ping": "^1.2",
@@ -35,7 +34,7 @@
         "norkunas/youtube-dl-php": "^2.0",
         "socialiteproviders/discord": "^4.1",
         "socialiteproviders/zoho": "^4.1",
-        "team-reflex/discord-php": "dev-master"
+        "team-reflex/discord-php": "dev-develop"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
