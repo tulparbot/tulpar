@@ -19,8 +19,8 @@ class CreateUsersTable extends Migration
             $table->string('nickname')->nullable()->default(null);
             $table->string('name')->nullable()->default(null);
             $table->string('email')->nullable()->default(null);
-            $table->string('avatar')->nullable()->default(null);
-            $table->string('data')->nullable()->default(serialize([]));
+            $table->longText('avatar')->nullable()->default(null);
+            $table->longText('data')->nullable()->default(serialize([]));
             $table->rememberToken();
             $table->timestamps();
         });
