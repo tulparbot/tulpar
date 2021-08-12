@@ -95,7 +95,7 @@ class Log
 
                 if (in_array($level, ['emergency', 'alert', 'critical', 'error', 'warning', 'notice', 'info', 'debug'])) {
                     if (config('tulpar.server.logging.' . $level) == true) {
-                        $messages = explode("\r\n", chunk_split($message, 200));
+                        $messages = explode("\r\n", chunk_split($message, 400));
                         $channel->sendMessage('``' . strtoupper($level) . '``: ' . $messages[0])->done(function (Message $message) use ($messages) {
                             $messages = collect($messages)->except(0)->toArray();
                             foreach ($messages as $msg) {
