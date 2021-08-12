@@ -2,6 +2,7 @@
 
 use App\Tulpar\Commands\Authorization\RegisterCommand;
 use App\Tulpar\Commands\Basic\AboutCommand;
+use App\Tulpar\Commands\Basic\AboutServerCommand;
 use App\Tulpar\Commands\Basic\AboutUserCommand;
 use App\Tulpar\Commands\Basic\EmoticonsCommand;
 use App\Tulpar\Commands\Basic\HelloCommand;
@@ -133,6 +134,7 @@ return [
         HelpCommand::class,
         PingCommand::class,
         AboutUserCommand::class,
+        AboutServerCommand::class,
 
         MusicCommand::class,
 
