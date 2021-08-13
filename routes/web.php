@@ -5,6 +5,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ServerController;
 use App\Http\Controllers\Servers\EmbedController;
+use App\Http\Controllers\TempLinkController;
 use App\Models\AutoResponse;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +19,8 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/tmp/{uuid}', [TempLinkController::class, 'index'])->name('temp-link');
 
 Route::get('/', [PageController::class, 'home'])->name('home');
 

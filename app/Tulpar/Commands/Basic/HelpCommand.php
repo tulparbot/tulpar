@@ -4,9 +4,12 @@
 namespace App\Tulpar\Commands\Basic;
 
 
+use App\Support\Str;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Helpers;
+use Discord\Builders\Components\ActionRow;
+use Discord\Builders\Components\Button;
 use Discord\Builders\Components\Option;
 use Discord\Builders\Components\SelectMenu;
 use Discord\Builders\MessageBuilder;
@@ -15,6 +18,8 @@ use Discord\Parts\Channel\Message;
 use Discord\Parts\Embed\Embed;
 use Discord\Parts\Interactions\Interaction;
 use Exception;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class HelpCommand extends BaseCommand implements CommandInterface
 {
@@ -54,14 +59,14 @@ class HelpCommand extends BaseCommand implements CommandInterface
                 }, $this->discord);
 
                 $count++;
-                if ($count > 24) {
+                if ($count > 23) {
                     break;
                 }
             }
         }
 
         try {
-            if ($count > 24) {
+            if ($count > 23) {
                 $text = '';
 
                 foreach (config('tulpar.commands', []) as $command) {
@@ -69,6 +74,13 @@ class HelpCommand extends BaseCommand implements CommandInterface
                         $text .= $command::getHelp() . PHP_EOL . PHP_EOL;
                     }
                 }
+
+                $uuid = Str::uuid();
+                Cache::put('temp-link-' . $uuid, $text, Carbon::make('+5 minutes'));
+                $builder->setContent('The command link:');
+                $builder->addComponent(ActionRow::new()->addComponent(Button::new(Button::STYLE_LINK)->setLabel('Open')->setUrl(route('temp-link', $uuid))));
+                $this->message->channel->sendMessage($builder);
+                return;
 
                 if (mb_strlen($text) > 2000) {
                     $messages = explode("*/*/*", chunk_split($text, 2000, '*/*/*'));
