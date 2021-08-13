@@ -12,6 +12,10 @@ class UppercaseFilter extends BaseFilter
      */
     public function check(): bool
     {
+        if (mb_strlen($this->message->content) < 1) {
+            return false;
+        }
+
         $count = 0;
         $matches = [];
         if (preg_match_all('/[A-Z]/', $this->message->content, $matches) > 0) {
