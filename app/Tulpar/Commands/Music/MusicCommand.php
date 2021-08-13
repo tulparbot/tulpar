@@ -4,6 +4,7 @@
 namespace App\Tulpar\Commands\Music;
 
 
+use App\Enums\CommandCategory;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
 use Illuminate\Support\Str;
@@ -17,6 +18,8 @@ class MusicCommand extends BaseCommand implements CommandInterface
     public static array $permissions = [];
 
     public static array $requires = [0];
+
+    public static string $category = CommandCategory::Music;
 
     public function run(): void
     {

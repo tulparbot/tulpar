@@ -4,6 +4,7 @@
 namespace App\Tulpar\Commands\Music;
 
 
+use App\Enums\CommandCategory;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\MusicPlayer;
@@ -18,6 +19,8 @@ class NowPlayingCommand extends BaseCommand implements CommandInterface
     public static string $description = 'Show now playing song.';
 
     public static array $permissions = [];
+
+    public static string $category = CommandCategory::Music;
 
     public static function show(Channel|string $channel)
     {

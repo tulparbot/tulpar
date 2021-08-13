@@ -59,6 +59,13 @@ interface CommandInterface
     public static function getHelp(): string;
 
     /**
+     * Get command category.
+     *
+     * @return string
+     */
+    public static function getCategory(): string;
+
+    /**
      * Check if this command are allowed in private channel.
      *
      * @return bool

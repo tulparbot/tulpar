@@ -4,6 +4,7 @@
 namespace App\Tulpar\Commands\Game;
 
 
+use App\Enums\CommandCategory;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
 use Discord\Parts\Channel\Channel;
@@ -27,6 +28,8 @@ class HangmanCommand extends BaseCommand implements CommandInterface
         'restart',
         'try {letter}',
     ];
+
+    public static string $category = CommandCategory::Game;
 
     public static array $steps = [
         ' ------

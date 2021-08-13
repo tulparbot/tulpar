@@ -5,6 +5,7 @@ namespace App\Tulpar\Commands\Management;
 
 
 use App\Console\Commands\RunCommand;
+use App\Enums\CommandCategory;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Tulpar;
@@ -22,6 +23,8 @@ class RestartCommand extends BaseCommand implements CommandInterface
     public static bool $allowPm = true;
 
     public static string $version = '1.1';
+
+    public static string $category = CommandCategory::Management;
 
     private function restart(bool $hard = false)
     {

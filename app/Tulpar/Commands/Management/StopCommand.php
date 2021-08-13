@@ -4,6 +4,7 @@
 namespace App\Tulpar\Commands\Management;
 
 
+use App\Enums\CommandCategory;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Tulpar;
@@ -21,6 +22,8 @@ class StopCommand extends BaseCommand implements CommandInterface
     public static bool $allowPm = true;
 
     public static string $version = '1.1';
+
+    public static string $category = CommandCategory::Management;
 
     public function run(): void
     {

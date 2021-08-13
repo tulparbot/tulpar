@@ -4,6 +4,7 @@
 namespace App\Tulpar\Commands\Basic;
 
 
+use App\Enums\CommandCategory;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Helpers;
@@ -25,6 +26,8 @@ class AboutCommand extends BaseCommand implements CommandInterface
     public static string $version = '1.0';
 
     public static bool $allowPm = true;
+
+    public static string $category = CommandCategory::General;
 
     public function run(): void
     {

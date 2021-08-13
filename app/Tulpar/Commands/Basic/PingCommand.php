@@ -4,6 +4,7 @@
 namespace App\Tulpar\Commands\Basic;
 
 
+use App\Enums\CommandCategory;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
 use JJG\Ping;
@@ -21,6 +22,8 @@ class PingCommand extends BaseCommand implements CommandInterface
     public static array $usages = [];
 
     public static bool $allowPm = true;
+
+    public static string $category = CommandCategory::General;
 
     public static function ping(): float
     {

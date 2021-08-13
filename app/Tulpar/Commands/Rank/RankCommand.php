@@ -3,6 +3,7 @@
 namespace App\Tulpar\Commands\Rank;
 
 use App\Enums\Align;
+use App\Enums\CommandCategory;
 use App\Models\UserRank;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
@@ -22,6 +23,8 @@ class RankCommand extends BaseCommand implements CommandInterface
         '',
         '@username',
     ];
+
+    public static string $category = CommandCategory::Rank;
 
     public function run(): void
     {

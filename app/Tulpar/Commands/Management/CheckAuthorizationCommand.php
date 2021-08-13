@@ -4,6 +4,7 @@
 namespace App\Tulpar\Commands\Management;
 
 
+use App\Enums\CommandCategory;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Guard;
@@ -22,6 +23,8 @@ class CheckAuthorizationCommand extends BaseCommand implements CommandInterface
     public static array $usages = ['', '@user'];
 
     public static string $version = '1.2';
+
+    public static string $category = CommandCategory::Management;
 
     public function run(): void
     {

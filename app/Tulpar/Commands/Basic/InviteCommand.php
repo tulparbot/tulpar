@@ -4,6 +4,7 @@
 namespace App\Tulpar\Commands\Basic;
 
 
+use App\Enums\CommandCategory;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
 use Illuminate\Support\Str;
@@ -21,6 +22,8 @@ class InviteCommand extends BaseCommand implements CommandInterface
     public static array $usages = [''];
 
     public static string $version = '1.1';
+
+    public static string $category = CommandCategory::General;
 
     public function run(): void
     {

@@ -4,6 +4,7 @@
 namespace App\Tulpar\Commands\Management;
 
 
+use App\Enums\CommandCategory;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Guard;
@@ -28,6 +29,8 @@ class RootCommand extends BaseCommand implements CommandInterface
     public static bool $allowPm = true;
 
     public static array $requires = [0];
+
+    public static string $category = CommandCategory::Management;
 
     public function run(): void
     {

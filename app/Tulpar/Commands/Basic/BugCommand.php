@@ -4,6 +4,7 @@
 namespace App\Tulpar\Commands\Basic;
 
 
+use App\Enums\CommandCategory;
 use App\Support\Str;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
@@ -25,6 +26,8 @@ class BugCommand extends BaseCommand implements CommandInterface
     public static array $permissions = ['*'];
 
     public static string $version = '1.0';
+
+    public static string $category = CommandCategory::General;
 
     public function run(): void
     {

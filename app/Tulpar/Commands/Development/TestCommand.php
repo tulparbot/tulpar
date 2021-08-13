@@ -2,6 +2,7 @@
 
 namespace App\Tulpar\Commands\Development;
 
+use App\Enums\CommandCategory;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
 
@@ -14,7 +15,9 @@ class TestCommand extends BaseCommand implements CommandInterface
     public static array $permissions = ['root'];
 
     public static bool $allowPm = true;
-    
+
+    public static string $category = CommandCategory::Development;
+
     public function run(): void
     {
         // ...

@@ -4,6 +4,7 @@
 namespace App\Tulpar\Commands\Basic;
 
 
+use App\Enums\CommandCategory;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Helpers;
@@ -24,6 +25,8 @@ class AboutUserCommand extends BaseCommand implements CommandInterface
         'user-id',
         '@username',
     ];
+
+    public static string $category = CommandCategory::General;
 
     public function run(): void
     {

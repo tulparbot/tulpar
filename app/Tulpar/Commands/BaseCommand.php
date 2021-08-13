@@ -4,6 +4,7 @@
 namespace App\Tulpar\Commands;
 
 
+use App\Enums\CommandCategory;
 use App\Enums\CommandValidation;
 use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Guard;
@@ -27,6 +28,8 @@ class BaseCommand implements CommandInterface
     public static array $usages = [''];
 
     public static bool $allowPm = false;
+
+    public static string $category = CommandCategory::General;
 
     /**
      * @inheritDoc
@@ -114,6 +117,14 @@ HELP;
     public static function isAllowedPm(): bool
     {
         return static::$allowPm;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function getCategory(): string
+    {
+        return static::$category;
     }
 
     /**

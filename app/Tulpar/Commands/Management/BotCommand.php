@@ -4,6 +4,7 @@
 namespace App\Tulpar\Commands\Management;
 
 
+use App\Enums\CommandCategory;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Log;
@@ -24,6 +25,8 @@ class BotCommand extends BaseCommand implements CommandInterface
     public static array $permissions = ['root'];
 
     public static bool $allowPm = true;
+
+    public static string $category = CommandCategory::Management;
 
     public array $statuses = [Activity::STATUS_ONLINE, Activity::STATUS_DND, Activity::STATUS_IDLE, Activity::STATUS_INVISIBLE];
 

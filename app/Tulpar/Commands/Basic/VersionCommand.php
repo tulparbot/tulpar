@@ -4,6 +4,7 @@
 namespace App\Tulpar\Commands\Basic;
 
 
+use App\Enums\CommandCategory;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
 
@@ -14,6 +15,8 @@ class VersionCommand extends BaseCommand implements CommandInterface
     public static string $description = 'Show bot version.';
 
     public static array $permissions = [];
+
+    public static string $category = CommandCategory::General;
 
     public function run(): void
     {
