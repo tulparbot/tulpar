@@ -11,8 +11,10 @@ use Discord\Builders\Components\Option;
 use Discord\Builders\Components\SelectMenu;
 use Discord\Builders\MessageBuilder;
 use Discord\Helpers\Collection;
+use Discord\Parts\Channel\Message;
 use Discord\Parts\Embed\Embed;
 use Discord\Parts\Interactions\Interaction;
+use Exception;
 
 class HelpCommand extends BaseCommand implements CommandInterface
 {
@@ -33,8 +35,9 @@ class HelpCommand extends BaseCommand implements CommandInterface
         $embed->description = 'You can use these commands in here.';
 
         $builder = MessageBuilder::new();
-        $builder->setContent('Help menu for user: ' . Helpers::userTag($this->message->member->id));
         $builder->setReplyTo($this->message);
+
+        $count = 0;
 
         $selectMenu = SelectMenu::new();
         /** @var BaseCommand $command */
@@ -49,10 +52,48 @@ class HelpCommand extends BaseCommand implements CommandInterface
                         $interaction->updateMessage(MessageBuilder::new()->setContent('Command details:')->addEmbed($embed));
                     }
                 }, $this->discord);
+
+                $count++;
+                if ($count > 24) {
+                    break;
+                }
             }
         }
 
-        $builder->addComponent($selectMenu);
-        $this->message->channel->sendMessage($builder);
+        try {
+            if ($count > 24) {
+                $text = '';
+
+                foreach (config('tulpar.commands', []) as $command) {
+                    if ((new $command($this->message, $this->discord))->checkAccess()) {
+                        $text .= $command::getHelp() . PHP_EOL . PHP_EOL;
+                    }
+                }
+
+                if (mb_strlen($text) > 2000) {
+                    $messages = explode("*/*/*", chunk_split($text, 2000, '*/*/*'));
+                    $this->message->reply($messages[0])->done(function (Message $message) use ($messages) {
+                        $messages = collect($messages)->except(0)->toArray();
+                        foreach ($messages as $msg) {
+                            if (mb_strlen($msg) > 0) {
+                                $message->reply($msg);
+                            }
+                        }
+                    });
+
+                    return;
+                }
+
+                $builder->setContent($text);
+            }
+            else {
+                $builder->setContent('Help menu for user: ' . Helpers::userTag($this->message->member->id));
+                $builder->addComponent($selectMenu);
+            }
+
+            $this->message->channel->sendMessage($builder);
+        } catch (Exception $exception) {
+            dd($exception);
+        }
     }
 }
