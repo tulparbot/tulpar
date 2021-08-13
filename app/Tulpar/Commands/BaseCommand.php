@@ -25,7 +25,7 @@ class BaseCommand implements CommandInterface
 
     public static array $permissions = ['root'];
 
-    public static array $usages = [''];
+    public static array $usages = [];
 
     public static bool $allowPm = false;
 
