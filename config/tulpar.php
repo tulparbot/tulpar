@@ -26,6 +26,7 @@ use App\Tulpar\Commands\Moderation\KickCommand;
 use App\Tulpar\Commands\Moderation\UnbanCommand;
 use App\Tulpar\Commands\Music\MusicCommand;
 use App\Tulpar\Commands\Rank\RankCommand;
+use App\Tulpar\Filters\Chat\RepeatFilter;
 use App\Tulpar\Filters\Chat\UppercaseFilter;
 
 return [
@@ -157,6 +158,7 @@ return [
     */
     'filters' => [
         UppercaseFilter::class,
+        RepeatFilter::class,
     ],
 
     'requires' => [

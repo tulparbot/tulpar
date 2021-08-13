@@ -25,5 +25,5 @@ interface FilterInterface
     /**
      * Execute the filter.
      */
-    public function run(): Message;
+    public function run(): Message|null;
 }
