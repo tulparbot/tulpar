@@ -4,22 +4,17 @@
 namespace App\Tulpar\Commands\Basic;
 
 
-use App\Support\Str;
+use App\Enums\CommandCategory;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Helpers;
-use Discord\Builders\Components\ActionRow;
-use Discord\Builders\Components\Button;
+use App\Tulpar\Tulpar;
 use Discord\Builders\Components\Option;
 use Discord\Builders\Components\SelectMenu;
 use Discord\Builders\MessageBuilder;
 use Discord\Helpers\Collection;
-use Discord\Parts\Channel\Message;
 use Discord\Parts\Embed\Embed;
 use Discord\Parts\Interactions\Interaction;
-use Exception;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Cache;
 
 class HelpCommand extends BaseCommand implements CommandInterface
 {
@@ -29,83 +24,71 @@ class HelpCommand extends BaseCommand implements CommandInterface
 
     public static array $permissions = [];
 
-    public static string $version = '1.1';
+    public static string $version = '1.3';
 
     public static bool $allowPm = true;
 
+    public static string $category = CommandCategory::General;
+
     public function run(): void
     {
-        $embed = new Embed($this->discord);
-        $embed->title = config('app.name') . ' ' . config('app.version');
-        $embed->description = 'You can use these commands in here.';
+        $categories = CommandCategory::getCategories();
 
         $builder = MessageBuilder::new();
         $builder->setReplyTo($this->message);
 
-        $count = 0;
-
         $selectMenu = SelectMenu::new();
-        /** @var BaseCommand $command */
-        foreach (config('tulpar.commands', []) as $command) {
-            if ((new $command($this->message, $this->discord))->checkAccess()) {
-                $selectMenu = $selectMenu->addOption(Option::new($command::getCommand(), $command::getCommand()))->setListener(function (Interaction $interaction, Collection $options) use ($command) {
-                    if ($interaction->member->id == $this->message->member->id) {
-                        $embed = new Embed($this->discord);
-                        $embed->setAuthor($this->message->user->username, $this->message->user->avatar);
-                        $embed->setDescription($command::getHelp());
-
-                        $interaction->updateMessage(MessageBuilder::new()->setContent('Command details:')->addEmbed($embed));
-                    }
-                }, $this->discord);
-
-                $count++;
-                if ($count > 23) {
-                    break;
-                }
+        foreach ($categories as $category) {
+            $option = Option::new(ucwords($category), $category);
+            if (isset(CommandCategory::getCategoryEmojis()[$category])) {
+                $option->setEmoji(CommandCategory::getCategoryEmojis()[$category]);
             }
-        }
 
-        try {
-            if ($count > 23) {
-                $text = '';
+            $selectMenu = $selectMenu->addOption($option)->setListener(function (Interaction $interaction, Collection $options) use ($categories) {
+                if ($interaction->member->id == $this->message->member->id) {
+                    /** @var string $category */
+                    $category = $options[0]->getValue();
 
-                foreach (config('tulpar.commands', []) as $command) {
-                    if ((new $command($this->message, $this->discord))->checkAccess()) {
-                        $text .= $command::getHelp() . PHP_EOL . PHP_EOL;
+                    if (!in_array($category, $categories)) {
+                        $interaction->updateMessage(MessageBuilder::new()->setContent('Invalid Category'));
+                        return;
                     }
-                }
 
-                $uuid = Str::uuid();
-                Cache::put('temp-link-' . $uuid, $text, Carbon::make('+5 minutes'));
-                $builder->setContent('The command link:');
-                $builder->addComponent(ActionRow::new()->addComponent(Button::new(Button::STYLE_LINK)->setLabel('Open')->setUrl(route('temp-link', $uuid))));
-                $this->message->channel->sendMessage($builder);
-                return;
+                    $commands = CommandCategory::getCommands()[$category];
+                    $builder = MessageBuilder::new()->setContent('Commands of in the category: ' . ucwords($category));
 
-                if (mb_strlen($text) > 2000) {
-                    $messages = explode("*/*/*", chunk_split($text, 2000, '*/*/*'));
-                    $this->message->reply($messages[0])->done(function (Message $message) use ($messages) {
-                        $messages = collect($messages)->except(0)->toArray();
-                        foreach ($messages as $msg) {
-                            if (mb_strlen($msg) > 0) {
-                                $message->reply($msg);
+                    /** @var BaseCommand $command */
+                    foreach ($commands as $command) {
+                        if ((new $command($this->message, $this->discord))->checkAccess()) {
+                            if (mb_strlen($command::getUsages()) > 0) {
+                                $embed = new Embed($this->discord);
+                                $embed->setAuthor(Tulpar::getPrefix() . $command::getCommand(), $this->discord->user->getAvatarAttribute());
+                                $embed->setThumbnail($this->message->user->avatar);
+
+                                $content = '';
+                                foreach ($command::$usages as $usage) {
+                                    if (mb_strlen($usage) > 0) {
+                                        $content .= Helpers::line(Tulpar::getPrefix() . $command::getCommand() . ' ' . $usage) . PHP_EOL;
+                                    }
+                                    else {
+                                        $content .= Helpers::line(Tulpar::getPrefix() . $command::getCommand()) . PHP_EOL;
+                                    }
+                                }
+
+                                $embed->setDescription('```' . $content . '```');
+                                $embed->setFooter($command::getVersion());
+                                $builder->addEmbed($embed);
                             }
                         }
-                    });
+                    }
 
-                    return;
+                    $interaction->updateMessage($builder);
                 }
-
-                $builder->setContent($text);
-            }
-            else {
-                $builder->setContent('Help menu for user: ' . Helpers::userTag($this->message->member->id));
-                $builder->addComponent($selectMenu);
-            }
-
-            $this->message->channel->sendMessage($builder);
-        } catch (Exception $exception) {
-            dd($exception);
+            }, $this->discord);
         }
+
+        $builder->setContent('Help menu for user: ' . Helpers::userTag($this->message->member->id));
+        $builder->addComponent($selectMenu);
+        $this->message->channel->sendMessage($builder);
     }
 }
