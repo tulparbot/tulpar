@@ -26,6 +26,7 @@ use App\Tulpar\Commands\Moderation\KickCommand;
 use App\Tulpar\Commands\Moderation\UnbanCommand;
 use App\Tulpar\Commands\Music\MusicCommand;
 use App\Tulpar\Commands\Rank\RankCommand;
+use App\Tulpar\Filters\Chat\UppercaseFilter;
 
 return [
     /*
@@ -147,6 +148,15 @@ return [
         HangmanCommand::class,
 
         RankCommand::class,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Activated filter classes
+    |--------------------------------------------------------------------------
+    */
+    'filters' => [
+        UppercaseFilter::class,
     ],
 
     'requires' => [

@@ -185,11 +185,9 @@ class CreateEvent
             }
         }
         else {
-            /** @todo make here.. */
             /** @var FilterInterface $filter */
-            foreach ([] as $filter) {
-                $instance = new $filter($message, $discord);
-                $instance->run();
+            foreach (config('tulpar.filters', []) as $filter) {
+                (new $filter($message, $discord))->run();
             }
 
             $autoResponses = AutoResponse::where('guild_id', $message->guild_id)->get();
