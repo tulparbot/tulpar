@@ -20,7 +20,6 @@ use App\Tulpar\Commands\General\HelpCommand;
 use App\Tulpar\Commands\General\InviteCommand;
 use App\Tulpar\Commands\General\PingCommand;
 use App\Tulpar\Commands\General\VersionCommand;
-use App\Tulpar\Commands\Management\StatisticsCommand;
 use App\Tulpar\Commands\Moderation\BanCommand;
 use App\Tulpar\Commands\Moderation\KickCommand;
 use App\Tulpar\Commands\Moderation\UnbanCommand;
@@ -120,7 +119,6 @@ return [
     'commands' => [
         TestCommand::class,
         WhoamiCommand::class,
-        StatisticsCommand::class,
         StopCommand::class,
         RestartCommand::class,
         RootCommand::class,
