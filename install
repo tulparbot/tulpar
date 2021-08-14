@@ -1,0 +1,204 @@
+#!/bin/php
+<?php
+
+use JetBrains\PhpStorm\NoReturn;
+
+if (!function_exists('is_cli')) {
+    function is_cli(): bool
+    {
+        return php_sapi_name() === 'cli';
+    }
+}
+
+if (!function_exists('is_windows')) {
+    function is_windows(): bool
+    {
+        return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
+    }
+}
+
+if (!function_exists('rmdir_recursive')) {
+    function rmdir_recursive(string $directory): bool
+    {
+        $paths = array_diff(scandir($directory), ['.', '..']);
+        foreach ($paths as $path) {
+            if (is_dir($directory . '/' . $path)) {
+                rmdir_recursive($directory . '/' . $path);
+            }
+            else {
+                unlink($directory . '/' . $path);
+            }
+        }
+
+        return rmdir($directory);
+    }
+}
+
+if (!function_exists('clear_dir')) {
+    function clear_dir(string $directory, array $exceptions = []): void
+    {
+        $exceptions[] = '.';
+        $exceptions[] = '..';
+        $exceptions[] = '.gitignore';
+        $exceptions[] = '.gitkeep';
+
+        foreach (scandir($directory) as $path) {
+            if (!in_array($path, $exceptions)) {
+                $path = realpath($directory . DIRECTORY_SEPARATOR . $path);
+                if (is_dir($path)) {
+                    rmdir_recursive($path);
+                }
+                else {
+                    unlink($path);
+                }
+            }
+        }
+    }
+}
+
+if (!function_exists('error')) {
+    #[NoReturn] function error(string $text): void
+    {
+        print PHP_EOL . '!!! ERR: ' . $text . ' !!!' . PHP_EOL;
+        exit;
+    }
+}
+
+if (!function_exists('line')) {
+    function line(string $text): string
+    {
+        return print date('d-m-Y H:i:s') . ' >> ' . $text . PHP_EOL;
+    }
+}
+
+if (!function_exists('update_env')) {
+    function update_env(string $env, array $values): string
+    {
+        foreach ($values as $key => $value) {
+            if ($key == 'APP_URL') {
+                $env = str_replace($key . '=http://localhost', $key . '="' . $value . '"', $env);
+                continue;
+            }
+
+            if ($key == 'TULPAR_COMMAND_PREFIX') {
+                $env = str_replace($key . '="!"', $key . '="' . $value . '"', $env);
+                continue;
+            }
+
+            $env = str_replace($key . '=', $key . '="' . $value . '"', $env);
+        }
+
+        return $env;
+    }
+}
+
+if (!is_cli()) {
+    echo 'This script can be only run in CLI mode !!!';
+    exit;
+}
+
+line('Installation is starting...');
+
+$executables = [
+    'composer' => null,
+    'npm' => null,
+    'ffmpeg' => null,
+];
+
+line('Checking required executables...');
+
+foreach ($executables as $executable => $path) {
+    $_ = exec((is_windows() ? 'where' : 'which') . ' ' . $executable);
+    if (mb_strlen($_) > 0) {
+        $executables[$executable] = $_;
+    }
+    else {
+        error('Required application is not installed on this os: ' . $executable);
+    }
+}
+
+line('Clearing filesystem...');
+
+foreach ([
+             'bootstrap/cache',
+             'storage/app/music',
+             'storage/app/public',
+             'storage/framework/cache/data',
+             'storage/framework/sessions',
+             'storage/framework/testing',
+             'storage/framework/views',
+             'storage/logs',
+             'storage/tmp',
+         ] as $path) {
+    line('Clearing ./' . $path);
+    clear_dir(__DIR__ . '/' . $path);
+}
+
+line('Deleting: ./vendor');
+if (is_dir(__DIR__ . '/vendor')) {
+    rmdir_recursive(__DIR__ . '/vendor');
+}
+
+line('Deleting: ./node_modules');
+if (is_dir(__DIR__ . '/vendor')) {
+    rmdir_recursive(__DIR__ . '/vendor');
+}
+
+foreach ([
+             'storage/administrators.dat',
+             '.env',
+             'composer.lock',
+             'package-lock.json',
+         ] as $path) {
+    line('Deleting: ./' . $path);
+    if (file_exists(__DIR__ . '/' . $path)) {
+        unlink(__DIR__ . '/' . $path);
+    }
+}
+
+foreach ([
+             'composer install --no-cache --no-dev --optimize-autoloader',
+             'npm install',
+             'npm run prod',
+             (is_windows() ? 'copy' : 'cp') . ' .env.example .env',
+         ] as $command) {
+    line('Executing: ' . $command);
+    shell_exec($command);
+}
+
+
+$values = [
+    'APP_URL' => null,
+    'DISCORD_TOKEN' => null,
+    'DISCORD_PUBLIC_KEY' => null,
+    'DISCORD_CLIENT_ID' => null,
+    'DISCORD_CLIENT_SECRET' => null,
+    'YOUTUBE_API_KEY' => null,
+    'TULPAR_COMMAND_PREFIX' => null,
+    'TULPAR_SERVER_ID' => null,
+    'TULPAR_CHANNEL_LOG' => null,
+    'TULPAR_CHANNEL_MODERATION' => null,
+];
+
+foreach ($values as $key => $value) {
+    $values[$key] = readline(mb_strtoupper($key) . ' = ');
+}
+
+file_put_contents(__DIR__ . '/.env', update_env(file_get_contents(__DIR__ . '/.env.example'), $values));
+
+foreach ([
+             'php tulpar key:generate',
+             'php tulpar migrate:fresh',
+             'php tulpar cache:clear',
+             'php tulpar optimize',
+         ] as $command) {
+    line('Executing: ' . $command);
+    shell_exec($command);
+}
+
+line('OK');
+line('');
+line('Installation successfully completed.');
+line('Run command to start web server:  php tulpar serve');
+line('Run command to start bot:         php tulpar run');
+line('');
