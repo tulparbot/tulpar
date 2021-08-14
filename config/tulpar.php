@@ -3,6 +3,7 @@
 use App\Tulpar\Commands\Authorization\RegisterCommand;
 use App\Tulpar\Commands\Authorization\RootCommand;
 use App\Tulpar\Commands\Authorization\WhoamiCommand;
+use App\Tulpar\Commands\Chat\AnnounceCommand;
 use App\Tulpar\Commands\Chat\ClearChannelCommand;
 use App\Tulpar\Commands\Chat\EmoticonsCommand;
 use App\Tulpar\Commands\Chat\HelloCommand;
@@ -151,6 +152,7 @@ return [
         RankCommand::class,
         PrefixCommand::class,
         GiveawayCommand::class,
+        AnnounceCommand::class,
     ],
 
     /*
