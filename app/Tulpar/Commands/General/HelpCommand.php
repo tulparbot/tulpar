@@ -62,16 +62,16 @@ class HelpCommand extends BaseCommand implements CommandInterface
                         if ((new $command($this->message, $this->discord))->checkAccess()) {
                             if (mb_strlen($command::getUsages()) > 0) {
                                 $embed = new Embed($this->discord);
-                                $embed->setAuthor(Tulpar::getPrefix() . $command::getCommand(), $this->discord->user->getAvatarAttribute());
+                                $embed->setAuthor(Tulpar::getPrefix($this->message->guild_id) . $command::getCommand(), $this->discord->user->getAvatarAttribute());
                                 $embed->setThumbnail($this->message->user->avatar);
 
                                 $content = '';
                                 foreach ($command::$usages as $usage) {
                                     if (mb_strlen($usage) > 0) {
-                                        $content .= Helpers::line(Tulpar::getPrefix() . $command::getCommand() . ' ' . $usage) . PHP_EOL;
+                                        $content .= Helpers::line(Tulpar::getPrefix($this->message->guild_id) . $command::getCommand() . ' ' . $usage) . PHP_EOL;
                                     }
                                     else {
-                                        $content .= Helpers::line(Tulpar::getPrefix() . $command::getCommand()) . PHP_EOL;
+                                        $content .= Helpers::line(Tulpar::getPrefix($this->message->guild_id) . $command::getCommand()) . PHP_EOL;
                                     }
                                 }
 
