@@ -16,6 +16,7 @@ use App\Tulpar\Commands\General\AboutCommand;
 use App\Tulpar\Commands\General\AboutServerCommand;
 use App\Tulpar\Commands\General\AboutUserCommand;
 use App\Tulpar\Commands\General\BugCommand;
+use App\Tulpar\Commands\General\GiveawayCommand;
 use App\Tulpar\Commands\General\HelpCommand;
 use App\Tulpar\Commands\General\InviteCommand;
 use App\Tulpar\Commands\General\PingCommand;
@@ -149,6 +150,7 @@ return [
 
         RankCommand::class,
         PrefixCommand::class,
+        GiveawayCommand::class,
     ],
 
     /*
