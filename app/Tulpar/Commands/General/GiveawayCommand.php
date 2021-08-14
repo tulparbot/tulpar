@@ -52,7 +52,7 @@ class GiveawayCommand extends BaseCommand implements CommandInterface
                 Tulpar::getInstance()->getDiscord()->getLoop()->cancelTimer($timer);
                 $winners = [];
 
-                if (array_key_exists($message->id, static::$votes)) {
+                if (array_key_exists($message->id, static::$votes) && count(static::$votes) > 0) {
                     $winners[] = static::$votes[$message->id][array_rand(static::$votes[$message->id])];
                 }
 
