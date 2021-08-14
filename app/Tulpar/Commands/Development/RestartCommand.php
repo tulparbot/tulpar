@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Tulpar\Commands\Management;
+namespace App\Tulpar\Commands\Development;
 
 
 use App\Console\Commands\RunCommand;
