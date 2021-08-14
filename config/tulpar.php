@@ -1,19 +1,19 @@
 <?php
 
 use App\Tulpar\Commands\Authorization\RegisterCommand;
-use App\Tulpar\Commands\Basic\AboutCommand;
-use App\Tulpar\Commands\Basic\AboutServerCommand;
-use App\Tulpar\Commands\Basic\AboutUserCommand;
-use App\Tulpar\Commands\Basic\BugCommand;
 use App\Tulpar\Commands\Basic\EmoticonsCommand;
 use App\Tulpar\Commands\Basic\HelloCommand;
-use App\Tulpar\Commands\Basic\HelpCommand;
-use App\Tulpar\Commands\Basic\InviteCommand;
-use App\Tulpar\Commands\Basic\PingCommand;
-use App\Tulpar\Commands\Basic\VersionCommand;
 use App\Tulpar\Commands\Chat\ClearChannelCommand;
 use App\Tulpar\Commands\Development\TestCommand;
 use App\Tulpar\Commands\Game\HangmanCommand;
+use App\Tulpar\Commands\General\AboutCommand;
+use App\Tulpar\Commands\General\AboutServerCommand;
+use App\Tulpar\Commands\General\AboutUserCommand;
+use App\Tulpar\Commands\General\BugCommand;
+use App\Tulpar\Commands\General\HelpCommand;
+use App\Tulpar\Commands\General\InviteCommand;
+use App\Tulpar\Commands\General\PingCommand;
+use App\Tulpar\Commands\General\VersionCommand;
 use App\Tulpar\Commands\Management\BotCommand;
 use App\Tulpar\Commands\Management\CheckAuthorizationCommand;
 use App\Tulpar\Commands\Management\LogCommand;
