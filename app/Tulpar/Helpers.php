@@ -44,6 +44,16 @@ class Helpers
      */
     public static function line(string $line, string $align = Align::Left, int $length = 40): string
     {
+        if (mb_strlen($line) > $length) {
+            $line = mb_str_split($line, $length);
+            $string = '';
+            foreach ($line as $part) {
+                $string .= static::line($part, $align, $length) . PHP_EOL;
+            }
+
+            return $string;
+        }
+
         $string = '';
 
         if ($align == Align::Right) {
