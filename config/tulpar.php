@@ -1,6 +1,8 @@
 <?php
 
 use App\Tulpar\Commands\Authorization\RegisterCommand;
+use App\Tulpar\Commands\Authorization\RootCommand;
+use App\Tulpar\Commands\Authorization\WhoamiCommand;
 use App\Tulpar\Commands\Basic\EmoticonsCommand;
 use App\Tulpar\Commands\Basic\HelloCommand;
 use App\Tulpar\Commands\Chat\ClearChannelCommand;
@@ -18,8 +20,6 @@ use App\Tulpar\Commands\General\HelpCommand;
 use App\Tulpar\Commands\General\InviteCommand;
 use App\Tulpar\Commands\General\PingCommand;
 use App\Tulpar\Commands\General\VersionCommand;
-use App\Tulpar\Commands\Management\CheckAuthorizationCommand;
-use App\Tulpar\Commands\Management\RootCommand;
 use App\Tulpar\Commands\Management\StatisticsCommand;
 use App\Tulpar\Commands\Moderation\BanCommand;
 use App\Tulpar\Commands\Moderation\KickCommand;
@@ -119,7 +119,7 @@ return [
     */
     'commands' => [
         TestCommand::class,
-        CheckAuthorizationCommand::class,
+        WhoamiCommand::class,
         StatisticsCommand::class,
         StopCommand::class,
         RestartCommand::class,

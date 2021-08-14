@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Tulpar\Commands\Management;
+namespace App\Tulpar\Commands\Authorization;
 
 
 use App\Enums\CommandCategory;
@@ -10,7 +10,7 @@ use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Guard;
 use Discord\Parts\User\Member;
 
-class CheckAuthorizationCommand extends BaseCommand implements CommandInterface
+class WhoamiCommand extends BaseCommand implements CommandInterface
 {
     public static string $command = 'whoami';
 

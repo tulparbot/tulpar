@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Tulpar\Commands\Management;
+namespace App\Tulpar\Commands\Authorization;
 
 
 use App\Enums\CommandCategory;
