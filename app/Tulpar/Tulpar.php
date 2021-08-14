@@ -4,6 +4,7 @@
 namespace App\Tulpar;
 
 
+use App\Models\ServerPrefix;
 use App\Tulpar\Events;
 use Discord\Discord;
 use Discord\Exceptions\IntentException;
@@ -56,10 +57,22 @@ class Tulpar
     }
 
     /**
+     * @param Guild|string|null $guild
      * @return string
      */
-    public static function getPrefix(): string
+    public static function getPrefix(Guild|string|null $guild = null): string
     {
+        if ($guild != null) {
+            if ($guild instanceof Guild) {
+                $guild = $guild->id;
+            }
+
+            $prefix = ServerPrefix::where('guild_id', $guild)->first();
+            if ($prefix != null && $prefix->prefix != '') {
+                return $prefix->prefix;
+            }
+        }
+
         return config('tulpar.command.prefix', '!');
     }
 

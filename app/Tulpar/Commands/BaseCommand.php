@@ -142,7 +142,7 @@ HELP;
         public Discord $discord,
     )
     {
-        $this->userCommand = new Strargs(substr($this->message->content, mb_strlen(Tulpar::getPrefix())));
+        $this->userCommand = new Strargs(substr($this->message->content, mb_strlen(Tulpar::getPrefix($this->message->guild_id))));
         $this->userCommand->decode();
     }
 
@@ -186,7 +186,7 @@ HELP;
      */
     public function check(): string
     {
-        if (str_starts_with($this->message->content, Tulpar::getPrefix())) {
+        if (str_starts_with($this->message->content, Tulpar::getPrefix($this->message->guild_id))) {
             if (mb_strtolower($this->userCommand->getCommand()) == mb_strtolower(static::getCommand())) {
 
                 if ($this->message->channel->is_private && static::$allowPm === false) {

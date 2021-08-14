@@ -130,9 +130,11 @@ class CreateEvent
             return;
         }
 
+        $prefix = Tulpar::getPrefix($message->guild_id);
         static::flushCommandHistory();
 
-        if (str_starts_with($message->content, Tulpar::getPrefix()) && mb_strlen($message->content) > mb_strlen(Tulpar::getPrefix())) {
+        // Execute commands.
+        if (str_starts_with($message->content, $prefix) && mb_strlen($message->content) > mb_strlen($prefix)) {
             static::addHistory($message);
 
             if (static::isRateLimited($message->guild_id, $message->channel)) {
@@ -171,10 +173,9 @@ class CreateEvent
             }
 
             if (isset(static::$commandHistory[$message->id]) && static::$commandHistory[$message->id]?->check == CommandValidation::NotCommand) {
-                $customCommand = CustomCommand::find($message->guild_id, mb_substr($message->content, mb_strlen(Tulpar::getPrefix())));
+                $customCommand = CustomCommand::find($message->guild_id, mb_substr($message->content, mb_strlen($prefix)));
 
                 if ($customCommand == null) {
-                    Log::notice('Unknown command requested: "' . $message->content . '"');
                     if (config('tulpar.command.unknown_alert') == true) {
                         $message->reply('Sorry unknown command requested. :(');
                     }
@@ -183,34 +184,13 @@ class CreateEvent
                     $customCommand->execute($message, $discord);
                 }
             }
-        }
-        else {
-            /** @var FilterInterface $filter */
-            foreach (config('tulpar.filters', []) as $filter) {
-                if ((new $filter($message, $discord))->run() === null) {
-                    return;
-                }
-            }
 
-            $autoResponses = AutoResponse::where('guild_id', $message->guild_id)->get();
-            foreach ($autoResponses as $autoResponse) {
-                if (mb_strtolower($message->content) == mb_strtolower($autoResponse->message)) {
-                    if (mb_strlen($autoResponse->reply) > 0) {
-                        $message->reply($autoResponse->reply);
-                    }
-
-                    if (mb_strlen($autoResponse->emoji) > 0) {
-                        $message->react($autoResponse->emoji);
-                    }
-
-                    break;
-                }
-            }
+            return;
         }
 
         // Send emoji if message contains bot name.
         if (str_contains(mb_strtolower($message->content), mb_strtolower(config('app.name'))) || str_contains(mb_strtolower($message->content), mb_strtolower($discord->id))) {
-            Log::debug('The command contains bot name. ' . config('app.name'));
+            // Log::debug('The command contains bot name. ' . config('app.name'));
             $message->react('💖')->otherwise(function ($exception) {
                 Log::error($exception);
             });
@@ -221,6 +201,30 @@ class CreateEvent
             $userRank = UserRank::find($message->guild_id, $message->user_id);
             $userRank->increment('message_count');
             $userRank->save();
+        }
+
+        // Execute message filters.
+        /** @var FilterInterface $filter */
+        foreach (config('tulpar.filters', []) as $filter) {
+            if ((new $filter($message, $discord))->run() === null) {
+                return;
+            }
+        }
+
+        // Execute auto responses.
+        $autoResponses = AutoResponse::where('guild_id', $message->guild_id)->get();
+        foreach ($autoResponses as $autoResponse) {
+            if (mb_strtolower($message->content) == mb_strtolower($autoResponse->message)) {
+                if (mb_strlen($autoResponse->reply) > 0) {
+                    $message->reply($autoResponse->reply);
+                }
+
+                if (mb_strlen($autoResponse->emoji) > 0) {
+                    $message->react($autoResponse->emoji);
+                }
+
+                break;
+            }
         }
     }
 }
