@@ -5,6 +5,7 @@ namespace App\Tulpar\Commands\General;
 
 
 use App\Enums\CommandCategory;
+use App\Models\UserRank;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Helpers;
@@ -54,6 +55,11 @@ class AboutUserCommand extends BaseCommand implements CommandInterface
 
         $embed->addFieldValues('Joined At', $joined_at->shortRelativeToNowDiffForHumans(), true);
         $embed->addFieldValues('Registered At', Carbon::createFromTimestamp($registered_at)->shortRelativeToNowDiffForHumans(), true);
+        $embed->addFieldValues('Rank', 0, true);
+
+        $embed->addFieldValues('Messages in ````' . $this->message->guild->name . '````', ($rank = UserRank::find($this->message->guild_id, $this->message->user_id))->message_count, true);
+        $embed->addFieldValues('Messages in ````#' . $this->message->channel->name . '````', $rank->getChannelMessageCount($this->message->channel_id), true);
+
         $embed->addFieldValues('Roles [' . count($roles) . ']', implode(' ', $roles), false);
 
         $this->message->channel->sendEmbed($embed);

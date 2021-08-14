@@ -200,6 +200,9 @@ class CreateEvent
         if (!$message->channel->is_private) {
             $userRank = UserRank::find($message->guild_id, $message->user_id);
             $userRank->increment('message_count');
+            $userRank
+                ->incrementGuildMessages($message->guild_id)
+                ->incrementChannelMessages($message->channel_id);
             $userRank->save();
         }
 
