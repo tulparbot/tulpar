@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Tulpar\Commands\Basic;
+namespace App\Tulpar\Commands\Chat;
 
 
 use App\Enums\CommandCategory;
