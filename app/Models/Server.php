@@ -40,6 +40,7 @@ class Server extends Model
         'bans',
         'emojis',
         'joined_at',
+        'log_channel',
     ];
 
     protected $dates = [
@@ -47,7 +48,7 @@ class Server extends Model
     ];
 
     protected $appends = [
-        'short_name'
+        'short_name',
     ];
 
     public function getShortNameAttribute(): string
