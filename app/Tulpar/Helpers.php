@@ -31,7 +31,7 @@ class Helpers
         try {
             return $callable(...$arguments);
         } catch (Exception $exception) {
-            Log::error($exception->getTraceAsString());
+            Log::error($exception);
             return $exception;
         }
     }

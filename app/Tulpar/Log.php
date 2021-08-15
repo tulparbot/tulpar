@@ -76,15 +76,13 @@ class Log
         static::log('debug', $message, $context);
     }
 
-    public static function log($level, $message, array $context = [])
+    public static function discordLog($level, $message, array $context = [])
     {
-        if (mb_strlen($message) < 1) {
-            return;
-        }
-
-        FacadesLog::log($level, $message, $context);
-
         try {
+            if ($message instanceof Exception) {
+                $message = ('File: ' . $message->getFile() . ' Code: ' . $message->getCode() . ' Line: ' . $message->getLine() . ' Message: ' . $message->getMessage());
+            }
+
             $channel = static::getChannel();
             if ($channel !== false) {
                 if (!Tulpar::getInstance()->checkPermission($channel->guild, 'administrator', true)) {
@@ -108,8 +106,21 @@ class Log
                 }
             }
         } catch (Exception $exception) {
-            FacadesLog::critical($exception->getTraceAsString());
+            FacadesLog::critical($exception->getMessage() . PHP_EOL . $exception->getTraceAsString());
             static::consoleLog('ERR', 'CANNOT SEND MESSAGE TO LOG CHANNEL SEE LOG FILE TO DETAILS');
         }
+    }
+
+    public static function log($level, $message, array $context = [])
+    {
+        if ($message instanceof Exception) {
+            FacadesLog::critical($message->getTraceAsString());
+        }
+        else if (mb_strlen($message) < 1) {
+            return;
+        }
+
+        static::discordLog($level, $message, $context);
+        FacadesLog::log($level, $message, $context);
     }
 }
