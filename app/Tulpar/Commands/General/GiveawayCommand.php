@@ -28,14 +28,55 @@ class GiveawayCommand extends BaseCommand implements CommandInterface
     public static array $usages = [
         '"giveaway title"',
         '"giveaway title" "+3 days"',
+        'message-id --re',
     ];
 
     public static array $requires = [0];
 
     public static array $votes = [];
 
+    public function giveaway(Message $message)
+    {
+        $winners = [];
+
+        if (isset(static::$votes[$message->id]) && count(static::$votes) > 0 && count(static::$votes[$message->id]) > 0) {
+            $winners[] = static::$votes[$message->id][array_rand(static::$votes[$message->id])];
+        }
+
+        $winners = collect($winners)->unique()->filter(function ($value) {
+            return !$this->message->guild->members->get('id', $value)->user->bot;
+        });
+
+        if ($winners->count() > 0) {
+            $builder = new MessageBuilder();
+            $builder->setContent('Winners:');
+            $builder->setReplyTo($message);
+            $embed = new Embed($this->discord);
+            $embed->setAuthor('Winner!');
+            $embed->setDescription(Helpers::userTag($winners[0]));
+            $builder->addEmbed($embed);
+            $message->channel->sendMessage($builder);
+            return;
+        }
+
+        $message->reply('Nobody won the lottery.');
+    }
+
     public function run(): void
     {
+        if ($this->userCommand->hasFlag('re')) {
+            if (!$this->userCommand->hasArgument(0)) {
+                $this->message->reply(static::getHelp());
+                return;
+            }
+
+            $this->message->channel->messages->fetch($this->userCommand->getArgument(0))->done(function (Message $message) {
+                $this->giveaway($message);
+            });
+
+            return;
+        }
+
         $title = $this->userCommand->getArgument(0);
         $duration = Carbon::make($this->userCommand->getArgument(1) ?? '+10 minutes');
         $emoji = '🎉';
@@ -50,29 +91,7 @@ class GiveawayCommand extends BaseCommand implements CommandInterface
 
             Tulpar::getInstance()->getDiscord()->getLoop()->addTimer($duration->diffInSeconds() + 1, function (Timer $timer) use ($message, $duration) {
                 Tulpar::getInstance()->getDiscord()->getLoop()->cancelTimer($timer);
-                $winners = [];
-
-                if (array_key_exists($message->id, static::$votes) && count(static::$votes) > 0) {
-                    $winners[] = static::$votes[$message->id][array_rand(static::$votes[$message->id])];
-                }
-
-                $winners = collect($winners)->unique()->filter(function ($value) {
-                    return !$this->message->guild->members->get('id', $value)->user->bot;
-                });
-
-                if ($winners->count() > 0) {
-                    $builder = new MessageBuilder();
-                    $builder->setContent('Winners:');
-                    $builder->setReplyTo($message);
-                    $embed = new Embed($this->discord);
-                    $embed->setAuthor('Winner!');
-                    $embed->setDescription(Helpers::userTag($winners[0]));
-                    $builder->addEmbed($embed);
-                    $message->channel->sendMessage($builder);
-                    return;
-                }
-
-                $message->reply('Nobody won the lottery.');
+                $this->giveaway($message);
             });
         });
     }
