@@ -13,6 +13,7 @@ use App\Tulpar\Commands\Development\RestartCommand;
 use App\Tulpar\Commands\Development\StopCommand;
 use App\Tulpar\Commands\Development\TestCommand;
 use App\Tulpar\Commands\Game\HangmanCommand;
+use App\Tulpar\Commands\Game\HeadsTailsCommand;
 use App\Tulpar\Commands\General\AboutCommand;
 use App\Tulpar\Commands\General\AboutServerCommand;
 use App\Tulpar\Commands\General\AboutUserCommand;
@@ -153,6 +154,8 @@ return [
         PrefixCommand::class,
         GiveawayCommand::class,
         AnnounceCommand::class,
+
+        HeadsTailsCommand::class,
     ],
 
     /*
