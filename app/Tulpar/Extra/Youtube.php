@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tulpar;
+namespace App\Tulpar\Extra;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
