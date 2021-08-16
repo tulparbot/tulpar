@@ -4,8 +4,6 @@ namespace App\Console\Commands;
 
 use App\Tulpar\Tulpar;
 use Discord\Exceptions\IntentException;
-use Discord\Slash\Parts\Choices;
-use Discord\Slash\Parts\Interaction;
 use Discord\WebSockets\Intents;
 use Exception;
 use Illuminate\Console\Command;
@@ -45,37 +43,46 @@ class RunCommand extends Command
      */
     public function handle(): int
     {
+        $this->info('Waiting before starting application...');
+        $this->info('Tulpar Discord Bot: Developed by https://github.com/isaeken THX.');
+        sleep(3);
+
+        $this->info((static::$restartReceived ? 'Restarting' : 'Starting') . '...');
+
         while (static::$restartReceived) {
             static::$restartReceived = false;
 
             try {
                 $this->makeInstance();
+
+                $this->info('Starting bot...');
                 static::$instance->run($this->getOutput());
+
+                $this->info('Stopping bot...');
                 static::$instance->stop();
+
+                $this->info('Bot stopped.');
             } catch (IntentException | Exception $exception) {
                 $this->error($exception);
                 static::$restartReceived = true;
             }
         }
 
+        $this->info('Developed by https://github.com/isaeken THX');
         return CommandAlias::SUCCESS;
     }
 
-    /**
-     * @throws IntentException
-     */
     public function makeInstance(): void
     {
+        $this->info('Creating instance...');
         static::$instance = Tulpar::newInstance();
+
+        $this->info('Setting Discord Token...');
         static::$instance->options['token'] = (string)config('discord.token');
+
+        $this->info('Setting intents...');
         static::$instance->options['loadAllMembers'] = true;
         static::$instance->options['intents'] = Intents::getAllIntents();
-
-        foreach (config('tulpar.timers') ?? [] as $interval => $timers) {
-            foreach ($timers as $timer) {
-                static::$instance->getDiscord()->getLoop()->addPeriodicTimer($interval, [$timer, 'run']);
-            }
-        }
     }
 
     /**

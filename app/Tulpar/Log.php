@@ -7,6 +7,7 @@ namespace App\Tulpar;
 use Discord\Parts\Channel\Channel;
 use Discord\Parts\Channel\Message;
 use Exception;
+use Illuminate\Console\OutputStyle;
 use Illuminate\Support\Facades\Log as FacadesLog;
 
 class Log
@@ -36,44 +37,44 @@ class Log
         echo PHP_EOL . PHP_EOL . '!!! ' . $level . ': ' . $text . ' !!!' . PHP_EOL . PHP_EOL;
     }
 
-    public static function emergency($message, array $context = [])
+    public static function emergency($message, array $context = [], OutputStyle|null $output = null)
     {
-        static::log('emergency', $message, $context);
+        static::log('emergency', $message, $context, $output);
     }
 
-    public static function alert($message, array $context = [])
+    public static function alert($message, array $context = [], OutputStyle|null $output = null)
     {
-        static::log('alert', $message, $context);
+        static::log('alert', $message, $context, $output);
     }
 
-    public static function critical($message, array $context = [])
+    public static function critical($message, array $context = [], OutputStyle|null $output = null)
     {
-        static::log('critical', $message, $context);
+        static::log('critical', $message, $context, $output);
     }
 
-    public static function error($message, array $context = [])
+    public static function error($message, array $context = [], OutputStyle|null $output = null)
     {
-        static::log('error', $message, $context);
+        static::log('error', $message, $context, $output);
     }
 
-    public static function warning($message, array $context = [])
+    public static function warning($message, array $context = [], OutputStyle|null $output = null)
     {
-        static::log('warning', $message, $context);
+        static::log('warning', $message, $context, $output);
     }
 
-    public static function notice($message, array $context = [])
+    public static function notice($message, array $context = [], OutputStyle|null $output = null)
     {
-        static::log('notice', $message, $context);
+        static::log('notice', $message, $context, $output);
     }
 
-    public static function info($message, array $context = [])
+    public static function info($message, array $context = [], OutputStyle|null $output = null)
     {
-        static::log('info', $message, $context);
+        static::log('info', $message, $context, $output);
     }
 
-    public static function debug($message, array $context = [])
+    public static function debug($message, array $context = [], OutputStyle|null $output = null)
     {
-        static::log('debug', $message, $context);
+        static::log('debug', $message, $context, $output);
     }
 
     public static function discordLog($level, $message, array $context = [])
@@ -111,7 +112,7 @@ class Log
         }
     }
 
-    public static function log($level, $message, array $context = [])
+    public static function log($level, $message, array $context = [], OutputStyle|null $output = null)
     {
         if ($message instanceof Exception) {
             FacadesLog::critical($message->getTraceAsString());
@@ -122,5 +123,11 @@ class Log
 
         static::discordLog($level, $message, $context);
         FacadesLog::log($level, $message, $context);
+
+        if ($output == null) {
+            $output = Tulpar::getInstance()->output;
+        }
+        
+        $output->info($level . ': ' . ($message instanceof Exception ? $message->getMessage() : $message));
     }
 }

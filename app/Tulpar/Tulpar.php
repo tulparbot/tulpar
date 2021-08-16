@@ -22,6 +22,11 @@ use Illuminate\Support\Facades\Cache;
 class Tulpar
 {
     /**
+     * @var array $voiceChannels
+     */
+    public static array $voiceChannels = [];
+
+    /**
      * @var Tulpar|null $instance
      */
     private static Tulpar|null $instance = null;
@@ -32,9 +37,19 @@ class Tulpar
     private static object|null $composer = null;
 
     /**
-     * @var array $voiceChannels
+     * @var array $options
      */
-    public static array $voiceChannels = [];
+    public array $options = [];
+
+    /**
+     * @var OutputStyle|null $output
+     */
+    public OutputStyle|null $output = null;
+
+    /**
+     * @var Discord|null $discord
+     */
+    private Discord|null $discord = null;
 
     /**
      * @return Tulpar
@@ -54,6 +69,14 @@ class Tulpar
     public static function newInstance(): Tulpar
     {
         return static::$instance = new static;
+    }
+
+    /**
+     * @return OutputStyle|null
+     */
+    public static function getOutput(): OutputStyle|null
+    {
+        return static::getInstance()->output;
     }
 
     /**
@@ -77,6 +100,21 @@ class Tulpar
     }
 
     /**
+     * @return string
+     */
+    public static function getVersion(): string
+    {
+        $version = null;
+        try {
+            $version = static::getComposer()?->version;
+        } catch (Exception $exception) {
+            // ...
+        }
+
+        return $version ?? 'unreleased';
+    }
+
+    /**
      * @return object
      * @throws FileNotFoundException
      */
@@ -94,29 +132,13 @@ class Tulpar
     }
 
     /**
-     * @return string
+     * @return Channel|null
+     * @throws IntentException
      */
-    public static function getVersion(): string
+    public function getLogChannel(): Channel|null
     {
-        $version = null;
-        try {
-            $version = static::getComposer()?->version;
-        } catch (Exception $exception) {
-            // ...
-        }
-
-        return $version ?? 'unreleased';
+        return $this->getDiscord()->getChannel(config('tulpar.server.channel.log')) ?? null;
     }
-
-    /**
-     * @var Discord|null $discord
-     */
-    private Discord|null $discord = null;
-
-    /**
-     * @var array $options
-     */
-    public array $options = [];
 
     /**
      * @return Discord
@@ -132,12 +154,34 @@ class Tulpar
     }
 
     /**
-     * @return Channel|null
+     * @param Guild|string $guild
+     * @param bool         $fresh
+     * @return bool
      * @throws IntentException
      */
-    public function getLogChannel(): Channel|null
+    public function checkPermissions(Guild|string $guild, bool $fresh = false): bool
     {
-        return $this->getDiscord()->getChannel(config('tulpar.server.channel.log')) ?? null;
+        $permissions = config('tulpar.guild.permissions', []);
+
+        foreach ($permissions as $permission) {
+            if (!$this->checkPermission($guild, $permission, $fresh)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param Guild|string $guild
+     * @param string       $permission
+     * @param bool         $fresh
+     * @return bool
+     * @throws IntentException
+     */
+    public function checkPermission(Guild|string $guild, string $permission, bool $fresh = false): bool
+    {
+        return $this->getPermissions($guild, $fresh)?->{$permission} === true;
     }
 
     /**
@@ -175,44 +219,26 @@ class Tulpar
     }
 
     /**
-     * @param Guild|string $guild
-     * @param string       $permission
-     * @param bool         $fresh
-     * @return bool
-     * @throws IntentException
-     */
-    public function checkPermission(Guild|string $guild, string $permission, bool $fresh = false): bool
-    {
-        return $this->getPermissions($guild, $fresh)?->{$permission} === true;
-    }
-
-    /**
-     * @param Guild|string $guild
-     * @param bool         $fresh
-     * @return bool
-     * @throws IntentException
-     */
-    public function checkPermissions(Guild|string $guild, bool $fresh = false): bool
-    {
-        $permissions = config('tulpar.guild.permissions', []);
-
-        foreach ($permissions as $permission) {
-            if (!$this->checkPermission($guild, $permission, $fresh)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * @param OutputStyle $output
      * @throws IntentException
      */
     public function run(OutputStyle $output)
     {
+        $this->output = $output;
+
         $this->getDiscord()->on('ready', function (Discord $discord) use ($output) {
-            Log::debug('Events are registering...');
+            Log::debug('Registering timers...');
+            $timerCount = 0;
+            foreach (config('tulpar.timers') ?? [] as $interval => $timers) {
+                foreach ($timers as $timer) {
+                    $timerCount++;
+                    Log::debug('Registered timer: ' . $interval . ' => ' . $timer);
+                    $this->getDiscord()->getLoop()->addPeriodicTimer($interval, [$timer, 'run']);
+                }
+            }
+            Log::debug('Registered ' . $timerCount . ' timers.');
+
+            Log::debug('Registering events...');
 
             // General
             $discord->on(Event::RESUMED, new Events\General\ResumedEvent);
@@ -264,13 +290,12 @@ class Tulpar
 
             // Ready
 
-            Log::info('Connected and ready.');
-            $output->info('Connected and ready.');
+            Log::info('Events registered.');
         });
 
-        $output->info('Starting bot...');
-
+        $output->info('Starting bot loop...');
         $this->getDiscord()->run();
+        $output->info('Bot loop stopped.');
     }
 
     /**
@@ -278,6 +303,8 @@ class Tulpar
      */
     public function stop(): void
     {
+        $this->output->info('Stopping bot loop...');
         $this->getDiscord()->close(true);
+        $this->output->info('Bot loop stopped.');
     }
 }
