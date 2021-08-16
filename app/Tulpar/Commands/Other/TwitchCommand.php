@@ -31,6 +31,10 @@ class TwitchCommand extends BaseCommand implements CommandInterface
 
     public static array $requires = [0];
 
+    public static array $usages = [
+        'username',
+    ];
+
     public function run(): void
     {
         if (TwitchConnection::findToken($this->message->user_id) == null) {

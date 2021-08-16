@@ -8,6 +8,7 @@ use App\Enums\CommandCategory;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Dialog;
+use App\Tulpar\Guard;
 use App\Tulpar\Tulpar;
 use Discord\Parts\Interactions\Interaction;
 
@@ -30,8 +31,16 @@ class StopCommand extends BaseCommand implements CommandInterface
     public function run(): void
     {
         $this->message->channel->sendMessage((Dialog::confirm('Are you sure to stop ' . config('app.name') . '?', listenerNo: function (Interaction $interaction) {
+            if (!Guard::isRoot($interaction->member)) {
+                return;
+            }
+            
             $interaction->message->delete();
         }, listenerYes: function (Interaction $interaction) {
+            if (!Guard::isRoot($interaction->member)) {
+                return;
+            }
+
             $this->message->reply(config('app.name') . ' is stopping...')->done(function () {
                 Tulpar::getInstance()->stop();
             });
