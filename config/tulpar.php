@@ -22,6 +22,7 @@ use App\Tulpar\Commands\General\BugCommand;
 use App\Tulpar\Commands\General\GiveawayCommand;
 use App\Tulpar\Commands\General\HelpCommand;
 use App\Tulpar\Commands\General\InviteCommand;
+use App\Tulpar\Commands\General\MoveCommand;
 use App\Tulpar\Commands\General\PingCommand;
 use App\Tulpar\Commands\General\VersionCommand;
 use App\Tulpar\Commands\Management\PrefixCommand;
@@ -158,7 +159,7 @@ return [
 
         HeadsTailsCommand::class,
         ActivityCommand::class,
-        \App\Tulpar\Commands\General\MoveCommand::class,
+        MoveCommand::class,
     ],
 
     /*
