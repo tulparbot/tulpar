@@ -109,7 +109,7 @@ class RunCommand extends Command
                 });
             }
         });
-        static::$instance->getDiscord()->getLoop()->addPeriodicTimer(2, function () {
+        static::$instance->getDiscord()->getLoop()->addPeriodicTimer(30, function () {
             $activities = config('tulpar.activities');
 
             /** @var Activity $_ */
