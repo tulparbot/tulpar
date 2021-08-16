@@ -8,6 +8,7 @@ use App\Tulpar\Tulpar;
 use Discord\Exceptions\IntentException;
 use Discord\Parts\Channel\Channel;
 use Discord\Parts\Guild\Guild;
+use Discord\Parts\User\Activity;
 use Discord\Parts\User\Member;
 use Discord\Repository\Guild\MemberRepository;
 use Discord\Slash\Parts\Choices;
@@ -108,8 +109,12 @@ class RunCommand extends Command
                 });
             }
         });
-        static::$instance->getDiscord()->getLoop()->addPeriodicTimer(10, function () {
+        static::$instance->getDiscord()->getLoop()->addPeriodicTimer(2, function () {
+            $activities = config('tulpar.activities');
 
+            /** @var Activity $_ */
+            $_ = static::$instance->getDiscord()->factory(\Discord\Parts\User\Activity::class, $activities[array_rand($activities)]);
+            static::$instance->getDiscord()->updatePresence($_);
         });
     }
 
