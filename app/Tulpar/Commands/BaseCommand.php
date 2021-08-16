@@ -187,7 +187,10 @@ HELP;
     public function check(): string
     {
         if (str_starts_with($this->message->content, Tulpar::getPrefix($this->message->guild_id))) {
-            if (mb_strtolower($this->userCommand->getCommand()) == mb_strtolower(static::getCommand())) {
+            $baseCheck = mb_strtolower($this->userCommand->getCommand()) == mb_strtolower(static::getCommand());
+            $aliasCheck = in_array(mb_strtolower($this->userCommand->getCommand()), config('tulpar.aliases')[static::class]);
+
+            if ($baseCheck || $aliasCheck) {
 
                 if ($this->message->channel->is_private && static::$allowPm === false) {
                     return CommandValidation::NoAccess;

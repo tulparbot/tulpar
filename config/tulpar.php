@@ -160,6 +160,11 @@ return [
         ActivityCommand::class,
     ],
 
+    'aliases' => [
+        HelloCommand::class => ['merhaba', 'mrb', 'hi'],
+        HeadsTailsCommand::class => ['yazitura'],
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Activated filter classes
