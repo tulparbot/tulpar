@@ -8,7 +8,13 @@ use App\Console\Commands\RunCommand;
 use App\Enums\CommandCategory;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
+use App\Tulpar\Dialog;
 use App\Tulpar\Tulpar;
+use Discord\Builders\Components\Option;
+use Discord\Builders\Components\SelectMenu;
+use Discord\Builders\MessageBuilder;
+use Discord\Helpers\Collection;
+use Discord\Parts\Interactions\Interaction;
 
 class RestartCommand extends BaseCommand implements CommandInterface
 {
@@ -17,8 +23,6 @@ class RestartCommand extends BaseCommand implements CommandInterface
     public static string $description = 'Stop and terminate bot processes and restart.';
 
     public static array $permissions = ['root'];
-
-    public static array $usages = ['', '--reason="reason"', '--time=1'];
 
     public static bool $allowPm = true;
 
@@ -53,24 +57,30 @@ class RestartCommand extends BaseCommand implements CommandInterface
 
     public function run(): void
     {
-        $hard = $this->userCommand->hasFlag('hard');
-        $time = $this->userCommand->hasOption('time') ? intval($this->userCommand->getOption('time')) : 0;
-        $reason = $this->userCommand->hasOption('reason') ? $this->userCommand->getOption('reason') : '';
-        $message = config('app.name') . ' is restarting...';
+        $question = function (bool $hard) {
+            $this->message->channel->sendMessage((Dialog::confirm('Are you sure to restart ' . config('app.name') . '?', listenerNo: function (Interaction $interaction) {
+                $interaction->message->delete();
+            }, listenerYes: function (Interaction $interaction) use ($hard) {
+                $this->message->reply('Restarting...')->done(function () use ($hard) {
+                    $this->restart($hard);
+                });
+            }))->setReplyTo($this->message));
+        };
 
-        if ($time > 0 && $reason != '') {
-            $message = config('app.name') . ' is restarting in ' . $time . ' seconds because: ' . $reason;
-        }
-        else if ($time > 0) {
-            $message = config('app.name') . ' is restarting in ' . $time . ' seconds';
-        }
-        else if ($reason != '') {
-            $message = config('app.name') . ' is restarting because: ' . $reason;
-        }
-
-        $this->message->reply($message)->done(function () use ($time, $hard) {
-            sleep($time);
-            $this->restart($hard);
-        });
+        $this->message->channel->sendMessage(
+            MessageBuilder::new()
+                ->setReplyTo($this->message)
+                ->setContent('Select restart method:')
+                ->addComponent(
+                    SelectMenu::new()
+                        ->addOption(Option::new('Normal', 'normal'))
+                        ->addOption(Option::new('Hard', 'hard'))
+                        ->setListener(function (Interaction $interaction, Collection $collection) use ($question) {
+                            /** @var Option $option */
+                            $option = $collection->first();
+                            $question(!$option->getValue() == 'normal');
+                        }, $this->discord)
+                )
+        );
     }
 }
