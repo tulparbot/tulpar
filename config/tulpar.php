@@ -12,6 +12,7 @@ use App\Tulpar\Commands\Development\LogCommand;
 use App\Tulpar\Commands\Development\RestartCommand;
 use App\Tulpar\Commands\Development\StopCommand;
 use App\Tulpar\Commands\Development\TestCommand;
+use App\Tulpar\Commands\Game\ActivityCommand;
 use App\Tulpar\Commands\Game\HangmanCommand;
 use App\Tulpar\Commands\Game\HeadsTailsCommand;
 use App\Tulpar\Commands\General\AboutCommand;
@@ -156,6 +157,7 @@ return [
         AnnounceCommand::class,
 
         HeadsTailsCommand::class,
+        ActivityCommand::class,
     ],
 
     /*
