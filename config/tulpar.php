@@ -10,6 +10,7 @@ use App\Tulpar\Commands\Chat\HelloCommand;
 use App\Tulpar\Commands\Development\BotCommand;
 use App\Tulpar\Commands\Development\LogCommand;
 use App\Tulpar\Commands\Development\RestartCommand;
+use App\Tulpar\Commands\Development\StatusCommand;
 use App\Tulpar\Commands\Development\StopCommand;
 use App\Tulpar\Commands\Development\TestCommand;
 use App\Tulpar\Commands\Game\ActivityCommand;
@@ -167,6 +168,7 @@ return [
         ActivityCommand::class,
         MoveCommand::class,
         TwitchCommand::class,
+        StatusCommand::class,
     ],
 
     /*
