@@ -191,6 +191,44 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Activity List
+    |--------------------------------------------------------------------------
+    */
+    'activities' => [
+        (object) [
+            'name' => '',
+            'type' => \Discord\Parts\User\Activity::TYPE_LISTENING,
+            'emoji' => '',
+            'url' => '',
+            'application_id' => '',
+            'buttons' => [],
+            'details' => '',
+            'state' => '',
+        ],
+        (object) [
+            'name' => '',
+            'type' => \Discord\Parts\User\Activity::TYPE_LISTENING,
+            'emoji' => '',
+            'url' => '',
+            'application_id' => '',
+            'buttons' => [],
+            'details' => '',
+            'state' => '',
+        ],
+        (object) [
+            'name' => '',
+            'type' => \Discord\Parts\User\Activity::TYPE_LISTENING,
+            'emoji' => '',
+            'url' => '',
+            'application_id' => '',
+            'buttons' => [],
+            'details' => '',
+            'state' => '',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Activated filter classes
     |--------------------------------------------------------------------------
     */
