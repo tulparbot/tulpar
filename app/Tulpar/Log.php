@@ -127,7 +127,7 @@ class Log
         if ($output == null) {
             $output = Tulpar::getInstance()->output;
         }
-        
-        $output->info($level . ': ' . ($message instanceof Exception ? $message->getMessage() : $message));
+
+        $output->info($level . ': ' . ($message instanceof Exception ? $message->getMessage() . PHP_EOL . 'Line: ' . $message->getLine() . PHP_EOL . 'File: ' . $message->getFile() : $message));
     }
 }
