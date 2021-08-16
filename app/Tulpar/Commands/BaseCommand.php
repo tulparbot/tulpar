@@ -188,7 +188,7 @@ HELP;
     {
         if (str_starts_with($this->message->content, Tulpar::getPrefix($this->message->guild_id))) {
             $baseCheck = mb_strtolower($this->userCommand->getCommand()) == mb_strtolower(static::getCommand());
-            $aliasCheck = in_array(mb_strtolower($this->userCommand->getCommand()), config('tulpar.aliases')[static::class]);
+            $aliasCheck = isset(config('tulpar.aliases')[static::class]) && in_array(mb_strtolower($this->userCommand->getCommand()), config('tulpar.aliases')[static::class]);
 
             if ($baseCheck || $aliasCheck) {
 
