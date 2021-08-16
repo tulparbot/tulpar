@@ -7,7 +7,7 @@ namespace App\Tulpar\Commands\Music;
 use App\Enums\CommandCategory;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
-use App\Tulpar\MusicPlayer;
+use App\Tulpar\Extra\MusicPlayer;
 use App\Tulpar\Tulpar;
 use Discord\Parts\Channel\Channel;
 use Discord\Parts\Embed\Embed;

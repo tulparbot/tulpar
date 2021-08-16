@@ -7,9 +7,9 @@ namespace App\Tulpar\Commands\Music;
 use App\Enums\CommandCategory;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
+use App\Tulpar\Extra\MusicPlayer;
 use App\Tulpar\Helpers;
 use App\Tulpar\Log;
-use App\Tulpar\MusicPlayer;
 use Discord\Voice\VoiceClient;
 use Exception;
 
