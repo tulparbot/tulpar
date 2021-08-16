@@ -200,8 +200,20 @@ return [
             'type' => \Discord\Parts\User\Activity::TYPE_PLAYING,
             'url' => 'https://tulpar.xyz',
             'application_id' => '',
-            'buttons' => [],
             'details' => '.yardım veya .help',
+            'timestamps' => (object) [
+                'start' => \Illuminate\Support\Carbon::make('-5 days')->timestamp,
+            ],
+            'buttons' => [
+                (object) [
+                    'label' => 'deneme',
+                    'url' => 'https://tulpar.xyz',
+                ],
+                (object) [
+                    'label' => 'asd',
+                    'url' => 'https://google.com',
+                ],
+            ],
             'state' => \Discord\Parts\User\Activity::STATUS_IDLE,
         ],
     ],
