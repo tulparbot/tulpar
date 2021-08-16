@@ -30,6 +30,7 @@ use App\Tulpar\Commands\Moderation\BanCommand;
 use App\Tulpar\Commands\Moderation\KickCommand;
 use App\Tulpar\Commands\Moderation\UnbanCommand;
 use App\Tulpar\Commands\Music\MusicCommand;
+use App\Tulpar\Commands\Other\TwitchCommand;
 use App\Tulpar\Commands\Rank\RankCommand;
 use App\Tulpar\Filters\Chat\RepeatFilter;
 use App\Tulpar\Filters\Chat\UppercaseFilter;
@@ -160,6 +161,7 @@ return [
         HeadsTailsCommand::class,
         ActivityCommand::class,
         MoveCommand::class,
+        TwitchCommand::class,
     ],
 
     /*

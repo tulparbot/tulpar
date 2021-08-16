@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AutoResponderController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\Oauth\TwitchController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ServerController;
 use App\Http\Controllers\Servers\EmbedController;
@@ -26,6 +27,7 @@ Route::get('/', [PageController::class, 'home'])->name('home');
 
 Route::middleware('auth')->group(function () {
     Route::get('/auth/logout', [LoginController::class, 'logout'])->name('logout');
+    Route::get('/auth/callback/twitch', [TwitchController::class, 'callback']);
 
     Route::get('/servers', [PageController::class, 'servers'])->name('servers');
     Route::prefix('/servers/{server}')->group(function () {

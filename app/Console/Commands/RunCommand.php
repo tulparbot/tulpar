@@ -4,7 +4,10 @@ namespace App\Console\Commands;
 
 use App\Models\Job;
 use App\Models\ServerStatisticsChannel;
+use App\Models\TwitchConnection;
+use App\Tulpar\Commands\Other\TwitchCommand;
 use App\Tulpar\Tulpar;
+use Discord\Builders\MessageBuilder;
 use Discord\Exceptions\IntentException;
 use Discord\Parts\Channel\Channel;
 use Discord\Parts\Guild\Guild;
@@ -45,6 +48,29 @@ class RunCommand extends Command
      * @var string
      */
     protected $description = 'Start the bot';
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
+    public function handle(): int
+    {
+        while (static::$restartReceived) {
+            static::$restartReceived = false;
+
+            try {
+                $this->makeInstance();
+                static::$instance->run($this->getOutput());
+                static::$instance->stop();
+            } catch (IntentException | Exception $exception) {
+                $this->error($exception);
+                static::$restartReceived = true;
+            }
+        }
+
+        return CommandAlias::SUCCESS;
+    }
 
     /**
      * @throws IntentException
@@ -120,32 +146,28 @@ class RunCommand extends Command
                 ->replace('{command_count}', count(config('tulpar.commands')));
 
             /** @var Activity $_ */
-            $_ = static::$instance->getDiscord()->factory(\Discord\Parts\User\Activity::class, $activity);
+            $_ = static::$instance->getDiscord()->factory(Activity::class, $activity);
             static::$instance->getDiscord()->updatePresence($_);
         });
-    }
-
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
-    public function handle(): int
-    {
-        while (static::$restartReceived) {
-            static::$restartReceived = false;
-
-            try {
-                $this->makeInstance();
-                static::$instance->run($this->getOutput());
-                static::$instance->stop();
-            } catch (IntentException | Exception $exception) {
-                $this->error($exception);
-                static::$restartReceived = true;
+        static::$instance->getDiscord()->getLoop()->addPeriodicTimer(15 * 60, function () {
+            $connections = TwitchConnection::where('channel_id', '!=', null)->where('token', '!=', null)->where('accounts', '!=', null)->get();
+            foreach ($connections as $connection) {
+                $accounts = unserialize($connection->accounts) ?? [];
+                if (count($accounts) > 0) {
+                    $channel = static::$instance->getDiscord()->getChannel($connection->channel_id);
+                    if ($channel != null) {
+                        foreach ($accounts as $account) {
+                            $status = TwitchCommand::getStatusFromUsername($account, $connection->token);
+                            if ($status->live) {
+                                $builder = MessageBuilder::new();
+                                $builder = TwitchCommand::makeStatusMessage($builder, $status);
+                                $channel->sendMessage($builder);
+                            }
+                        }
+                    }
+                }
             }
-        }
-
-        return CommandAlias::SUCCESS;
+        });
     }
 
     /**
