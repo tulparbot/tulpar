@@ -160,6 +160,11 @@ return [
         ActivityCommand::class,
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Command Aliases
+    |--------------------------------------------------------------------------
+    */
     'aliases' => [
         HelloCommand::class => ['merhaba', 'mrb', 'hi'],
         HeadsTailsCommand::class => ['yazitura'],
