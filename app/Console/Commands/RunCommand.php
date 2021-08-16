@@ -108,6 +108,9 @@ class RunCommand extends Command
                 });
             }
         });
+        static::$instance->getDiscord()->getLoop()->addPeriodicTimer(10, function () {
+
+        });
     }
 
     /**
