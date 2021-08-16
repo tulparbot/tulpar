@@ -163,6 +163,7 @@ return [
     'aliases' => [
         HelloCommand::class => ['merhaba', 'mrb', 'hi'],
         HeadsTailsCommand::class => ['yazitura'],
+        HangmanCommand::class => ['adamasmaca'],
     ],
 
     /*
