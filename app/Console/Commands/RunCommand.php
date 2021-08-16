@@ -2,25 +2,14 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Job;
-use App\Models\ServerStatisticsChannel;
-use App\Models\TwitchConnection;
-use App\Tulpar\Commands\Other\TwitchCommand;
 use App\Tulpar\Tulpar;
-use Discord\Builders\MessageBuilder;
 use Discord\Exceptions\IntentException;
-use Discord\Parts\Channel\Channel;
-use Discord\Parts\Guild\Guild;
-use Discord\Parts\User\Activity;
-use Discord\Parts\User\Member;
-use Discord\Repository\Guild\MemberRepository;
 use Discord\Slash\Parts\Choices;
 use Discord\Slash\Parts\Interaction;
 use Discord\WebSockets\Intents;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Console\Scheduling\Schedule;
-use Illuminate\Support\Str;
 use Symfony\Component\Console\Command\Command as CommandAlias;
 
 class RunCommand extends Command
@@ -81,93 +70,12 @@ class RunCommand extends Command
         static::$instance->options['token'] = (string)config('discord.token');
         static::$instance->options['loadAllMembers'] = true;
         static::$instance->options['intents'] = Intents::getAllIntents();
-        static::$instance->getDiscord()->getLoop()->addPeriodicTimer(3, function () {
-            foreach (Job::where('executed', false)->get() as $job) {
-                $job->run();
+
+        foreach (config('tulpar.timers') ?? [] as $interval => $timers) {
+            foreach ($timers as $timer) {
+                static::$instance->getDiscord()->getLoop()->addPeriodicTimer($interval, [$timer, 'run']);
             }
-        });
-        static::$instance->getDiscord()->getLoop()->addPeriodicTimer(5 * 60, function () {
-            foreach (ServerStatisticsChannel::all() as $statisticsChannel) {
-                /** @var Guild|null $guild */
-                $guild = static::$instance->getDiscord()->guilds->get('id', $statisticsChannel->guild_id);
-                if ($guild == null) {
-                    continue;
-                }
-
-                $guild->channels->fetch($statisticsChannel->channel_id)->done(function (Channel $channel) use ($statisticsChannel) {
-                    switch ($statisticsChannel->type) {
-                        case 'total_users':
-                            $channel->name = $channel->guild->member_count . ' Total Members';
-                            $channel->guild->channels->save($channel);
-                            break;
-
-                        case 'bot_users':
-                            $channel->guild->members->freshen()->done(function (MemberRepository $memberRepository) use ($channel) {
-                                $count = 0;
-
-                                /** @var Member $member */
-                                foreach ($memberRepository as $member) {
-                                    if ($member->user->bot) {
-                                        $count++;
-                                    }
-                                }
-
-                                $channel->name = $count . ' Bot\'s';
-                                $channel->guild->channels->save($channel);
-                            });
-                            break;
-
-                        case 'online_users':
-                            $channel->guild->members->freshen()->done(function (MemberRepository $memberRepository) use ($channel) {
-                                $count = 0;
-
-                                /** @var Member $member */
-                                foreach ($memberRepository as $member) {
-                                    if ($member->status == 'online') {
-                                        $count++;
-                                    }
-                                }
-
-                                $channel->name = $count . ' Online Members';
-                                $channel->guild->channels->save($channel);
-                            });
-                            break;
-                    }
-                });
-            }
-        });
-        static::$instance->getDiscord()->getLoop()->addPeriodicTimer(5, function () {
-            $activities = config('tulpar.activities');
-            $activity = $activities[array_rand($activities)];
-            $activity->name = Str::of($activity->name)
-                ->replace('{prefix}', Tulpar::getPrefix())
-                ->replace('{guild_count}', Tulpar::getInstance()->getDiscord()->guilds->count())
-                ->replace('{member_count}', Tulpar::getInstance()->getDiscord()->users->count())
-                ->replace('{command_count}', count(config('tulpar.commands')));
-
-            /** @var Activity $_ */
-            $_ = static::$instance->getDiscord()->factory(Activity::class, $activity);
-            static::$instance->getDiscord()->updatePresence($_);
-        });
-        static::$instance->getDiscord()->getLoop()->addPeriodicTimer(15 * 60, function () {
-            $connections = TwitchConnection::where('channel_id', '!=', null)->where('token', '!=', null)->where('accounts', '!=', null)->get();
-            foreach ($connections as $connection) {
-                $accounts = unserialize($connection->accounts) ?? [];
-                if (count($accounts) > 0) {
-                    $channel = static::$instance->getDiscord()->getChannel($connection->channel_id);
-                    if ($channel != null) {
-                        foreach ($accounts as $account) {
-                            $status = TwitchCommand::getStatusFromUsername($account, $connection->token);
-                            if ($status->live) {
-                                $builder = MessageBuilder::new();
-                                $builder = TwitchCommand::makeStatusMessage($builder, $status);
-                                $channel->sendMessage($builder);
-                            }
-                        }
-                    }
-                }
-            }
-        });
+        }
     }
 
     /**

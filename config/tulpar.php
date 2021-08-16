@@ -34,6 +34,11 @@ use App\Tulpar\Commands\Other\TwitchCommand;
 use App\Tulpar\Commands\Rank\RankCommand;
 use App\Tulpar\Filters\Chat\RepeatFilter;
 use App\Tulpar\Filters\Chat\UppercaseFilter;
+use App\Tulpar\Timers\ActivityTimer;
+use App\Tulpar\Timers\JobTimer;
+use App\Tulpar\Timers\StatisticsTimer;
+use App\Tulpar\Timers\TwitchTimer;
+use Discord\Parts\User\Activity;
 
 return [
     /*
@@ -199,25 +204,45 @@ return [
     |--------------------------------------------------------------------------
     */
     'activities' => [
-        (object) [
+        (object)[
             'name' => 'Tulpar Bot top.gg',
-            'type' => \Discord\Parts\User\Activity::TYPE_COMPETING,
+            'type' => Activity::TYPE_COMPETING,
         ],
-        (object) [
+        (object)[
             'name' => '{prefix}yardım',
-            'type' => \Discord\Parts\User\Activity::TYPE_PLAYING,
+            'type' => Activity::TYPE_PLAYING,
         ],
-        (object) [
+        (object)[
             'name' => 'Toplam {guild_count} Sunucuda!',
-            'type' => \Discord\Parts\User\Activity::TYPE_LISTENING,
+            'type' => Activity::TYPE_LISTENING,
         ],
-        (object) [
+        (object)[
             'name' => 'Toplam {member_count} Kullanıcı!',
-            'type' => \Discord\Parts\User\Activity::TYPE_STREAMING,
+            'type' => Activity::TYPE_STREAMING,
         ],
-        (object) [
+        (object)[
             'name' => 'Toplam {command_count} Komut!',
-            'type' => \Discord\Parts\User\Activity::TYPE_WATCHING,
+            'type' => Activity::TYPE_WATCHING,
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Timers
+    |--------------------------------------------------------------------------
+    */
+    'timers' => [
+        3 => [
+            JobTimer::class,
+        ],
+        5 => [
+            ActivityTimer::class,
+        ],
+        5 * 60 => [
+            StatisticsTimer::class,
+        ],
+        15 * 60 => [
+            TwitchTimer::class,
         ],
     ],
 
