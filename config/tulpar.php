@@ -158,6 +158,7 @@ return [
 
         HeadsTailsCommand::class,
         ActivityCommand::class,
+        \App\Tulpar\Commands\General\MoveCommand::class,
     ],
 
     /*
