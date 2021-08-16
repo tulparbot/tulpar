@@ -196,25 +196,16 @@ return [
     */
     'activities' => [
         (object) [
-            'name' => 'Tulpar Bot',
+            'name' => 'Tulpar Bot top.gg',
+            'type' => \Discord\Parts\User\Activity::TYPE_COMPETING,
+        ],
+        (object) [
+            'name' => '{prefix}yardım',
             'type' => \Discord\Parts\User\Activity::TYPE_PLAYING,
-            'url' => 'https://tulpar.xyz',
-            'application_id' => '',
-            'details' => '.yardım veya .help',
-            'timestamps' => (object) [
-                'start' => \Illuminate\Support\Carbon::make('-5 days')->timestamp,
-            ],
-            'buttons' => [
-                (object) [
-                    'label' => 'deneme',
-                    'url' => 'https://tulpar.xyz',
-                ],
-                (object) [
-                    'label' => 'asd',
-                    'url' => 'https://google.com',
-                ],
-            ],
-            'state' => \Discord\Parts\User\Activity::STATUS_IDLE,
+        ],
+        (object) [
+            'name' => 'Toplam {guild_count} Sunucuda!',
+            'type' => \Discord\Parts\User\Activity::TYPE_LISTENING,
         ],
     ],
 
