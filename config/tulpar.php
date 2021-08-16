@@ -207,6 +207,14 @@ return [
             'name' => 'Toplam {guild_count} Sunucuda!',
             'type' => \Discord\Parts\User\Activity::TYPE_LISTENING,
         ],
+        (object) [
+            'name' => 'Toplam {member_count} Kullanıcı!',
+            'type' => \Discord\Parts\User\Activity::TYPE_STREAMING,
+        ],
+        (object) [
+            'name' => 'Toplam {command_count} Komut!',
+            'type' => \Discord\Parts\User\Activity::TYPE_WATCHING,
+        ],
     ],
 
     /*
