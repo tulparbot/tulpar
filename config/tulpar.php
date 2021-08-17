@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\VersionType;
 use App\Tulpar\Commands\Authorization\RegisterCommand;
 use App\Tulpar\Commands\Authorization\RootCommand;
 use App\Tulpar\Commands\Authorization\WhoamiCommand;
@@ -42,6 +43,13 @@ use App\Tulpar\Timers\TwitchTimer;
 use Discord\Parts\User\Activity;
 
 return [
+    /*
+    |--------------------------------------------------------------------------
+    | Set tulpar version type
+    |--------------------------------------------------------------------------
+    */
+    'type' => env('TULPAR_TYPE', VersionType::Release),
+
     /*
     |--------------------------------------------------------------------------
     | Command options
