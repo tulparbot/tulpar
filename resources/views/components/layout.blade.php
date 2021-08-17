@@ -20,7 +20,12 @@
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
             <div class="flex w-full">
                 <div class="text-lg font-semibold">
-                    <a href="#">{{ config('app.name') }}</a>
+                    <a href="{{ route('home') }}">
+                        <img
+                            class="h-14"
+                            src="{{ asset(config('tulpar.type') == \App\Enums\VersionType::Release ? 'img/branding/brand/brand-invert.svg' : 'img/branding/brand/nightly/brand-invert.svg') }}"
+                            alt="{{ config('app.name') }}">
+                    </a>
                 </div>
                 <ul class="ml-auto space-x-2 text-sm my-auto h-8 inline-flex">
                     <li>

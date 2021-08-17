@@ -1,10 +1,10 @@
 <?php
 
-use App\Http\Controllers\AutoResponderController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Oauth\TwitchController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ServerController;
+use App\Http\Controllers\Servers\AutoResponderController;
 use App\Http\Controllers\Servers\EmbedController;
 use App\Http\Controllers\TempLinkController;
 use App\Models\AutoResponse;

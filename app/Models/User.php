@@ -75,4 +75,22 @@ class User extends Authenticatable
     {
         return $this->hasMany(Server::class, 'owner_id', 'uid');
     }
+
+    public function getServer(Server|string $id): Server|null
+    {
+        if ($id instanceof Server) {
+            $id = $id->id;
+        }
+
+        $server = null;
+        $servers = $this->getServersAttribute();
+        foreach ($servers as $s) {
+            if ($s->id == $id) {
+                $server = $s;
+                break;
+            }
+        }
+
+        return $server;
+    }
 }

@@ -2,9 +2,13 @@
 
 namespace App\Models;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\RequestOptions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class Server extends Model
 {
@@ -49,6 +53,7 @@ class Server extends Model
 
     protected $appends = [
         'short_name',
+        'data',
     ];
 
     public function getShortNameAttribute(): string
@@ -70,7 +75,15 @@ class Server extends Model
 
     public function getRolesAttribute()
     {
-        return @json_decode($this->attributes['roles']) ?? null;
+        return Cache::remember('server-' . $this->id . '-roles', Carbon::make('+6 hours'), function () {
+            $client = new Client();
+            $r = $client->get('https://discord.com/api/v9/guilds/' . $this->server_id . '/roles', [
+                RequestOptions::HEADERS => [
+                    'Authorization' => 'Bot ' . config('discord.token'),
+                ],
+            ]);
+            return json_decode($r->getBody()->getContents());
+        });
     }
 
     public function getChannelsAttribute()
@@ -80,7 +93,15 @@ class Server extends Model
 
     public function getMembersAttribute()
     {
-        return @json_decode($this->attributes['members']) ?? null;
+        return Cache::remember('server-' . $this->id . '-members', Carbon::make('+6 hours'), function () {
+            $client = new Client();
+            $r = $client->get('https://discord.com/api/v9/guilds/' . $this->server_id . '/members?limit=1000', [
+                RequestOptions::HEADERS => [
+                    'Authorization' => 'Bot ' . config('discord.token'),
+                ],
+            ]);
+            return json_decode($r->getBody()->getContents());
+        });
     }
 
     public function getInvitesAttribute()
@@ -96,6 +117,20 @@ class Server extends Model
     public function getEmojisAttribute()
     {
         return @json_decode($this->attributes['emojis']) ?? null;
+    }
+
+    public function getDataAttribute(): object|null
+    {
+        $data = null;
+        if (auth()->check() && auth()->id() == $this->id) {
+            foreach (auth()->user()->servers as $server) {
+                if ($server->id == $this->server_id) {
+                    $data = $server;
+                }
+            }
+        }
+
+        return $data;
     }
 
     public function owner(): HasOne

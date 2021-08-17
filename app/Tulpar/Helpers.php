@@ -16,6 +16,8 @@ use Discord\Parts\User\User;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 use JetBrains\PhpStorm\Pure;
 use React\Promise\PromiseInterface;
 
@@ -95,6 +97,10 @@ class Helpers
      */
     public static function getUserGuilds(User|Member|string $user = '@me'): array
     {
+        if (!auth()->check()) {
+            abort(403);
+        }
+
         if ($user instanceof User) {
             $user = $user->username;
         }
@@ -102,39 +108,41 @@ class Helpers
             $user = $user->user->username;
         }
 
-        try {
-            $request = (new Client(['verify' => false]))
-                ->request('get', 'https://discordapp.com/api/v6/users/' . $user . '/guilds', [
-                    'headers' => [
-                        'Authorization' => 'Bot ' . config('discord.token'),
-                    ],
-                    'config' => [
-                        'curl' => [
-                            CURLOPT_RETURNTRANSFER => 1,
-                            CURLOPT_FOLLOWLOCATION => 1,
-                            CURLOPT_SSL_VERIFYPEER => 0,
+        return Cache::remember('user-guilds-' . auth()->id(), Carbon::make('+1 hours'), function () use ($user) {
+            try {
+                $request = (new Client(['verify' => false]))
+                    ->request('get', 'https://discordapp.com/api/v6/users/' . $user . '/guilds', [
+                        'headers' => [
+                            'Authorization' => 'Bot ' . config('discord.token'),
                         ],
-                    ],
-                ]);
+                        'config' => [
+                            'curl' => [
+                                CURLOPT_RETURNTRANSFER => 1,
+                                CURLOPT_FOLLOWLOCATION => 1,
+                                CURLOPT_SSL_VERIFYPEER => 0,
+                            ],
+                        ],
+                    ]);
 
-            if ($request->getStatusCode() === 200) {
-                $servers = [];
-                foreach (json_decode($request->getBody()->getContents()) as $server) {
-                    $server->extra = (object)[
-                        'icon' => 'https://cdn.discordapp.com/icons/' . $server->id . '/' . $server->icon . '.webp',
-                    ];
-                    $server->joinned = ($_ = Server::where('server_id', $server->id)->first()) != null;
-                    $server->model = $_;
-                    $servers[] = $server;
+                if ($request->getStatusCode() === 200) {
+                    $servers = [];
+                    foreach (json_decode($request->getBody()->getContents()) as $server) {
+                        $server->extra = (object)[
+                            'icon' => 'https://cdn.discordapp.com/icons/' . $server->id . '/' . $server->icon . '.jpg?size=1024',
+                        ];
+                        $server->joinned = ($_ = Server::where('server_id', $server->id)->first()) != null;
+                        $server->model = $_;
+                        $servers[] = $server;
+                    }
+
+                    return $servers;
                 }
-
-                return $servers;
+            } catch (GuzzleException $e) {
+                // ...
             }
-        } catch (GuzzleException $e) {
-            // ...
-        }
 
-        return [];
+            return [];
+        });
     }
 
     /**
