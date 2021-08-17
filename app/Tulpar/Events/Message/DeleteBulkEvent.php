@@ -8,7 +8,7 @@ use stdClass;
 
 class DeleteBulkEvent
 {
-    public function __invoke(Collection|stdClass $messages, Discord $discord)
+    public function __invoke(Collection|stdClass|array $messages, Discord $discord)
     {
         // ...
     }
