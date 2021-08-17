@@ -8,6 +8,7 @@ use App\Tulpar\Commands\Chat\AnnounceCommand;
 use App\Tulpar\Commands\Chat\ClearChannelCommand;
 use App\Tulpar\Commands\Chat\EmoticonsCommand;
 use App\Tulpar\Commands\Chat\HelloCommand;
+use App\Tulpar\Commands\Chat\TemporaryChannelCommand;
 use App\Tulpar\Commands\Development\BotCommand;
 use App\Tulpar\Commands\Development\LogCommand;
 use App\Tulpar\Commands\Development\RestartCommand;
@@ -179,6 +180,7 @@ return [
         TwitchCommand::class,
         StatusCommand::class,
         ExchangeCommand::class,
+        TemporaryChannelCommand::class,
     ],
 
     /*
