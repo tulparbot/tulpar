@@ -7,6 +7,7 @@ use App\Http\Controllers\ServerController;
 use App\Http\Controllers\Servers\AutoResponderController;
 use App\Http\Controllers\Servers\EmbedController;
 use App\Http\Controllers\TempLinkController;
+use App\Http\Controllers\TestController;
 use App\Models\AutoResponse;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +25,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/tmp/{uuid}', [TempLinkController::class, 'index'])->name('temp-link');
 
 Route::get('/', [PageController::class, 'home'])->name('home');
+Route::get('/test', [TestController::class, 'index'])->name('test');
 
 Route::middleware('auth')->group(function () {
     Route::get('/auth/logout', [LoginController::class, 'logout'])->name('logout');
