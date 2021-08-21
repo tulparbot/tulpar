@@ -39,6 +39,7 @@ use App\Tulpar\Commands\Rank\RankCommand;
 use App\Tulpar\Filters\Chat\RepeatFilter;
 use App\Tulpar\Filters\Chat\UppercaseFilter;
 use App\Tulpar\Timers\ActivityTimer;
+use App\Tulpar\Timers\CleanStorageTimer;
 use App\Tulpar\Timers\JobTimer;
 use App\Tulpar\Timers\StatisticsTimer;
 use App\Tulpar\Timers\TwitchTimer;
@@ -257,6 +258,9 @@ return [
         ],
         15 * 60 => [
             TwitchTimer::class,
+        ],
+        60 * 60 * 24 => [
+            CleanStorageTimer::class,
         ],
     ],
 
