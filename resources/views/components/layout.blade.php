@@ -8,15 +8,12 @@
 
     <title>{{ config('app.name', 'Tulpar') }}</title>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.7/tailwind.min.css"
-          integrity="sha512-y6ZMKFUQrn+UUEVoqYe8ApScqbjuhjqzTuwUMEGMDuhS2niI8KA3vhH2LenreqJXQS+iIXVTRL2iaNfJbDNA1Q=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
-
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <script src="{{ asset('js/app.js') }}" defer></script>
 </head>
-<body class="font-sans antialiased cursor-default">
+<body class="antialiased cursor-default">
 <div class="min-h-screen bg-gray-900 text-gray-50">
-    <header class="bg-gray-800 shadow">
+    <header class="bg-gray-900 shadow">
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
             <div class="flex w-full">
                 <div class="text-lg font-semibold">
@@ -85,9 +82,31 @@
         </main>
     </div>
 
-    <footer class="bg-gray-800">
+    <footer class="bg-gray-800 py-12">
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-
+            <div class="flex w-full">
+                <div class="w-full lg:w-1/2 space-y-6">
+                    <div>
+                        <img
+                            class="h-14"
+                            src="{{ asset(config('tulpar.type') == \App\Enums\VersionType::Release ? 'img/branding/brand/brand-invert.svg' : 'img/branding/brand/nightly/brand-invert.svg') }}"
+                            alt="{{ config('app.name') }}">
+                    </div>
+                    <div class="space-y-1.5 text-gray-400 font-semibold text-sm">
+                        <div>
+                            The best Discord bot to bootstrap and grow your Discord server
+                        </div>
+                        <div>
+                            Copyright &copy; {{ date('Y') }} İsa Eken / Hostadresim
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full lg:w-1/2 space-y-6">
+                    <div>
+                        
+                    </div>
+                </div>
+            </div>
         </div>
     </footer>
 </div>

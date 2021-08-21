@@ -4,3 +4,12 @@
 @tailwind components;
 @tailwind utilities;
 
+input:checked ~ .dot {
+    transform: translateX(100%);
+    background-color: #A5B4FC;
+}
+
+input:checked ~ .dot {
+    transform: translateX(100%);
+    background-color: #A5B4FC;
+}

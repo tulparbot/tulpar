@@ -72,30 +72,50 @@
 
     <div class="w-full flex">
         <div class="w-full max-w-sm bg-gray-800 py-2 px-3 flex space-x-3">
-            <div class="w-24 space-y-3 rounded-3xl bg-gray-700 py-2">
-                @foreach($_own_servers as $_own_server)
-                    <a href="{{ route('servers.dashboard', $_own_server->model) }}" class="block">
+            <div class="w-24">
+                <div class="space-y-3 rounded-3xl bg-gray-700 py-2" style="min-height: 42rem">
+                    @foreach($_own_servers as $_own_server)
+                        <a href="{{ route('servers.dashboard', $_own_server->model) }}" class="block">
+                            <div class="relative group">
+                                <div
+                                    class="hidden group-hover:block absolute left-full ml-2 top-1/2 transform -translate-y-1/2">
+                                    <div
+                                        class="bg-black rounded z-50 w-40 bg-opacity-80 text-sm font-semibold text-center py-2 px-2">
+                                        {{ $_own_server->name }}
+                                    </div>
+                                </div>
+                                @if (mb_strlen($_own_server->extra->icon) > 0)
+                                    <img src="{{ $_own_server->extra->icon }}" alt="{{ $_own_server->name }}"
+                                         class="w-14 h-14 rounded-3xl mx-auto bg-white hover:rounded-full transition">
+                                @else
+                                    <div
+                                        class="w-14 h-14 mx-auto rounded-3xl bg-white hover:rounded-full transition flex text-center align-middle text-black select-none">
+                                        <div
+                                            class="mx-auto my-auto font-semibold text-3xl">{{ $_own_server->short_name }}</div>
+                                    </div>
+                                @endif
+                            </div>
+                        </a>
+                    @endforeach
+                    <a href="#" class="block">
                         <div class="relative group">
                             <div
                                 class="hidden group-hover:block absolute left-full ml-2 top-1/2 transform -translate-y-1/2">
                                 <div
                                     class="bg-black rounded z-50 w-40 bg-opacity-80 text-sm font-semibold text-center py-2 px-2">
-                                    {{ $_own_server->name }}
+                                    Add a another server
                                 </div>
                             </div>
-                            @if (mb_strlen($_own_server->extra->icon) > 0)
-                                <img src="{{ $_own_server->extra->icon }}" alt="{{ $_own_server->name }}"
-                                     class="w-14 h-14 rounded-3xl mx-auto bg-white">
-                            @else
+                            <div
+                                class="w-14 h-14 mx-auto rounded-3xl bg-white hover:bg-gray-200 hover:rounded-full transition-all flex text-center align-middle text-black select-none">
                                 <div
-                                    class="w-14 h-14 mx-auto rounded-3xl bg-white flex text-center align-middle text-black select-none">
-                                    <div
-                                        class="mx-auto my-auto font-semibold text-3xl">{{ $_own_server->short_name }}</div>
+                                    class="mx-auto my-auto font-semibold text-3xl">
+                                    +
                                 </div>
-                            @endif
+                            </div>
                         </div>
                     </a>
-                @endforeach
+                </div>
             </div>
             <div class="w-full">
                 <div class="border-b border-gray-900 pb-6">

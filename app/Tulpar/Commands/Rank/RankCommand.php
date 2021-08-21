@@ -10,6 +10,7 @@ use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Helpers;
 use Discord\Parts\Embed\Embed;
 use Discord\Parts\User\Member;
+use Discord\Parts\User\User;
 
 class RankCommand extends BaseCommand implements CommandInterface
 {
@@ -17,7 +18,7 @@ class RankCommand extends BaseCommand implements CommandInterface
 
     public static string $description = 'Show the rank';
 
-    public static array $permissions = [];
+    public static array $permissions = ['root'];
 
     public static array $usages = [
         '',
@@ -29,6 +30,11 @@ class RankCommand extends BaseCommand implements CommandInterface
     public function run(): void
     {
         $user_id = $this->userCommand->hasArgument(0) ? $this->userCommand->getArgument(0) : $this->message->user_id;
+        if (!is_numeric($user_id) && !$user_id instanceof Member && !$user_id instanceof User) {
+            $this->message->reply('Invalid member');
+            return;
+        }
+
         $this->message->channel->guild->members->fetch($user_id)->done(function (Member $member) use ($user_id) {
             $userRank = UserRank::find($this->message->guild_id, $user_id);
             $messages = $userRank->message_count;

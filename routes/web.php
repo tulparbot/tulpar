@@ -6,6 +6,8 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\ServerController;
 use App\Http\Controllers\Servers\AutoResponderController;
 use App\Http\Controllers\Servers\EmbedController;
+use App\Http\Controllers\Servers\LeavingSystemController;
+use App\Http\Controllers\Servers\WelcomerController;
 use App\Http\Controllers\TempLinkController;
 use App\Http\Controllers\TestController;
 use App\Models\AutoResponse;
@@ -26,6 +28,7 @@ Route::get('/tmp/{uuid}', [TempLinkController::class, 'index'])->name('temp-link
 
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/test', [TestController::class, 'index'])->name('test');
+Route::view('/wip', 'servers.wip')->name('wip');
 
 Route::middleware('auth')->group(function () {
     Route::get('/auth/logout', [LoginController::class, 'logout'])->name('logout');
@@ -37,6 +40,14 @@ Route::middleware('auth')->group(function () {
 
         Route::prefix('/embed-messages')->group(function () {
             Route::get('/', [EmbedController::class, 'index'])->name('servers.embed-messages');
+        });
+        Route::prefix('/welcomer')->group(function () {
+            Route::get('/', [WelcomerController::class, 'index'])->name('servers.welcomer');
+            Route::get('/preview', [WelcomerController::class, 'preview'])->name('servers.welcomer.preview');
+        });
+        Route::prefix('/leaving-system')->group(function () {
+            Route::get('/', [LeavingSystemController::class, 'index'])->name('servers.leaving-system');
+            Route::get('/preview', [LeavingSystemController::class, 'preview'])->name('servers.leaving-system.preview');
         });
         Route::prefix('/auto-responder')->group(function () {
             Route::bind('auto_response', function ($value) {

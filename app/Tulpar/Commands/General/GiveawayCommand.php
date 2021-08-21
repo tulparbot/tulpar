@@ -12,6 +12,7 @@ use App\Tulpar\Tulpar;
 use Discord\Builders\MessageBuilder;
 use Discord\Parts\Channel\Message;
 use Discord\Parts\Embed\Embed;
+use Exception;
 use Illuminate\Support\Carbon;
 use React\EventLoop\Timer\Timer;
 
@@ -78,8 +79,23 @@ class GiveawayCommand extends BaseCommand implements CommandInterface
         }
 
         $title = $this->userCommand->getArgument(0);
-        $duration = Carbon::make($this->userCommand->getArgument(1) ?? '+10 minutes');
+        try {
+            $duration = Carbon::make($this->userCommand->getArgument(1) ?? '+10 minutes');
+        } catch (Exception $exception) {
+            $this->message->reply('Invalid duration');
+            return;
+        }
         $emoji = '🎉';
+
+        if (mb_strlen($title) < 1 || mb_strlen($title) > 200) {
+            $this->message->reply('The title is must can not be longer than 200 characters');
+            return;
+        }
+
+        if ($duration == null) {
+            $this->message->reply('Invalid duration');
+            return;
+        }
 
         $embed = new Embed($this->discord);
         $embed->setTitle($title);

@@ -35,6 +35,11 @@ class BanCommand extends BaseCommand implements CommandInterface
     {
         /** @var Member $member */
         $member = $this->message->channel->guild->members->get('id', $this->userCommand->getArgument(0));
+        if (!$member instanceof Member) {
+            $this->message->reply('You can only ban members!');
+            return;
+        }
+
         $reason = $this->userCommand->hasArgument(1) ? $this->userCommand->getArgument(1) : '';
         $daysToDeleteMessages = $this->userCommand->hasArgument(2) ? $this->userCommand->getArgument(2) : null;
 

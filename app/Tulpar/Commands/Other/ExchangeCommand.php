@@ -13,7 +13,7 @@ class ExchangeCommand extends BaseCommand implements CommandInterface
 
     public static string $description = 'Show exchange rates.';
 
-    public static array $permissions = [];
+    public static array $permissions = ['root'];
 
     public static bool $allowPm = true;
 

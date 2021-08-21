@@ -39,6 +39,11 @@ class AboutUserCommand extends BaseCommand implements CommandInterface
             $member = $this->message->member;
         }
 
+        if (!$member instanceof Member) {
+            $this->message->reply('You can only use in members!');
+            return;
+        }
+
         $registered_at = $member->user->createdTimestamp();
         $joined_at = $member->joined_at;
         $roles = [];

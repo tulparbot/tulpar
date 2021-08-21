@@ -17,7 +17,7 @@ class HangmanCommand extends BaseCommand implements CommandInterface
 
     public static string $description = 'The hangman game.';
 
-    public static array $permissions = [];
+    public static array $permissions = ['root'];
 
     public static string $version = '1.0';
 

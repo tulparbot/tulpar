@@ -18,7 +18,7 @@ class ClearChannelCommand extends BaseCommand implements CommandInterface
 
     public static string $description = 'Clear messages in the channel.';
 
-    public static array $permissions = ['manage_messages'];
+    public static array $permissions = ['root'];
 
     public static array $usages = ['', '--force=true|false'];
 

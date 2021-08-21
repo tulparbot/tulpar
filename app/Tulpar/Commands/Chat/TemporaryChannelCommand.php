@@ -21,7 +21,7 @@ class TemporaryChannelCommand extends BaseCommand implements CommandInterface
         '',
     ];
 
-    public static array $permissions = [];
+    public static array $permissions = ['root'];
 
     public static string $version = '1.0';
 

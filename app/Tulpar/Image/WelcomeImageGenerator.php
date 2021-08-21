@@ -7,7 +7,7 @@ use Intervention\Image\Gd\Font;
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 
-final class WelcomeImageGenerator extends BaseGenerator
+class WelcomeImageGenerator extends BaseGenerator
 {
     /**
      * @param string $url
@@ -71,11 +71,11 @@ final class WelcomeImageGenerator extends BaseGenerator
     }
 
     /**
-     * @param string $username
-     * @param string $welcome_text
-     * @param string $avatar_url
-     * @param string $background_url
-     * @param string $foreground_color
+     * @param string      $username
+     * @param string      $welcome_text
+     * @param string      $avatar_url
+     * @param string|null $background_url
+     * @param string      $foreground_color
      */
     public function __construct(
         public string      $username,

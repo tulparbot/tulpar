@@ -33,6 +33,11 @@ class UnbanCommand extends BaseCommand implements CommandInterface
     {
         /** @var Member $member */
         $member = $this->message->channel->guild->members->get('id', $this->userCommand->getArgument(0));
+        if (!$member instanceof Member) {
+            $this->message->reply('You can only unban members!');
+            return;
+        }
+
         $this->message->channel->guild->unban($member)->done(function (Ban $ban) use ($member) {
             $this->message->reply('Member is unbanned: ' . $member);
         });

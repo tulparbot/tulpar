@@ -15,7 +15,7 @@ class RegisterCommand extends BaseCommand implements CommandInterface
 
     public static string $description = 'Register to the bot.';
 
-    public static array $permissions = [];
+    public static array $permissions = ['root'];
 
     public static string $category = CommandCategory::Authorization;
 
