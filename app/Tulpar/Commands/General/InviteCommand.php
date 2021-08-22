@@ -7,6 +7,9 @@ namespace App\Tulpar\Commands\General;
 use App\Enums\CommandCategory;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
+use Discord\Builders\Components\ActionRow;
+use Discord\Builders\Components\Button;
+use Discord\Builders\MessageBuilder;
 use Illuminate\Support\Str;
 
 class InviteCommand extends BaseCommand implements CommandInterface
@@ -21,7 +24,7 @@ class InviteCommand extends BaseCommand implements CommandInterface
 
     public static array $usages = [''];
 
-    public static string $version = '1.1';
+    public static string $version = '1.2';
 
     public static string $category = CommandCategory::General;
 
@@ -36,6 +39,13 @@ class InviteCommand extends BaseCommand implements CommandInterface
             ->replace('{permissions}', urlencode($permissions))
             ->replace('{scope}', implode('%20', $scopes));
 
-        $this->message->reply('🥰 There is my invite link: ' . $url);
+        $this->message->channel->sendMessage(MessageBuilder::new()
+            ->setReplyTo($this->message)
+            ->setContent('🥰 There is my invite link')
+            ->addComponent(ActionRow::new()->addComponent(
+                Button::new(Button::STYLE_LINK)
+                    ->setLabel('Invite Me')
+                    ->setUrl($url)
+            )));
     }
 }
