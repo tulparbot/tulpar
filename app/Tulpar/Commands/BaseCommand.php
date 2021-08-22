@@ -161,6 +161,10 @@ HELP;
 
         $permissions = $this->message->member->getPermissions()->getRawAttributes();
         foreach (static::getPermissions() as $permission) {
+            if ($permission == '*') {
+                return true;
+            }
+
             if ($permission == 'root') {
                 if ($messages == true) {
                     $this->message->reply('You are not authorized to use this command.');
