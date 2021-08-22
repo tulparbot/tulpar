@@ -22,7 +22,7 @@ class GiveawayCommand extends BaseCommand implements CommandInterface
 
     public static string $description = 'Make a giveaway.';
 
-    public static array $permissions = [];
+    public static array $permissions = ['administrator'];
 
     public static string $category = CommandCategory::General;
 
