@@ -3,8 +3,10 @@
 namespace App\Tulpar\Events\Guild;
 
 use App\Models\Server;
+use App\Support\Str;
 use Discord\Discord;
 use Discord\Parts\Guild\Guild;
+use Illuminate\Support\Facades\Cache;
 
 class CreateEvent
 {
@@ -40,6 +42,12 @@ class CreateEvent
                 'emojis' => $guild->emojis->serialize(),
                 'joined_at' => $guild->joined_at,
             ]);
+        }
+
+        foreach (cache()->getKeys() as $key) {
+            if (Str::startsWith($key, 'user-guilds-')) {
+                Cache::forget($key);
+            }
         }
     }
 }
