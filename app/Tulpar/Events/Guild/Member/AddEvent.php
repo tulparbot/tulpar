@@ -2,11 +2,13 @@
 
 namespace App\Tulpar\Events\Guild\Member;
 
+use App\Models\AutoWelcomeRole;
 use App\Models\Welcomer;
 use App\Tulpar\Helpers;
 use App\Tulpar\Image\WelcomeImageGenerator;
 use Discord\Builders\MessageBuilder;
 use Discord\Discord;
+use Discord\Parts\Guild\Role;
 use Discord\Parts\User\Member;
 
 class AddEvent
@@ -34,6 +36,17 @@ class AddEvent
                 }
 
                 $member->guild->channels->get('id', $welcomer->channel_id)?->sendMessage($builder);
+            }
+
+            //
+
+            $autoWelcomeRole = AutoWelcomeRole::where('enable', true)->where('server_id', $member->guild_id)->first();
+            if ($autoWelcomeRole != null) {
+                /** @var Role|null $role */
+                $role = $member->guild->roles->get('id', $autoWelcomeRole->role_id);
+                if ($role !== null) {
+                    $member->addRole($role);
+                }
             }
         }
     }
