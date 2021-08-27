@@ -31,6 +31,9 @@ use App\Tulpar\Commands\General\VersionCommand;
 use App\Tulpar\Commands\Management\PrefixCommand;
 use App\Tulpar\Commands\Moderation\BanCommand;
 use App\Tulpar\Commands\Moderation\KickCommand;
+use App\Tulpar\Commands\Moderation\RestrictChannelCommand;
+use App\Tulpar\Commands\Moderation\SlowModeCommand;
+use App\Tulpar\Commands\Moderation\TempBanCommand;
 use App\Tulpar\Commands\Moderation\UnbanCommand;
 use App\Tulpar\Commands\Music\MusicCommand;
 use App\Tulpar\Commands\Other\ExchangeCommand;
@@ -38,6 +41,10 @@ use App\Tulpar\Commands\Other\TwitchCommand;
 use App\Tulpar\Commands\Rank\RankCommand;
 use App\Tulpar\Filters\Chat\RepeatFilter;
 use App\Tulpar\Filters\Chat\UppercaseFilter;
+use App\Tulpar\Restricts\CommandRestrict;
+use App\Tulpar\Restricts\ImageRestrict;
+use App\Tulpar\Restricts\LinkRestrict;
+use App\Tulpar\Restricts\TextRestrict;
 use App\Tulpar\Timers\ActivityTimer;
 use App\Tulpar\Timers\CleanStorageTimer;
 use App\Tulpar\Timers\JobTimer;
@@ -164,6 +171,9 @@ return [
 
         MusicCommand::class,
 
+        RestrictChannelCommand::class,
+        SlowModeCommand::class,
+        TempBanCommand::class,
         BanCommand::class,
         UnbanCommand::class,
         KickCommand::class,
@@ -182,6 +192,18 @@ return [
         StatusCommand::class,
         ExchangeCommand::class,
         TemporaryChannelCommand::class,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Restrict classes
+    |--------------------------------------------------------------------------
+    */
+    'restricts' => [
+        CommandRestrict::class,
+        LinkRestrict::class,
+        ImageRestrict::class,
+        TextRestrict::class,
     ],
 
     /*

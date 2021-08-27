@@ -6,6 +6,7 @@ namespace App\Tulpar\Events\Message;
 
 use App\Enums\CommandValidation;
 use App\Models\AutoResponse;
+use App\Models\ChannelRestrict;
 use App\Models\CustomCommand;
 use App\Models\UserRank;
 use App\Tulpar\Commands\BaseCommand;
@@ -130,6 +131,17 @@ class CreateEvent
             return;
         }
 
+        // restricts
+        $restrict = ChannelRestrict::where('enable', true)->where('server_id', $message->guild_id)->where('channel_id', $message->channel_id)->first();
+        if ($restrict !== null && !str_starts_with(mb_strtolower($message->content), Tulpar::getPrefix($message->guild))) {
+            foreach (config('tulpar.restricts') as $class) {
+                if ((new $class($restrict, $message, $discord))->run()) {
+                    return;
+                }
+            }
+        }
+
+        // commands
         $prefix = Tulpar::getPrefix($message->guild_id);
         static::flushCommandHistory();
 
