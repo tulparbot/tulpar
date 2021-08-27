@@ -4,7 +4,6 @@
 namespace App\Tulpar\Events\Message;
 
 
-use App\Enums\ChannelRestricts;
 use App\Enums\CommandValidation;
 use App\Models\AutoResponse;
 use App\Models\ChannelRestrict;
@@ -134,36 +133,9 @@ class CreateEvent
 
         // restricts
         $restrict = ChannelRestrict::where('enable', true)->where('server_id', $message->guild_id)->where('channel_id', $message->channel_id)->first();
-        if ($restrict !== null) {
-            if ($restrict->restrict == ChannelRestricts::ImageOnly) {
-                if (mb_strlen($message->content) > 0) {
-                    $message->delete();
-                    return;
-                }
-
-                if (count($message->attachments) < 1) {
-                    $message->delete();
-                    return;
-                }
-            }
-            else if ($restrict->restrict == ChannelRestricts::LinkOnly) {
-                if (!filter_var($message->content, FILTER_VALIDATE_URL)) {
-                    $message->delete();
-                    return;
-                }
-            }
-            else if ($restrict->restrict == ChannelRestricts::CommandOnly) {
-                $prefixes = $restrict->getCommandPrefixesAttribute();
-                $isCommand = false;
-
-                foreach ($prefixes as $prefix) {
-                    if (str_starts_with($message->content, $prefix)) {
-                        $isCommand = true;
-                    }
-                }
-
-                if (!$isCommand) {
-                    $message->delete();
+        if ($restrict !== null && !str_starts_with(mb_strtolower($message->content), Tulpar::getPrefix($message->guild))) {
+            foreach (config('tulpar.restricts') as $class) {
+                if ((new $class($restrict, $message, $discord))->run()) {
                     return;
                 }
             }
