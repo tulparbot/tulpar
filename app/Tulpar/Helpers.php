@@ -11,6 +11,7 @@ use Discord\Discord;
 use Discord\Exceptions\IntentException;
 use Discord\Parts\Channel\Channel;
 use Discord\Parts\Guild\Guild;
+use Discord\Parts\Thread\Thread;
 use Discord\Parts\User\Member;
 use Discord\Parts\User\User;
 use Exception;
@@ -311,5 +312,19 @@ class Helpers
         }
 
         return $discord->guilds->get('id', $id);
+    }
+
+    /**
+     * @param Channel|Thread $channel
+     * @param int            $limit
+     * @return Thread|Channel
+     * @throws Exception
+     */
+    public static function setRateLimitPerUser(Channel|Thread $channel, int $limit = 0): Thread|Channel
+    {
+        $guild = $channel->guild;
+        $channel->rate_limit_per_user = $limit;
+        $guild->channels->save($channel);
+        return $channel;
     }
 }

@@ -31,6 +31,8 @@ use App\Tulpar\Commands\General\VersionCommand;
 use App\Tulpar\Commands\Management\PrefixCommand;
 use App\Tulpar\Commands\Moderation\BanCommand;
 use App\Tulpar\Commands\Moderation\KickCommand;
+use App\Tulpar\Commands\Moderation\SlowModeCommand;
+use App\Tulpar\Commands\Moderation\TempBanCommand;
 use App\Tulpar\Commands\Moderation\UnbanCommand;
 use App\Tulpar\Commands\Music\MusicCommand;
 use App\Tulpar\Commands\Other\ExchangeCommand;
@@ -164,6 +166,8 @@ return [
 
         MusicCommand::class,
 
+        SlowModeCommand::class,
+        TempBanCommand::class,
         BanCommand::class,
         UnbanCommand::class,
         KickCommand::class,
