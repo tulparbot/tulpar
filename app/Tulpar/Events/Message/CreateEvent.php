@@ -8,6 +8,7 @@ use App\Enums\CommandValidation;
 use App\Models\AutoResponse;
 use App\Models\ChannelRestrict;
 use App\Models\CustomCommand;
+use App\Models\Rank;
 use App\Models\UserRank;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
@@ -211,11 +212,16 @@ class CreateEvent
         // Increment xp.
         if (!$message->channel->is_private) {
             $userRank = UserRank::find($message->guild_id, $message->user_id);
+            $level = $userRank->getLevelAttribute();
             $userRank->increment('message_count');
             $userRank
                 ->incrementGuildMessages($message->guild_id)
                 ->incrementChannelMessages($message->channel_id);
             $userRank->save();
+
+            if ($userRank->getLevelAttribute() > $level) {
+                $message->channel->sendMessage(Rank::make($message->guild, $message->member, true, false)->setContent('LEVEL UP!')->setReplyTo($message));
+            }
         }
 
         // Execute message filters.
