@@ -4,6 +4,7 @@ namespace App\Tulpar\Commands\Rank;
 
 use App\Enums\Align;
 use App\Enums\CommandCategory;
+use App\Models\Infraction;
 use App\Models\UserRank;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
@@ -48,7 +49,7 @@ class RankCommand extends BaseCommand implements CommandInterface
             $embed->addFieldValues('XP', '``' . Helpers::line($xp, Align::Center, 7) . '``', true);
             $embed->addFieldValues('Total Messages', '``' . Helpers::line($messages, Align::Center, 7) . '``', true);
             $embed->addFieldValues('Since', $userRank->created_at);
-            $embed->addFieldValues('Records', 'No any bans, warnings, mutes or kicks found.');
+            $embed->addFieldValues('Records', Infraction::getRecordsString($this->message->guild, $this->message->member));
 
             $this->message->channel->sendEmbed($embed);
         });

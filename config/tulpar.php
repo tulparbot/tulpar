@@ -35,6 +35,7 @@ use App\Tulpar\Commands\Moderation\RestrictChannelCommand;
 use App\Tulpar\Commands\Moderation\SlowModeCommand;
 use App\Tulpar\Commands\Moderation\TempBanCommand;
 use App\Tulpar\Commands\Moderation\UnbanCommand;
+use App\Tulpar\Commands\Moderation\WarnCommand;
 use App\Tulpar\Commands\Music\MusicCommand;
 use App\Tulpar\Commands\Other\ExchangeCommand;
 use App\Tulpar\Commands\Other\TwitchCommand;
@@ -171,6 +172,7 @@ return [
 
         MusicCommand::class,
 
+        WarnCommand::class,
         RestrictChannelCommand::class,
         SlowModeCommand::class,
         TempBanCommand::class,
