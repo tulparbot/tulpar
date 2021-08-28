@@ -4,6 +4,12 @@ use App\Enums\VersionType;
 use App\Tulpar\Commands\Authorization\RegisterCommand;
 use App\Tulpar\Commands\Authorization\RootCommand;
 use App\Tulpar\Commands\Authorization\WhoamiCommand;
+use App\Tulpar\Commands\Birthday\BirthdayCommand;
+use App\Tulpar\Commands\Birthday\ForgetCommand;
+use App\Tulpar\Commands\Birthday\NextBirthdaysCommand;
+use App\Tulpar\Commands\Birthday\RememberCommand;
+use App\Tulpar\Commands\Birthday\SetUserBirthdayCommand;
+use App\Tulpar\Commands\Birthday\UnsetUserBirthdayCommand;
 use App\Tulpar\Commands\Chat\AnnounceCommand;
 use App\Tulpar\Commands\Chat\ClearChannelCommand;
 use App\Tulpar\Commands\Chat\EmoticonsCommand;
@@ -149,6 +155,13 @@ return [
     |--------------------------------------------------------------------------
     */
     'commands' => [
+        BirthdayCommand::class,
+        ForgetCommand::class,
+        NextBirthdaysCommand::class,
+        RememberCommand::class,
+        SetUserBirthdayCommand::class,
+        UnsetUserBirthdayCommand::class,
+
         TestCommand::class,
         WhoamiCommand::class,
         StopCommand::class,
