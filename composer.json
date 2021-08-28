@@ -21,6 +21,7 @@
     "require": {
         "php": "^8.0",
         "ext-curl": "*",
+        "ext-gd": "*",
         "bensampo/laravel-enum": "^3.4",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
@@ -34,6 +35,7 @@
         "norkunas/youtube-dl-php": "^2.0",
         "socialiteproviders/discord": "^4.1",
         "socialiteproviders/zoho": "^4.1",
+        "spatie/color": "^1.2",
         "team-reflex/discord-php": "dev-develop"
     },
     "require-dev": {
