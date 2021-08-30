@@ -25,5 +25,6 @@
     "You are ``GLOBAL ROOT`` :member ☠️": "Siz, ``Üst Düzey Yöneticisiniz`` :member ☠️",
     "Hi!": "Merhaba 👋👋",
     "Hi; :members!": "Merhaba; :members 👋👋",
-    "You can only use in members!": "You can only use in members!"
+    "You can only use in members!": "You can only use in members!",
+    "User (:member) warned by reason: :reason": "User (:member) warned by reason: :reason"
 }

@@ -8,6 +8,7 @@ use App\Enums\CommandCategory;
 use App\Enums\CommandValidation;
 use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Guard;
+use App\Tulpar\Translator;
 use App\Tulpar\Tulpar;
 use Discord\Discord;
 use Discord\Exceptions\IntentException;
@@ -145,6 +146,7 @@ HELP;
     {
         $this->userCommand = new Strargs(substr($this->message->content, mb_strlen(Tulpar::getPrefix($this->message->guild_id))));
         $this->userCommand->decode();
+        $this->userCommand = Translator::translateCommandArgs($this->message->guild, $this::class, $this->userCommand);
     }
 
     /**
