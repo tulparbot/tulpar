@@ -5,8 +5,8 @@ namespace App\Tulpar;
 
 
 use App\Models\ServerPrefix;
+use App\Tulpar\Discord\Discord;
 use App\Tulpar\Events;
-use Discord\Discord;
 use Discord\Exceptions\IntentException;
 use Discord\Parts\Channel\Channel;
 use Discord\Parts\Guild\Guild;
