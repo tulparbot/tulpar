@@ -41,14 +41,16 @@ class ActivityCommand extends BaseCommand implements CommandInterface
     {
         $activity = mb_strtolower($this->userCommand->getArgument(0));
         if (!array_key_exists($activity, static::$activities)) {
-            $this->message->reply('You can only use activities: ``' . implode(', ', array_keys(static::$activities)) . '``');
+            $this->message->reply($this->translate('You can only use activities: ``:activities``', [
+                'activities' => implode(', ', array_keys(static::$activities)),
+            ]));
             return;
         }
         $activity = static::$activities[$activity];
 
         $channel = Helpers::getMemberVoiceChannel($this->message->member->id);
         if ($channel == null) {
-            $this->message->reply('Join a voice channel first.');
+            $this->message->reply($this->translate('Join a voice channel first.'));
             return;
         }
 
