@@ -8,7 +8,7 @@ use App\Enums\CommandCategory;
 use App\Support\Str;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
-use App\Tulpar\Log;
+use App\Tulpar\Logger;
 use Discord\Builders\MessageBuilder;
 use Discord\Parts\Embed\Embed;
 use Illuminate\Support\Carbon;
@@ -41,7 +41,7 @@ class BugCommand extends BaseCommand implements CommandInterface
         $channel = $this->discord->getChannel(config('tulpar.server.channel.moderation'));
 
         if ($channel === null) {
-            Log::critical('Moderation channel is not set.');
+            Logger::critical('Moderation channel is not set.');
             $this->message->reply('Bug report cannot be sent. Please contact to an administrator.');
             return;
         }

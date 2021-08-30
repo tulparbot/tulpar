@@ -8,7 +8,7 @@ use App\Enums\CommandCategory;
 use App\Models\TempBan;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
-use App\Tulpar\Log;
+use App\Tulpar\Logger;
 use Discord\Parts\User\Member;
 use Exception;
 use Illuminate\Support\Carbon;
@@ -68,7 +68,7 @@ class TempBanCommand extends BaseCommand implements CommandInterface
                 'end_at' => $end,
             ]);
         }, function ($exception) {
-            Log::error($exception);
+            Logger::error($exception);
             $this->message->reply('An error occurred when banning the user.');
         });
     }

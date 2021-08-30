@@ -9,7 +9,7 @@ use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Dialog;
 use App\Tulpar\Helpers;
-use App\Tulpar\Log;
+use App\Tulpar\Logger;
 use Discord\Builders\MessageBuilder;
 use Discord\Parts\Interactions\Interaction;
 use Discord\Parts\User\Member;
@@ -62,7 +62,7 @@ class KickCommand extends BaseCommand implements CommandInterface
                     sleep($delay);
 
                     $except = function ($exception) {
-                        Log::error($exception);
+                        Logger::error($exception);
                         $this->message->reply('An error occurred when kicking the user.');
                     };
 

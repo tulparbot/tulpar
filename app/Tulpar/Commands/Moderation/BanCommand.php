@@ -7,7 +7,7 @@ namespace App\Tulpar\Commands\Moderation;
 use App\Enums\CommandCategory;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
-use App\Tulpar\Log;
+use App\Tulpar\Logger;
 use Discord\Parts\User\Member;
 
 class BanCommand extends BaseCommand implements CommandInterface
@@ -56,7 +56,7 @@ class BanCommand extends BaseCommand implements CommandInterface
                 $this->message->reply('Banned user "' . $member . '".');
             }
         }, function ($exception) {
-            Log::error($exception);
+            Logger::error($exception);
             $this->message->reply('An error occurred when banning the user.');
         });
     }
