@@ -10,6 +10,7 @@ use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Guard;
 use App\Tulpar\Tulpar;
 use Discord\Discord;
+use Discord\Exceptions\IntentException;
 use Discord\Parts\Channel\Message;
 use IsaEken\Strargs\Strargs;
 
@@ -144,6 +145,17 @@ HELP;
     {
         $this->userCommand = new Strargs(substr($this->message->content, mb_strlen(Tulpar::getPrefix($this->message->guild_id))));
         $this->userCommand->decode();
+    }
+
+    /**
+     * @param string $translation
+     * @param array  $replacements
+     * @return string
+     * @throws IntentException
+     */
+    public function translate(string $translation, array $replacements = []): string
+    {
+        return _text($this->message->guild, $translation, $replacements);
     }
 
     /**

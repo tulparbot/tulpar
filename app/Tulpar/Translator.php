@@ -4,8 +4,7 @@
 namespace App\Tulpar;
 
 
-use Discord\Discord;
-use Discord\Parts\Channel\Message;
+use Discord\Exceptions\IntentException;
 use Discord\Parts\Guild\Guild;
 use Illuminate\Support\Str;
 
@@ -17,39 +16,53 @@ class Translator
     private static array $translations = [];
 
     /**
-     * @param Message|Guild $from
-     * @param Discord       $discord
+     * @param Guild|string $guild
      * @return string
+     * @throws IntentException
      */
-    public static function findLocale(Message|Guild $from, Discord $discord): string
+    public static function localeBy(Guild|string $guild): string
     {
-        if ($from instanceof Message) {
-            $guild = $from->channel->guild;
-        }
-        else {
-            $guild = $from;
+        if (!$guild instanceof Guild) {
+            $guild = Tulpar::getInstance()->getDiscord()->guilds->get('id', $guild);
         }
 
-        if ($guild !== null) {
-            return $guild->preferred_locale;
-        }
-
-        return 'en';
+        return $guild->preferred_locale;
     }
 
+    /**
+     * @param string $text
+     * @param array  $replacements
+     * @return string
+     */
+    public static function format(string $text, array $replacements = []): string
+    {
+        $keys = collect(array_keys($replacements))->map(fn ($replacement) => ':' . $replacement)->toArray();
+        $values = collect(array_values($replacements))->toArray();
+
+        return Str::replace($keys, $values, $text);
+    }
+
+    /**
+     * @param string $translation
+     * @param string $locale
+     * @param array  $replacements
+     * @return string
+     */
     public static function translate(string $translation, string $locale = 'en', array $replacements = []): string
     {
+        $replacements['locale'] = $locale;
         $translation_file = resource_path('lang/' . $locale . '.json');
+
         if (file_exists($translation_file)) {
             if (!array_key_exists($translation, static::$translations)) {
                 static::$translations = json_decode(file_get_contents(resource_path('lang/' . $locale . '.json')), true);
             }
 
             if (array_key_exists($translation, static::$translations)) {
-                return Str::replace(array_keys($replacements), array_values($replacements), static::$translations[$translation]);
+                return static::format(static::$translations[$translation], $replacements);
             }
         }
 
-        return Str::replace(array_keys($replacements), array_values($replacements), $translation);
+        return static::format($translation, $replacements);
     }
 }
