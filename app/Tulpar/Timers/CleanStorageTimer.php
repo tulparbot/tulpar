@@ -21,7 +21,7 @@ class CleanStorageTimer
         return collect($paths);
     }
 
-    public static function run(TimerInterface $timer)
+    public static function run(TimerInterface|null $timer)
     {
         Log::info('Clearing storage files...');
         $files = collect([]);

@@ -16,6 +16,7 @@ use App\Tulpar\Commands\Chat\EmoticonsCommand;
 use App\Tulpar\Commands\Chat\HelloCommand;
 use App\Tulpar\Commands\Chat\TemporaryChannelCommand;
 use App\Tulpar\Commands\Development\BotCommand;
+use App\Tulpar\Commands\Development\ClearFileSystemCommand;
 use App\Tulpar\Commands\Development\LogCommand;
 use App\Tulpar\Commands\Development\RestartCommand;
 use App\Tulpar\Commands\Development\StatusCommand;
@@ -162,6 +163,7 @@ return [
         SetUserBirthdayCommand::class,
         UnsetUserBirthdayCommand::class,
 
+        ClearFileSystemCommand::class,
         TestCommand::class,
         WhoamiCommand::class,
         StopCommand::class,
