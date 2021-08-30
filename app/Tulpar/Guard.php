@@ -3,10 +3,15 @@
 namespace App\Tulpar;
 
 use App\Enums\Permission;
+use App\Models\ModeratorRole;
 use Discord\Exceptions\IntentException;
 use Discord\Parts\Guild\Guild;
+use Discord\Parts\Guild\Role;
 use Discord\Parts\User\Member;
 use Discord\Parts\User\User;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 
 class Guard
@@ -147,5 +152,65 @@ class Guard
         }
 
         return Permission::Member;
+    }
+
+    /**
+     * @param Guild|string $guild
+     * @return Collection
+     */
+    public static function getModeratorRoles(Guild|string $guild): Collection
+    {
+        if ($guild instanceof Guild) {
+            $guild = $guild->id;
+        }
+
+        return Cache::remember('moderator-roles-' . $guild, Carbon::make('+20 hours'), function () use ($guild) {
+            return ModeratorRole::where('server_id', $guild)->get();
+        });
+    }
+
+    /**
+     * @param Guild|string       $guild
+     * @param Member|User|string $member
+     * @return bool
+     * @throws IntentException
+     */
+    public static function isModerator(Guild|string $guild, Member|User|string $member): bool
+    {
+        if (static::isRoot($member)) {
+            return true;
+        }
+
+        if (!$guild instanceof Guild) {
+            $guild = Tulpar::getInstance()->getDiscord()->guilds->get('id', $guild);
+        }
+
+        if (!$member instanceof Member && !$member instanceof User) {
+            $member = $guild->members->get('id', $member);
+        }
+
+        return Cache::remember('is-moderator-' . $guild->id . '-' . $member->id, Carbon::make('+30 minutes'), function () use ($guild, $member) {
+            $roles = static::getModeratorRoles($guild);
+
+            /** @var Role $role */
+            foreach ($member->roles as $role) {
+                foreach ($roles as $model) {
+                    if ($model->role_id == $role->id) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        });
+    }
+
+    public static function clearModeratorCache(): void
+    {
+        foreach (Cache::getStore()->getKeys() as $key) {
+            if (str_starts_with($key, 'is-moderator-') || str_starts_with($key, 'moderator-roles-')) {
+                Cache::forget($key);
+            }
+        }
     }
 }

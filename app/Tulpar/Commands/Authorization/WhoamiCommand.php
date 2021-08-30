@@ -49,6 +49,12 @@ class WhoamiCommand extends BaseCommand implements CommandInterface
             $this->message->reply('You are ``Server Administrator`` ' . $member . ' 🥳');
             return;
         }
+        
+        Guard::clearModeratorCache();
+        if (Guard::isModerator($this->message->guild, $member)) {
+            $this->message->reply('You are ``Moderator`` ' . $member . ' 🤓');
+            return;
+        }
 
         $this->message->reply('You are ``Member`` ' . $member . ' 💖');
     }
