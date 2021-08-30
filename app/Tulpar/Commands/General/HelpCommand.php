@@ -43,7 +43,7 @@ class HelpCommand extends BaseCommand implements CommandInterface
 
         $selectMenu = SelectMenu::new();
         foreach ($categories as $key => $category) {
-            $option = Option::new($category->name, $key);
+            $option = Option::new($this->translate($category->name), $key);
             if ($category->emoticon) {
                 $option->setEmoji($category->emoticon);
             }

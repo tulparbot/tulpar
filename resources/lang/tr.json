@@ -49,5 +49,17 @@
     "Creation Date": "Creation Date",
     "Author": "Author",
     "Commands of in the category: :category": "Commands of in the category: :category",
-    ":count Total Members": ":count Total Members"
+    ":count Total Members": ":count Toplam Kullanıcı",
+    ":count Bot's": ":count Toplam Bot",
+    ":count Online Members": ":count Aktif Kullanıcı",
+    "Authorization": "Güvenlik & Oturum",
+    "Birthdays": "Doğum Günleri",
+    "Chat": "Sohbet",
+    "Development": "Development",
+    "Game": "Game",
+    "General": "General",
+    "Management": "Management",
+    "Moderation": "Moderation",
+    "Music": "Music",
+    "Other": "Other"
 }
