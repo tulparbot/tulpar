@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\CommandCategory;
 use App\Enums\VersionType;
 use App\Tulpar\Commands\Authorization\RegisterCommand;
 use App\Tulpar\Commands\Authorization\RootCommand;
@@ -44,6 +45,8 @@ use App\Tulpar\Commands\Moderation\TempBanCommand;
 use App\Tulpar\Commands\Moderation\UnbanCommand;
 use App\Tulpar\Commands\Moderation\WarnCommand;
 use App\Tulpar\Commands\Music\MusicCommand;
+use App\Tulpar\Commands\Music\NowPlayingCommand;
+use App\Tulpar\Commands\Music\PlayCommand;
 use App\Tulpar\Commands\Other\ExchangeCommand;
 use App\Tulpar\Commands\Other\TwitchCommand;
 use App\Tulpar\Commands\Rank\RankCommand;
@@ -209,6 +212,139 @@ return [
         StatusCommand::class,
         ExchangeCommand::class,
         TemporaryChannelCommand::class,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Command categories
+    |--------------------------------------------------------------------------
+    */
+    'categories' => [
+        CommandCategory::Authorization => (object)[
+            'name' => 'Authorization',
+            'emoticon' => '🔐',
+            'guard' => '*',
+            'commands' => [
+                RegisterCommand::class,
+                RootCommand::class,
+                WhoamiCommand::class,
+            ],
+        ],
+        CommandCategory::Birthdays => (object)[
+            'name' => 'Birthdays',
+            'emoticon' => '🎂',
+            'guard' => '*',
+            'commands' => [
+                BirthdayCommand::class,
+                ForgetCommand::class,
+                NextBirthdaysCommand::class,
+                RememberCommand::class,
+                SetUserBirthdayCommand::class,
+                UnsetUserBirthdayCommand::class,
+            ],
+        ],
+        CommandCategory::Chat => (object)[
+            'name' => 'Chat',
+            'emoticon' => '✉️',
+            'guard' => '*',
+            'commands' => [
+                AnnounceCommand::class,
+                ClearChannelCommand::class,
+                EmoticonsCommand::class,
+                HelloCommand::class,
+                TemporaryChannelCommand::class,
+            ],
+        ],
+        CommandCategory::Development => (object)[
+            'name' => 'Development',
+            'emoticon' => '🧑‍💻',
+            'guard' => 'root',
+            'commands' => [
+                BotCommand::class,
+                ClearFileSystemCommand::class,
+                LogCommand::class,
+                RestartCommand::class,
+                StatusCommand::class,
+                StopCommand::class,
+                TestCommand::class,
+            ],
+        ],
+        CommandCategory::Game => (object)[
+            'name' => 'Game',
+            'emoticon' => '🎮',
+            'guard' => '*',
+            'commands' => [
+                ActivityCommand::class,
+                HangmanCommand::class,
+                HeadsTailsCommand::class,
+            ],
+        ],
+        CommandCategory::General => (object)[
+            'name' => 'General',
+            'emoticon' => '🌍',
+            'guard' => '*',
+            'commands' => [
+                AboutCommand::class,
+                AboutServerCommand::class,
+                AboutUserCommand::class,
+                BugCommand::class,
+                GiveawayCommand::class,
+                HelpCommand::class,
+                InviteCommand::class,
+                MoveCommand::class,
+                PingCommand::class,
+                VersionCommand::class,
+            ],
+        ],
+        CommandCategory::Management => (object)[
+            'name' => 'Management',
+            'emoticon' => '🧑‍💼',
+            'guard' => 'moderator',
+            'commands' => [
+                PrefixCommand::class,
+            ],
+        ],
+        CommandCategory::Moderation => (object)[
+            'name' => 'Moderation',
+            'emoticon' => '👮',
+            'guard' => 'moderator',
+            'commands' => [
+                BanCommand::class,
+                KickCommand::class,
+                RestrictChannelCommand::class,
+                SlowModeCommand::class,
+                TempBanCommand::class,
+                UnbanCommand::class,
+                WarnCommand::class,
+            ],
+        ],
+        CommandCategory::Music => (object)[
+            'name' => 'Music',
+            'emoticon' => '🎧',
+            'guard' => '*',
+            'commands' => [
+                MusicCommand::class,
+                NowPlayingCommand::class,
+                PlayCommand::class,
+            ],
+        ],
+        CommandCategory::Rank => (object)[
+            'name' => 'Rank',
+            'emoticon' => '🆙',
+            'guard' => '*',
+            'commands' => [
+                RankCommand::class,
+            ],
+        ],
+        CommandCategory::Other => (object)[
+            'name' => 'Other',
+            'emoticon' => '🌐',
+            'guard' => '*',
+            'commands' => [
+                ExchangeCommand::class,
+                TwitchCommand::class,
+            ],
+        ],
     ],
 
     /*

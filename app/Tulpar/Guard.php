@@ -4,6 +4,7 @@ namespace App\Tulpar;
 
 use App\Enums\Permission;
 use App\Models\ModeratorRole;
+use App\Tulpar\Contracts\CommandInterface;
 use Discord\Exceptions\IntentException;
 use Discord\Parts\Guild\Guild;
 use Discord\Parts\Guild\Role;
@@ -212,5 +213,51 @@ class Guard
                 Cache::forget($key);
             }
         }
+    }
+
+    /**
+     * @param CommandInterface|string $command
+     * @param Member                  $member
+     * @param Guild|string|null       $guild
+     * @return bool
+     * @throws IntentException
+     */
+    public static function canUseCommand(CommandInterface|string $command, Member $member, Guild|string|null $guild = null): bool
+    {
+        if ($command instanceof CommandInterface) {
+            $command = $command::class;
+        }
+
+        if ($guild instanceof Guild) {
+            $guild = $guild->id;
+        }
+
+        if (static::isRoot($member)) {
+            return true;
+        }
+
+        if (in_array('*', $command::getPermissions())) {
+            return true;
+        }
+
+        if (in_array('root', $command::getPermissions())) {
+            return false;
+        }
+
+        if (in_array('moderator', $command::getPermissions())) {
+            return $guild !== null && static::isModerator($guild, $member);
+        }
+
+        return Cache::remember('can-use-command.' . $command . '.' . $member->id . '.' . $guild, Carbon::make('+2 hours'), function () use ($command, $member, $guild) {
+            $permissions = $member->getPermissions()->getRawAttributes();
+            foreach ($command::getPermissions() as $permission) {
+                $permission = mb_strtolower(trim($permission));
+                if (isset($permissions[$permission]) && $permissions[$permission] == false) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
     }
 }

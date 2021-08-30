@@ -15,6 +15,8 @@ abstract class CommandCategory
     const Moderation = 'moderation';
     const Music = 'music';
     const Rank = 'rank';
+    const Birthdays = 'birthdays';
+    const Other = 'other';
 
     /**
      * @return array
@@ -39,23 +41,5 @@ abstract class CommandCategory
         }
 
         return $commands;
-    }
-
-    /**
-     * @return string[]
-     */
-    public static function getCategoryEmojis(): array
-    {
-        return [
-            static::General => '🌍',
-            static::Authorization => '🔒',
-            static::Chat => '📱',
-            static::Development => '🧑‍💻',
-            static::Game => '🎮',
-            static::Management => '🧑‍💼',
-            static::Moderation => '🧑‍💼',
-            static::Music => '🎶',
-            static::Rank => '✔️',
-        ];
     }
 }
