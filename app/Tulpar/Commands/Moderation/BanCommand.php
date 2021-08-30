@@ -36,7 +36,7 @@ class BanCommand extends BaseCommand implements CommandInterface
         /** @var Member $member */
         $member = $this->message->channel->guild->members->get('id', $this->userCommand->getArgument(0));
         if (!$member instanceof Member) {
-            $this->message->reply('You can only ban members!');
+            $this->message->reply($this->translate('You can only ban members!'));
             return;
         }
 
@@ -50,14 +50,19 @@ class BanCommand extends BaseCommand implements CommandInterface
 
         $member->ban($daysToDeleteMessages, $reason)->done(function () use ($reason, $member) {
             if (mb_strlen($reason)) {
-                $this->message->reply('Banned user "' . $member . '" with reason: ``' . $reason . '``');
+                $this->message->reply($this->translate('Banned user ":member" with reason: ``:reason``', [
+                    'member' => $member,
+                    'reason' => $reason,
+                ]));
             }
             else {
-                $this->message->reply('Banned user "' . $member . '".');
+                $this->message->reply($this->translate('Banned user: ":member"', [
+                    'member' => $member,
+                ]));
             }
         }, function ($exception) {
             Logger::error($exception);
-            $this->message->reply('An error occurred when banning the user.');
+            $this->message->reply($this->translate('An error occurred when banning the user.'));
         });
     }
 }

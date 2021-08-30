@@ -20,5 +20,9 @@
     "Get invite link": "Get invite link",
     "Move you to a voice channel has a tagged user.": "Move you to a voice channel has a tagged user.",
     "Show the bot's ping.": "Show the bot's ping.",
-    "Show bot version.": "Show bot version."
+    "Show bot version.": "Show bot version.",
+    "Help menu for user: :user": ":user kullanıcısı için yardım menüsü",
+    "You are ``GLOBAL ROOT`` :member ☠️": "Siz, ``Üst Düzey Yöneticisiniz`` :member ☠️",
+    "Hi!": "Merhaba 👋👋",
+    "Hi; :members!": "Merhaba; :members 👋👋"
 }

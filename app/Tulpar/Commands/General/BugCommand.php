@@ -8,6 +8,7 @@ use App\Enums\CommandCategory;
 use App\Support\Str;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
+use App\Tulpar\Helpers;
 use App\Tulpar\Logger;
 use Discord\Builders\MessageBuilder;
 use Discord\Parts\Embed\Embed;
@@ -42,7 +43,7 @@ class BugCommand extends BaseCommand implements CommandInterface
 
         if ($channel === null) {
             Logger::critical('Moderation channel is not set.');
-            $this->message->reply('Bug report cannot be sent. Please contact to an administrator.');
+            $this->message->reply($this->translate('Bug report cannot be sent. Please contact to an administrator.'));
             return;
         }
 
@@ -52,11 +53,13 @@ class BugCommand extends BaseCommand implements CommandInterface
         $embed->setFooter(Carbon::now());
 
         $builder = MessageBuilder::new()
-            ->setContent('* New Bug Report From ' . ($this->message->member ?? $this->message->user) . ' *')
+            ->setContent($this->translate('* New Bug Report From :member *', [
+                'member' => Helpers::userTag($this->message->member ?? $this->message->user),
+            ]))
             ->addEmbed($embed);
 
         $channel->sendMessage($builder);
 
-        $this->message->reply('Bug report sent. Thanks for support! 💖');
+        $this->message->reply($this->translate('Bug report sent. Thanks for support! 💖'));
     }
 }

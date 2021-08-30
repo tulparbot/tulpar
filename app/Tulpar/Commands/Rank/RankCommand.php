@@ -28,7 +28,7 @@ class RankCommand extends BaseCommand implements CommandInterface
         $member = $this->userCommand->hasArgument(0) ? $this->userCommand->getArgument(0) : $this->message->member->id;
         $member = $this->message->guild->members->get('id', $member);
         if (!$member instanceof Member) {
-            $this->message->reply('Invalid member');
+            $this->message->reply($this->translate('Invalid member'));
             return;
         }
 

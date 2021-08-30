@@ -29,6 +29,6 @@ class ForgetCommand extends BaseCommand implements CommandInterface
     {
         $birthday = Birthday::where('server_id', $this->message->guild->id)->where('member_id', $this->message->member->id)->first();
         $birthday?->delete();
-        $this->message->reply('Your birth date is removed from this server.');
+        $this->message->reply($this->translate('Your birth date is removed from this server.'));
     }
 }

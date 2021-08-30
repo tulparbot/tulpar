@@ -33,7 +33,7 @@ class RestrictChannelCommand extends BaseCommand implements CommandInterface
         $restrict = $this->userCommand->getArgument(0);
         $message = $this->userCommand->hasArgument(1) ? $this->userCommand->getArgument(1) : null;
         if (!in_array($restrict, ['image', 'text', 'link', 'command', 'disable'])) {
-            $this->message->reply('You can only restrict channel to: image, text, link or command.');
+            $this->message->reply($this->translate('You can only restrict channel to: image, text, link or command.'));
             return;
         }
 
@@ -45,7 +45,7 @@ class RestrictChannelCommand extends BaseCommand implements CommandInterface
         }
 
         if ($restrict == 'disable') {
-            $this->message->reply('Channel restriction is disabled');
+            $this->message->reply($this->translate('Channel restriction is disabled'));
             return;
         }
 
@@ -57,6 +57,8 @@ class RestrictChannelCommand extends BaseCommand implements CommandInterface
             'message' => $message,
         ]);
 
-        $this->message->reply('This channel restricted to: ' . $restrict);
+        $this->message->reply($this->translate('This channel restricted to: :restrict', [
+            'restrict' => $restrict,
+        ]));
     }
 }

@@ -35,15 +35,15 @@ class RememberCommand extends BaseCommand implements CommandInterface
         $year = $this->userCommand->getArgument(2);
 
         if (!is_int($day) || !is_int($month) || !is_int($year)) {
-            $this->message->reply('Please enter a valid date.');
+            $this->message->reply($this->translate('Please enter a valid date.'));
             return;
         }
 
         if (!Birthday::make($this->message->guild, $this->message->member, $day, $month, $year)) {
-            $this->message->reply('Please enter a valid date.');
+            $this->message->reply($this->translate('Please enter a valid date.'));
             return;
         }
 
-        $this->message->reply('Your birth date is saved to this server.');
+        $this->message->reply($this->translate('Your birth date is saved to this server.'));
     }
 }

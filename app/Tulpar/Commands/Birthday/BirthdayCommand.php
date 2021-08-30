@@ -36,16 +36,21 @@ class BirthdayCommand extends BaseCommand implements CommandInterface
         }
 
         if (!$member instanceof Member) {
-            $this->message->reply('Please enter a valid member');
+            $this->message->reply($this->translate('Please enter a valid member'));
             return;
         }
 
         $birthday = Birthday::where('server_id', $this->message->guild->id)->where('member_id', $member->id)->first();
         if ($birthday == null) {
-            $this->message->reply('Birthday is not registered.');
+            $this->message->reply($this->translate('Birthday is not registered.'));
             return;
         }
 
-        $this->message->reply('The user (' . Helpers::userTag($member->id) . ') birthday is: ' . $birthday->day . '/' . $birthday->month . '/' . $birthday->year);
+        $this->message->reply($this->translate('The user (:member) birthday is: :day/:month/:year', [
+            'member' => Helpers::userTag($member->id),
+            'day' => $birthday->day,
+            'month' => $birthday->month,
+            'year' => $birthday->year,
+        ]));
     }
 }

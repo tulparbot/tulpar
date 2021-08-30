@@ -33,7 +33,7 @@ class EmoticonsCommand extends BaseCommand implements CommandInterface
 
         $guild->emojis->freshen()->done(function (EmojiRepository $emojiRepository) use ($guild) {
             if ($emojiRepository->count() < 1) {
-                $this->message->reply('No any emojis exists on this server.');
+                $this->message->reply($this->translate('No any emojis exists on this server.'));
                 return;
             }
 
@@ -51,7 +51,7 @@ class EmoticonsCommand extends BaseCommand implements CommandInterface
             $this->message->reply($message);
         }, function ($exception) {
             Logger::error($exception);
-            $this->message->reply('An error occurred on fetching emojis.');
+            $this->message->reply($this->translate('An error occurred on fetching emojis.'));
         });
     }
 }

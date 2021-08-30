@@ -56,12 +56,12 @@ class HelpCommand extends BaseCommand implements CommandInterface
                         $key = $options[0]->getValue();
 
                         if (!array_key_exists($key, $categories)) {
-                            $interaction->updateMessage(MessageBuilder::new()->setContent('Invalid Category'));
+                            $interaction->updateMessage(MessageBuilder::new()->setContent($this->translate('Invalid Category')));
                             return;
                         }
 
                         $category = $categories[$key];
-                        $builder = MessageBuilder::new()->setContent('Commands of in the category: ' . $category->name);
+                        $builder = MessageBuilder::new()->setContent($this->translate('Commands of in the category: :category', ['category' => $category->name]));
                         $embeds = [];
 
                         if (isset($category->commands)) {
@@ -104,7 +104,7 @@ class HelpCommand extends BaseCommand implements CommandInterface
                         }
 
                         if (count($embeds) < 1) {
-                            $builder->setContent('No command found in this category for you.');
+                            $builder->setContent($this->translate('No command found in this category for you.'));
                         }
                         else {
                             $builder->setEmbeds($embeds);
@@ -115,7 +115,7 @@ class HelpCommand extends BaseCommand implements CommandInterface
                 }, $this->discord);
         }
 
-        $builder->setContent('Help menu for user: ' . Helpers::userTag($this->message->member->id));
+        $builder->setContent($this->translate('Help menu for user: :user', ['user' => Helpers::userTag($this->message->member->id)]));
         $builder->addComponent($selectMenu);
         $this->message->channel->sendMessage($builder);
     }

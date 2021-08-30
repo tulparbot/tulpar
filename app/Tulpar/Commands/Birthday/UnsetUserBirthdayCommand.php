@@ -30,12 +30,12 @@ class UnsetUserBirthdayCommand extends BaseCommand implements CommandInterface
     {
         $member = $this->message->guild->members->get('id', $this->userCommand->getArgument(0));
         if (!$member instanceof Member) {
-            $this->message->reply('Please enter a valid member.');
+            $this->message->reply($this->translate('Please enter a valid member.'));
             return;
         }
 
         $birthday = Birthday::where('server_id', $this->message->guild->id)->where('member_id', $member->id)->first();
         $birthday?->delete();
-        $this->message->reply('Birth date is removed from this server.');
+        $this->message->reply($this->translate('Birth date is removed from this server.'));
     }
 }

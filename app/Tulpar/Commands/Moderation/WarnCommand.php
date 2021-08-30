@@ -46,7 +46,7 @@ class WarnCommand extends BaseCommand implements CommandInterface
         }
 
         if ($type == InfractionType::HardBan && !Guard::isRoot($this->message->member)) {
-            $this->message->reply('You are not authorized to use this command!');
+            $this->message->reply($this->translate('You are not authorized to use this command!'));
             return;
         }
 
@@ -61,7 +61,10 @@ class WarnCommand extends BaseCommand implements CommandInterface
         $this->message->channel->sendMessage(
             MessageBuilder::new()
                 ->setReplyTo($this->message)
-                ->setContent('User (' . Helpers::userTag($this->message->user_id) . ') warned by reason: ' . $reason)
+                ->setContent($this->translate('User (:member) warned by reason: :reason', [
+                    'member' => Helpers::userTag($this->message->user_id),
+                    'reason' => $reason,
+                ]))
         );
     }
 }

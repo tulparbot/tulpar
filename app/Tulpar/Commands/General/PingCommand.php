@@ -41,10 +41,8 @@ class PingCommand extends BaseCommand implements CommandInterface
 
     public function run(): void
     {
-        $this->message->reply(sprintf(
-            'The %s\'s ping is: %sms',
-            config('app.name'),
-            static::ping(),
-        ));
+        $this->message->reply($this->translate('The ping is: :pingms', [
+            'ping' => static::ping(),
+        ]));
     }
 }

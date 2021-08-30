@@ -66,14 +66,14 @@ class NextBirthdaysCommand extends BaseCommand implements CommandInterface
 
         $message = MessageBuilder::new()
             ->setReplyTo($this->message)
-            ->setContent('The list of 10 upcoming birthdays.');
+            ->setContent($this->translate('The list of 10 upcoming birthdays.'));
 
         foreach ($birthdays as $birthday) {
             $embed = new Embed($this->discord);
             $embed->setDescription(Helpers::userTag($birthday->member_id));
-            $embed->addFieldValues('Year', $birthday->date->year);
-            $embed->addFieldValues('Month', $birthday->date->month);
-            $embed->addFieldValues('Day', $birthday->date->day);
+            $embed->addFieldValues($this->translate('Year'), $birthday->date->year);
+            $embed->addFieldValues($this->translate('Month'), $birthday->date->month);
+            $embed->addFieldValues($this->translate('Day'), $birthday->date->day);
             $message->addEmbed($embed);
         }
 

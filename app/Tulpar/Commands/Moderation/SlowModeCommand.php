@@ -53,7 +53,7 @@ class SlowModeCommand extends BaseCommand implements CommandInterface
 
     public function run(): void
     {
-        $menu = SelectMenu::new()->addOption(Option::new('Off', 0));
+        $menu = SelectMenu::new()->addOption(Option::new($this->translate('Off'), 0));
         foreach (static::$slowmodes as $key => $value) {
             $menu = $menu->addOption(Option::new($key, $value));
         }
@@ -76,9 +76,12 @@ class SlowModeCommand extends BaseCommand implements CommandInterface
 
             Helpers::setRateLimitPerUser($this->message->channel, $value);
             $this->message->delete()->then(function () use ($interaction, $key) {
-                $message = '<#' . $this->message->channel_id . '> is no longer slow modded';
+                $message = $this->translate(':channel is no longer slow modded.', ['channel' => '<#' . $this->message->channel_id . '>']);
                 if ($key != 'off') {
-                    $message = '<#' . $this->message->channel_id . '> is now in slow motion. Regular users can only post once every ' . $key;
+                    $message = $this->translate(':channel is now in slow motion. Regular users can only post once every :seconds', [
+                        'channel' => '<#' . $this->message->channel_id . '>',
+                        'seconds' => $key,
+                    ]);
                 }
 
                 $interaction->message->delete();
@@ -88,7 +91,7 @@ class SlowModeCommand extends BaseCommand implements CommandInterface
 
         $this->message->channel->sendMessage(MessageBuilder::new()
             ->setReplyTo($this->message)
-            ->setContent('Please select a time or disable slow mode. ' . Helpers::userTag($this->message->user_id))
+            ->setContent($this->translate('Please select a time or disable slow mode.'))
             ->addComponent($menu));
 
         return;

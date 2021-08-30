@@ -6,14 +6,18 @@ use Discord\Parts\Guild\Guild;
 
 if (!function_exists('_text')) {
     /**
-     * @param string       $translation
-     * @param Guild|string $guild
-     * @param array        $replacements
+     * @param Guild|string|null $guild
+     * @param string            $translation
+     * @param array             $replacements
      * @return string
      * @throws IntentException
      */
-    function _text(Guild|string $guild, string $translation, array $replacements = []): string
+    function _text(Guild|string|null $guild, string $translation, array $replacements = []): string
     {
+        if ($guild === null) {
+            $guild = 'en';
+        }
+
         return Translator::translate($translation, Translator::localeBy($guild), $replacements);
     }
 }

@@ -32,16 +32,19 @@ class ExchangeCommand extends BaseCommand implements CommandInterface
         $rate = static::rate($from, $to);
 
         if ($from == $to) {
-            $this->message->reply('You can\'t do this.');
+            $this->message->reply($this->translate('You can\'t do this.'));
             return;
         }
 
         if ($rate == 0) {
-            $this->message->reply('A error occurred.');
+            $this->message->reply($this->translate('A error occurred.'));
             return;
         }
 
-        $this->message->reply('1 ' . $from . ' is ' . round($rate, 2) . ' ' . $to);
+        $this->message->reply($this->translate(':from is :to', [
+            'from' => $from,
+            'to' => round($rate, 2),
+        ]));
     }
 
     public static function rate(string $from, string $to): float

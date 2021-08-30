@@ -40,7 +40,7 @@ class KickCommand extends BaseCommand implements CommandInterface
         /** @var Member $member */
         $member = $this->message->channel->guild->members->get('id', $this->userCommand->getArgument(0));
         if (!$member instanceof Member) {
-            $this->message->reply('You can only kick members!');
+            $this->message->reply($this->translate('You can only kick members!'));
             return;
         }
 
@@ -52,23 +52,27 @@ class KickCommand extends BaseCommand implements CommandInterface
         }
 
         $this->message->channel->sendMessage(Dialog::confirm(
-            'Are you serious to kick user: ' . Helpers::userTag($member->id),
+            $this->translate('Are you serious to kick user: :member', [
+                'member' => Helpers::userTag($member->id),
+            ]),
             listenerNo: function (Interaction $interaction, MessageBuilder $builder) {
-                $interaction->updateMessage(MessageBuilder::new()->setContent('Kicking progress is canceled.'));
+                $interaction->updateMessage(MessageBuilder::new()->setContent($this->translate('Kicking progress is canceled.')));
             },
             listenerYes: function (Interaction $interaction, MessageBuilder $builder) use ($member, $delay) {
-                $interaction->updateMessage(MessageBuilder::new()->setContent('User is kicking in ' . $delay . ' seconds.'));
+                $interaction->updateMessage(MessageBuilder::new()->setContent($this->translate('User is kicking in :seconds seconds.', ['seconds' => $delay])));
                 new Promise(function () use ($member, $delay) {
                     sleep($delay);
 
                     $except = function ($exception) {
                         Logger::error($exception);
-                        $this->message->reply('An error occurred when kicking the user.');
+                        $this->message->reply($this->translate('An error occurred when kicking the user.'));
                     };
 
                     $member->ban()->done(function () use ($member, $except) {
                         $this->message->channel->guild->unban($member)->done(function () use ($member) {
-                            $this->message->reply('The user ' . Helpers::userTag($member->id) . ' is kicked.');
+                            $this->message->reply($this->translate('The user ":member" is kicked.', [
+                                'member' => Helpers::userTag($member->id),
+                            ]));
                         }, $except);
                     }, $except);
                 });

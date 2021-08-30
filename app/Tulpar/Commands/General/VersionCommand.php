@@ -21,6 +21,8 @@ class VersionCommand extends BaseCommand implements CommandInterface
     public function run(): void
     {
         $version = config('app.version');
-        $this->message->reply('Current version: ``' . $version . '``');
+        $this->message->reply($this->translate('Current version: ``:version``', [
+            'version' => $version,
+        ]));
     }
 }
