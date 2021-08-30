@@ -26,5 +26,6 @@
     "Hi!": "Merhaba 👋👋",
     "Hi; :members!": "Merhaba; :members 👋👋",
     "You can only use in members!": "You can only use in members!",
-    "User (:member) warned by reason: :reason": "User (:member) warned by reason: :reason"
+    "User (:member) warned by reason: :reason": "User (:member) warned by reason: :reason",
+    "You can only use: :constants": "You can only use: :constants"
 }

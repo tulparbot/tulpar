@@ -8,6 +8,7 @@ use App\Enums\CommandCategory;
 use App\Enums\InfractionType;
 use App\Models\Infraction;
 use App\Tulpar\Commands\BaseCommand;
+use App\Tulpar\CommandTraits\HasEnumArgument;
 use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Guard;
 use App\Tulpar\Helpers;
@@ -16,6 +17,8 @@ use Discord\Parts\User\Member;
 
 class WarnCommand extends BaseCommand implements CommandInterface
 {
+    use HasEnumArgument;
+
     public static string $command = 'warn';
 
     public static string $description = 'Warn the user.';
@@ -38,7 +41,11 @@ class WarnCommand extends BaseCommand implements CommandInterface
         /** @var Member $member */
         $member = $this->message->channel->guild->members->get('id', $this->userCommand->getArgument(0));
         $reason = $this->userCommand->getArgument(1);
-        $type = $this->userCommand->hasArgument(2) ? $this->userCommand->getArgument(2) : InfractionType::Custom;
+        $type = $this->getEnumArgument(2, InfractionType::class, InfractionType::Custom, true);
+        
+        if ($type == null) {
+            return;
+        }
 
         if (!$member instanceof Member || !in_array($type, [InfractionType::Custom, InfractionType::TempBan, InfractionType::Ban, InfractionType::HardBan, InfractionType::Kick, InfractionType::Mute])) {
             $this->message->reply(static::getUsages());
