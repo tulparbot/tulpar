@@ -33,5 +33,11 @@
     "Are you serious to kick user: :member": "Are you serious to kick user: :member",
     "Kicking progress is canceled.": "Kicking progress is canceled.",
     "Banned user: \":member\"": "Banned user: \":member\"",
-    "Member is unbanned: :member": "Member is unbanned: :member"
+    "Member is unbanned: :member": "Member is unbanned: :member",
+    "Joined At": "Joined At",
+    "Registered At": "Registered At",
+    "Rank": "Rank",
+    "Messages in ````:server````": "Messages in ````:server````",
+    "Messages in ````:channel````": "Messages in ````:channel````",
+    "Roles [:count]": "Roles [:count]"
 }
