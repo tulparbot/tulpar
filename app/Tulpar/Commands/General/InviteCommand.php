@@ -41,10 +41,10 @@ class InviteCommand extends BaseCommand implements CommandInterface
 
         $this->message->channel->sendMessage(MessageBuilder::new()
             ->setReplyTo($this->message)
-            ->setContent('🥰 There is my invite link')
+            ->setContent($this->translate('🥰 There is my invite link'))
             ->addComponent(ActionRow::new()->addComponent(
                 Button::new(Button::STYLE_LINK)
-                    ->setLabel('Invite Me')
+                    ->setLabel($this->translate('Invite Me'))
                     ->setUrl($url)
             )));
     }

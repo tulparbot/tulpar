@@ -5,8 +5,8 @@ namespace App\Tulpar;
 
 
 use App\Models\ServerPrefix;
+use App\Tulpar\Discord\Discord;
 use App\Tulpar\Events;
-use Discord\Discord;
 use Discord\Exceptions\IntentException;
 use Discord\Parts\Channel\Channel;
 use Discord\Parts\Guild\Guild;
@@ -227,18 +227,18 @@ class Tulpar
         $this->output = $output;
 
         $this->getDiscord()->on('ready', function (Discord $discord) use ($output) {
-            Log::debug('Registering timers...');
+            Logger::debug('Registering timers...');
             $timerCount = 0;
             foreach (config('tulpar.timers') ?? [] as $interval => $timers) {
                 foreach ($timers as $timer) {
                     $timerCount++;
-                    Log::debug('Registered timer: ' . $interval . ' => ' . $timer);
+                    Logger::debug('Registered timer: ' . $interval . ' => ' . $timer);
                     $this->getDiscord()->getLoop()->addPeriodicTimer($interval, [$timer, 'run']);
                 }
             }
-            Log::debug('Registered ' . $timerCount . ' timers.');
+            Logger::debug('Registered ' . $timerCount . ' timers.');
 
-            Log::debug('Registering events...');
+            Logger::debug('Registering events...');
 
             // General
             $discord->on(Event::RESUMED, new Events\General\ResumedEvent);
@@ -290,7 +290,7 @@ class Tulpar
 
             // Ready
 
-            Log::info('Events registered.');
+            Logger::info('Events registered.');
         });
 
         $output->info('Starting bot loop...');

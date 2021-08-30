@@ -7,7 +7,7 @@ namespace App\Tulpar\Commands\Chat;
 use App\Enums\CommandCategory;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
-use App\Tulpar\Log;
+use App\Tulpar\Logger;
 use Discord\Parts\Guild\Emoji;
 use Discord\Parts\Guild\Guild;
 use Discord\Repository\Guild\EmojiRepository;
@@ -33,7 +33,7 @@ class EmoticonsCommand extends BaseCommand implements CommandInterface
 
         $guild->emojis->freshen()->done(function (EmojiRepository $emojiRepository) use ($guild) {
             if ($emojiRepository->count() < 1) {
-                $this->message->reply('No any emojis exists on this server.');
+                $this->message->reply($this->translate('No any emojis exists on this server.'));
                 return;
             }
 
@@ -50,8 +50,8 @@ class EmoticonsCommand extends BaseCommand implements CommandInterface
 
             $this->message->reply($message);
         }, function ($exception) {
-            Log::error($exception);
-            $this->message->reply('An error occurred on fetching emojis.');
+            Logger::error($exception);
+            $this->message->reply($this->translate('An error occurred on fetching emojis.'));
         });
     }
 }

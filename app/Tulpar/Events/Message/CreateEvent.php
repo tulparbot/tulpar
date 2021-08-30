@@ -8,12 +8,13 @@ use App\Enums\CommandValidation;
 use App\Models\AutoResponse;
 use App\Models\ChannelRestrict;
 use App\Models\CustomCommand;
+use App\Models\Rank;
 use App\Models\UserRank;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Contracts\FilterInterface;
 use App\Tulpar\Helpers;
-use App\Tulpar\Log;
+use App\Tulpar\Logger;
 use App\Tulpar\Tulpar;
 use Discord\Discord;
 use Discord\Parts\Channel\Channel;
@@ -173,7 +174,7 @@ class CreateEvent
                             $message->channel->sendMessage($instance->getHelp());
                         }
                         else {
-                            Log::info('Running command: ' . $instance::class);
+                            Logger::info('Running command: ' . $instance::class);
                             $message->react(Helpers::getRandomEmoticon())->done(function () use ($instance) {
                                 new Promise(function () use ($instance) {
                                     Helpers::call(fn () => $instance->run());
@@ -204,18 +205,23 @@ class CreateEvent
         if (str_contains(mb_strtolower($message->content), mb_strtolower(config('app.name'))) || str_contains(mb_strtolower($message->content), mb_strtolower($discord->id))) {
             // Log::debug('The command contains bot name. ' . config('app.name'));
             $message->react('💖')->otherwise(function ($exception) {
-                Log::error($exception);
+                Logger::error($exception);
             });
         }
 
         // Increment xp.
         if (!$message->channel->is_private) {
             $userRank = UserRank::find($message->guild_id, $message->user_id);
+            $level = $userRank->getLevelAttribute();
             $userRank->increment('message_count');
             $userRank
                 ->incrementGuildMessages($message->guild_id)
                 ->incrementChannelMessages($message->channel_id);
             $userRank->save();
+
+            if ($userRank->getLevelAttribute() > $level) {
+                $message->channel->sendMessage(Rank::make($message->guild, $message->member, true, false)->setContent('LEVEL UP!')->setReplyTo($message));
+            }
         }
 
         // Execute message filters.

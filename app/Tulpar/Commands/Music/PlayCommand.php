@@ -9,7 +9,7 @@ use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Extra\MusicPlayer;
 use App\Tulpar\Helpers;
-use App\Tulpar\Log;
+use App\Tulpar\Logger;
 use Discord\Voice\VoiceClient;
 use Exception;
 
@@ -58,7 +58,7 @@ class PlayCommand extends BaseCommand implements CommandInterface
             $this->discord->joinVoiceChannel($channel)->done(function (VoiceClient $client) {
                 return $this->play($client);
             }, function ($exception) {
-                Log::critical($exception);
+                Logger::critical($exception);
             });
         };
 

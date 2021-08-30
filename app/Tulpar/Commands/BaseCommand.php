@@ -8,8 +8,10 @@ use App\Enums\CommandCategory;
 use App\Enums\CommandValidation;
 use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Guard;
+use App\Tulpar\Translator;
 use App\Tulpar\Tulpar;
 use Discord\Discord;
+use Discord\Exceptions\IntentException;
 use Discord\Parts\Channel\Message;
 use IsaEken\Strargs\Strargs;
 
@@ -144,6 +146,18 @@ HELP;
     {
         $this->userCommand = new Strargs(substr($this->message->content, mb_strlen(Tulpar::getPrefix($this->message->guild_id))));
         $this->userCommand->decode();
+        $this->userCommand = Translator::translateCommandArgs($this->message->guild, $this::class, $this->userCommand);
+    }
+
+    /**
+     * @param string $translation
+     * @param array  $replacements
+     * @return string
+     * @throws IntentException
+     */
+    public function translate(string $translation, array $replacements = []): string
+    {
+        return _text($this->message->guild, $translation, $replacements);
     }
 
     /**

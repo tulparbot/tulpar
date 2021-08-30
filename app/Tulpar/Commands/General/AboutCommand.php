@@ -23,7 +23,7 @@ class AboutCommand extends BaseCommand implements CommandInterface
 
     public static array $permissions = [];
 
-    public static string $version = '1.0';
+    public static string $version = '1.1';
 
     public static bool $allowPm = true;
 
@@ -44,17 +44,20 @@ class AboutCommand extends BaseCommand implements CommandInterface
 
         $embed = new Embed($this->discord);
         $embed->setThumbnail($this->discord->avatar);
-        $embed->setFooter('Bot ID: ' . $this->discord->id . ' - Runtime: ' . $runtime);
+        $embed->setFooter($this->translate('Bot ID: :id - Runtime: :runtime', [
+            'id' => $this->discord->id,
+            'runtime' => $runtime,
+        ]));
 
-        $embed->addFieldValues('Version', $version);
+        $embed->addFieldValues($this->translate('Version'), $version);
 
-        $embed->addFieldValues('Server Count', $guilds, true);
-        $embed->addFieldValues('User Count', $users, true);
-        $embed->addFieldValues('Latency', PingCommand::ping() . 'ms', true);
+        $embed->addFieldValues($this->translate('Server Count'), $guilds, true);
+        $embed->addFieldValues($this->translate('User Count'), $users, true);
+        $embed->addFieldValues($this->translate('Latency'), PingCommand::ping() . 'ms', true);
 
-        $embed->addFieldValues('Memory Usage', bytesToHuman($memory_usage), true);
-        $embed->addFieldValues('Creation Date', Carbon::make('8/12/2021')->toDateString(), true);
-        $embed->addFieldValues('Author', Helpers::userTag('569169824056475679'), true);
+        $embed->addFieldValues($this->translate('Memory Usage'), bytesToHuman($memory_usage), true);
+        $embed->addFieldValues($this->translate('Creation Date'), Carbon::make('8/12/2021')->toDateString(), true);
+        $embed->addFieldValues($this->translate('Author'), Helpers::userTag('569169824056475679'), true);
 
         $builder = MessageBuilder::new();
         $builder->addEmbed($embed);

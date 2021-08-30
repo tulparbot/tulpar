@@ -31,7 +31,7 @@ class HelloCommand extends BaseCommand implements CommandInterface
     public function run(): void
     {
         if (!$this->userCommand->hasArgument(0)) {
-            $this->message->reply('Hi!');
+            $this->message->reply($this->translate('Hi!'));
             return;
         }
 
@@ -40,6 +40,8 @@ class HelloCommand extends BaseCommand implements CommandInterface
             $users[] = Helpers::userTag($argument);
         }
 
-        $this->message->reply('Hi; ' . implode(', ', $users) . '!');
+        $this->message->reply($this->translate('Hi; :members!', [
+            'members' => implode(', ', $users),
+        ]));
     }
 }

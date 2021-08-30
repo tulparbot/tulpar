@@ -1,0 +1,188 @@
+{
+    "App\\Tulpar\\Commands\\Birthday\\BirthdayCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Birthday\\ForgetCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Birthday\\NextBirthdaysCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Birthday\\RememberCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Birthday\\SetUserBirthdayCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Birthday\\UnsetUserBirthdayCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Development\\ClearFileSystemCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Development\\TestCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Authorization\\WhoamiCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Development\\StopCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Development\\RestartCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Authorization\\RootCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Development\\LogCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Development\\BotCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Authorization\\RegisterCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Chat\\HelloCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\General\\AboutCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\General\\VersionCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Chat\\EmoticonsCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\General\\InviteCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Chat\\ClearChannelCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\General\\HelpCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\General\\PingCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\General\\AboutUserCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\General\\AboutServerCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\General\\BugCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Music\\MusicCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Moderation\\WarnCommand": {
+        "arguments": {
+            "geciciban": "temp-ban"
+        },
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Moderation\\RestrictChannelCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Moderation\\SlowModeCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Moderation\\TempBanCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Moderation\\BanCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Moderation\\UnbanCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Moderation\\KickCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Game\\HangmanCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Rank\\RankCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Management\\PrefixCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\General\\GiveawayCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Chat\\AnnounceCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Game\\HeadsTailsCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Game\\ActivityCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\General\\MoveCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Other\\TwitchCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Development\\StatusCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Other\\ExchangeCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Chat\\TemporaryChannelCommand": {
+        "arguments": {},
+        "options": {}
+    }
+}

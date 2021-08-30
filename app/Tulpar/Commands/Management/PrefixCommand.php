@@ -51,6 +51,8 @@ class PrefixCommand extends BaseCommand implements CommandInterface
             ]);
         }
 
-        $this->message->reply('Server prefix is changed to "' . $prefix . '".');
+        $this->message->reply($this->translate('Server prefix is changed to ":prefix"', [
+            'prefix' => $prefix,
+        ]));
     }
 }

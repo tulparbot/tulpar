@@ -3,6 +3,7 @@
 namespace App\Tulpar\Filters\Chat;
 
 use App\Tulpar\Filters\BaseFilter;
+use App\Tulpar\Guard;
 use App\Tulpar\Helpers;
 use Discord\Parts\Channel\Message;
 
@@ -15,6 +16,10 @@ class RepeatFilter extends BaseFilter
      */
     public function check(): bool
     {
+        if (Guard::isRoot($this->message->member) || Guard::isModerator($this->message->guild, $this->message->member)) {
+            return false;
+        }
+
         if (!array_key_exists($this->message->guild_id, static::$lastMessages)) {
             static::$lastMessages[$this->message->guild_id] = [];
         }

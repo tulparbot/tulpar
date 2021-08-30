@@ -1,22 +1,24 @@
 <?php
 
 use App\Tulpar\Translator;
+use Discord\Exceptions\IntentException;
 use Discord\Parts\Guild\Guild;
 
-if (!function_exists('__translate')) {
+if (!function_exists('_text')) {
     /**
-     * @param string       $translation
-     * @param Guild|string $locale
-     * @param array        $replacements
+     * @param Guild|string|null $guild
+     * @param string            $translation
+     * @param array             $replacements
      * @return string
+     * @throws IntentException
      */
-    function __translate(string $translation, Guild|string $locale = 'en', array $replacements = []): string
+    function _text(Guild|string|null $guild, string $translation, array $replacements = []): string
     {
-        if ($locale instanceof Guild) {
-            $locale = $locale->preferred_locale;
+        if ($guild === null) {
+            $guild = 'en';
         }
 
-        return Translator::translate($translation, $locale, $replacements);
+        return Translator::translate($translation, Translator::localeBy($guild), $replacements);
     }
 }
 

@@ -34,7 +34,7 @@ class Helpers
         try {
             return $callable(...$arguments);
         } catch (Exception $exception) {
-            Log::error($exception);
+            Logger::error($exception);
             return $exception;
         }
     }

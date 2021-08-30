@@ -36,20 +36,36 @@ class WhoamiCommand extends BaseCommand implements CommandInterface
         }
 
         if (in_array($member->id, Guard::$globalRoots)) {
-            $this->message->reply('You are ``GLOBAL ROOT`` ' . $member . ' ☠️');
+            $this->message->reply($this->translate('You are ``GLOBAL ROOT`` :member ☠️', [
+                'member' => $member,
+            ]));
             return;
         }
 
         if (Guard::isRoot($member)) {
-            $this->message->reply('You are ``ROOT`` ' . $member . ' 💣');
+            $this->message->reply($this->translate('You are ``ROOT`` :member 💣', [
+                'member' => $member,
+            ]));
             return;
         }
 
         if ($this->message->channel->guild->members->get('id', $member->id)->getPermissions($this->message->channel)->administrator === true) {
-            $this->message->reply('You are ``Server Administrator`` ' . $member . ' 🥳');
+            $this->message->reply($this->translate('You are ``Server Administrator`` :member 🥳', [
+                'member' => $member,
+            ]));
             return;
         }
 
-        $this->message->reply('You are ``Member`` ' . $member . ' 💖');
+        Guard::clearModeratorCache();
+        if (Guard::isModerator($this->message->guild, $member)) {
+            $this->message->reply($this->translate('You are ``Moderator`` :member 🤓', [
+                'member' => $member,
+            ]));
+            return;
+        }
+
+        $this->message->reply($this->translate('You are ``Member`` :member 💖', [
+            'member' => $member,
+        ]));
     }
 }

@@ -7,7 +7,7 @@ namespace App\Tulpar\Commands\Development;
 use App\Enums\CommandCategory;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
-use App\Tulpar\Log;
+use App\Tulpar\Logger;
 
 class LogCommand extends BaseCommand implements CommandInterface
 {
@@ -41,6 +41,6 @@ class LogCommand extends BaseCommand implements CommandInterface
         }
 
         $this->message->reply('Log sent.');
-        Log::log($level, $message);
+        Logger::log($level, $message);
     }
 }

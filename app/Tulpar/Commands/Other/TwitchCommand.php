@@ -12,6 +12,7 @@ use Discord\Builders\Components\ActionRow;
 use Discord\Builders\Components\Button;
 use Discord\Builders\MessageBuilder;
 use Discord\Parts\Embed\Embed;
+use Discord\Parts\Guild\Guild;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 use Illuminate\Support\Carbon;
@@ -40,10 +41,10 @@ class TwitchCommand extends BaseCommand implements CommandInterface
         if (TwitchConnection::findToken($this->message->user_id) == null) {
             $builder = MessageBuilder::new()
                 ->setReplyTo($this->message)
-                ->setContent('Please connect your account to Twitch.')
+                ->setContent($this->translate('Please connect your account to Twitch.'))
                 ->addComponent(ActionRow::new()->addComponent(
                     Button::new(Button::STYLE_LINK)
-                        ->setLabel('Connection')
+                        ->setLabel($this->translate('Connection'))
                         ->setUrl('https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=' . config('twitch.client.id') . '&redirect_uri=' . config('app.url') . '/auth/callback/twitch&scope=user_read')
                 ));
             $this->message->channel->sendMessage($builder);
@@ -51,7 +52,7 @@ class TwitchCommand extends BaseCommand implements CommandInterface
         }
 
         $status = static::getStatusFromUsername($this->userCommand->getArgument(0), TwitchConnection::findToken($this->message->user_id));
-        $this->message->channel->sendMessage(static::makeStatusMessage(MessageBuilder::new()->setReplyTo($this->message), $status));
+        $this->message->channel->sendMessage(static::makeStatusMessage(MessageBuilder::new()->setReplyTo($this->message), $status, $this->message->guild));
     }
 
     public static function getStatusFromUsername(string $username, string $token): object
@@ -104,13 +105,13 @@ class TwitchCommand extends BaseCommand implements CommandInterface
         });
     }
 
-    public static function makeStatusMessage(MessageBuilder $builder, object $status): MessageBuilder
+    public static function makeStatusMessage(MessageBuilder $builder, object $status, Guild|null $guild = null): MessageBuilder
     {
         $embed = new Embed(Tulpar::getInstance()->getDiscord());
 
         if (!$status->live) {
             $embed->setTitle($status->username);
-            $embed->setDescription('Is currently offline.');
+            $embed->setDescription(_text($guild, 'Is currently offline.'));
             $builder->addEmbed($embed);
             return $builder;
         }
@@ -121,7 +122,7 @@ class TwitchCommand extends BaseCommand implements CommandInterface
         $builder->addEmbed($embed);
         $builder->addComponent(ActionRow::new()->addComponent(
             Button::new(Button::STYLE_LINK)
-                ->setLabel('Join Stream')
+                ->setLabel(_text($guild, 'Join Stream'))
                 ->setUrl('https://twitch.tv/' . $status->username)
         ));
 

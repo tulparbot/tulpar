@@ -50,17 +50,17 @@ class GiveawayCommand extends BaseCommand implements CommandInterface
 
         if ($winners->count() > 0) {
             $builder = new MessageBuilder();
-            $builder->setContent('Winners:');
+            $builder->setContent($this->translate('Winners:'));
             $builder->setReplyTo($message);
             $embed = new Embed($this->discord);
-            $embed->setAuthor('Winner!');
+            $embed->setAuthor($this->translate('Winner!'));
             $embed->setDescription(Helpers::userTag($winners[0]));
             $builder->addEmbed($embed);
             $message->channel->sendMessage($builder);
             return;
         }
 
-        $message->reply('Nobody won the lottery.');
+        $message->reply($this->translate('Nobody won the lottery.'));
     }
 
     public function run(): void
@@ -82,24 +82,27 @@ class GiveawayCommand extends BaseCommand implements CommandInterface
         try {
             $duration = Carbon::make($this->userCommand->getArgument(1) ?? '+10 minutes');
         } catch (Exception $exception) {
-            $this->message->reply('Invalid duration');
+            $this->message->reply($this->translate('Invalid duration'));
             return;
         }
         $emoji = '🎉';
 
         if (mb_strlen($title) < 1 || mb_strlen($title) > 200) {
-            $this->message->reply('The title is must can not be longer than 200 characters');
+            $this->message->reply($this->translate('The title is must can not be longer than 200 characters'));
             return;
         }
 
         if ($duration == null) {
-            $this->message->reply('Invalid duration');
+            $this->message->reply($this->translate('Invalid duration'));
             return;
         }
 
         $embed = new Embed($this->discord);
         $embed->setTitle($title);
-        $embed->setDescription('React with ' . $emoji . ' to enter!' . PHP_EOL . 'Duration: ' . $duration->addSeconds()->diffForHumans());
+        $embed->setDescription($this->translate('React with :emoji to enter!:eolDuration: :duration', [
+            'emoji' => $emoji,
+            'duration' => $duration->addSeconds()->diffForHumans(),
+        ]));
 
         $this->message->channel->sendEmbed($embed)->done(function (Message $message) use ($duration, $emoji) {
             static::$votes[$message->id] = [];

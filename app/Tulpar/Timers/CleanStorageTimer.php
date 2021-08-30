@@ -2,7 +2,7 @@
 
 namespace App\Tulpar\Timers;
 
-use App\Tulpar\Log;
+use App\Tulpar\Logger;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use React\EventLoop\TimerInterface;
@@ -21,16 +21,16 @@ class CleanStorageTimer
         return collect($paths);
     }
 
-    public static function run(TimerInterface $timer)
+    public static function run(TimerInterface|null $timer)
     {
-        Log::info('Clearing storage files...');
+        Logger::info('Clearing storage files...');
         $files = collect([]);
         $files = $files->merge(static::collect(storage_path('app/music')));
         $files = $files->merge(static::collect(storage_path('tmp')));
-        Log::info('Deleting ' . $files->count() . ' file...');
+        Logger::info('Deleting ' . $files->count() . ' file...');
         foreach ($files as $file) {
             File::delete($file);
         }
-        Log::info('Deleted ' . $files->count() . ' file.');
+        Logger::info('Deleted ' . $files->count() . ' file.');
     }
 }

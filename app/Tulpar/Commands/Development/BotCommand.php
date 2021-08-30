@@ -7,7 +7,7 @@ namespace App\Tulpar\Commands\Development;
 use App\Enums\CommandCategory;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
-use App\Tulpar\Log;
+use App\Tulpar\Logger;
 use Discord\Parts\User\Activity;
 
 class BotCommand extends BaseCommand implements CommandInterface
@@ -74,7 +74,7 @@ class BotCommand extends BaseCommand implements CommandInterface
         }
 
         $__type = $this->types[$type];
-        Log::info(
+        Logger::info(
             'Updating activity to: ' . PHP_EOL .
             "name => ``$name``" . PHP_EOL .
             "url => ``$url``" . PHP_EOL .

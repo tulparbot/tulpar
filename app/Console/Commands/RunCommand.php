@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Tulpar\Logger;
 use App\Tulpar\Tulpar;
 use Discord\Exceptions\IntentException;
 use Discord\WebSockets\Intents;
@@ -83,6 +84,7 @@ class RunCommand extends Command
         $this->info('Setting intents...');
         static::$instance->options['loadAllMembers'] = true;
         static::$instance->options['intents'] = Intents::getAllIntents();
+        static::$instance->options['logger'] = Logger::getLogger();
     }
 
     /**
