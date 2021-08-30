@@ -36,6 +36,10 @@ class SlowModeCommand extends BaseCommand implements CommandInterface
     public static string $category = CommandCategory::Moderation;
 
     public static array $slowmodes = [
+        '1 seconds' => 1,
+        '2 seconds' => 2,
+        '3 seconds' => 3,
+        '4 seconds' => 4,
         '5 seconds' => 5,
         '10 seconds' => 10,
         '15 seconds' => 15,
@@ -93,19 +97,5 @@ class SlowModeCommand extends BaseCommand implements CommandInterface
             ->setReplyTo($this->message)
             ->setContent($this->translate('Please select a time or disable slow mode.'))
             ->addComponent($menu));
-
-        return;
-
-        $argument = $this->userCommand->getArgument(0);
-        if ($argument == 'off') {
-            Helpers::setRateLimitPerUser($this->message->channel, 0);
-            return;
-        }
-
-        if (!array_key_exists($argument, static::$slowmodes)) {
-            $this->message->reply('Invalid time requested. You only use: ' . implode(', ', array_keys(static::$slowmodes)));
-            return;
-        }
-
     }
 }
