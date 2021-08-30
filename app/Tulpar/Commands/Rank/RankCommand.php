@@ -5,16 +5,20 @@ namespace App\Tulpar\Commands\Rank;
 use App\Enums\CommandCategory;
 use App\Models\Rank;
 use App\Tulpar\Commands\BaseCommand;
+use App\Tulpar\CommandTraits\HasMemberArgument;
 use App\Tulpar\Contracts\CommandInterface;
-use Discord\Parts\User\Member;
 
 class RankCommand extends BaseCommand implements CommandInterface
 {
+    use HasMemberArgument;
+
     public static string $command = 'rank';
 
     public static string $description = 'Show the rank';
 
     public static array $permissions = ['root'];
+
+    public static string $version = 'v1.1';
 
     public static array $usages = [
         '',
@@ -25,11 +29,12 @@ class RankCommand extends BaseCommand implements CommandInterface
 
     public function run(): void
     {
-        $member = $this->userCommand->hasArgument(0) ? $this->userCommand->getArgument(0) : $this->message->member->id;
-        $member = $this->message->guild->members->get('id', $member);
-        if (!$member instanceof Member) {
-            $this->message->reply($this->translate('Invalid member'));
+        $member = $this->getMemberArgument(0, true);
+        if ($member === false) {
             return;
+        }
+        else if ($member === null) {
+            $member = $this->message->member;
         }
 
         $this->message->channel->sendMessage(Rank::make($this->message->guild, $member, true, true));
