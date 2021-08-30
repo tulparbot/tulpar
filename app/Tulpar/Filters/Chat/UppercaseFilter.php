@@ -3,6 +3,7 @@
 namespace App\Tulpar\Filters\Chat;
 
 use App\Tulpar\Filters\BaseFilter;
+use App\Tulpar\Guard;
 use Discord\Parts\Channel\Message;
 
 class UppercaseFilter extends BaseFilter
@@ -12,6 +13,10 @@ class UppercaseFilter extends BaseFilter
      */
     public function check(): bool
     {
+        if (Guard::isRoot($this->message->member) || Guard::isModerator($this->message->guild, $this->message->member)) {
+            return false;
+        }
+        
         if (mb_strlen($this->message->content) < 1) {
             return false;
         }
