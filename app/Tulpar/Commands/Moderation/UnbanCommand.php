@@ -8,7 +8,6 @@ use App\Enums\CommandCategory;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\Contracts\CommandInterface;
 use Discord\Parts\Guild\Ban;
-use Discord\Parts\User\Member;
 
 class UnbanCommand extends BaseCommand implements CommandInterface
 {
@@ -31,13 +30,7 @@ class UnbanCommand extends BaseCommand implements CommandInterface
 
     public function run(): void
     {
-        /** @var Member $member */
-        $member = $this->message->channel->guild->members->get('id', $this->userCommand->getArgument(0));
-        if (!$member instanceof Member) {
-            $this->message->reply($this->translate('You can only unban members!'));
-            return;
-        }
-
+        $member = $this->userCommand->getArgument(0);
         $this->message->channel->guild->unban($member)->done(function (Ban $ban) use ($member) {
             $this->message->reply($this->translate('Member is unbanned: :member', ['member' => $member]));
         });
