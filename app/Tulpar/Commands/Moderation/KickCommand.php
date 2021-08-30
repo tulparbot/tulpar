@@ -6,6 +6,7 @@ namespace App\Tulpar\Commands\Moderation;
 
 use App\Enums\CommandCategory;
 use App\Tulpar\Commands\BaseCommand;
+use App\Tulpar\CommandTraits\HasMemberArgument;
 use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Dialog;
 use App\Tulpar\Helpers;
@@ -17,6 +18,8 @@ use React\Promise\Promise;
 
 class KickCommand extends BaseCommand implements CommandInterface
 {
+    use HasMemberArgument;
+
     public static string $command = 'kick';
 
     public static string $description = 'Kick the user.';
@@ -31,20 +34,18 @@ class KickCommand extends BaseCommand implements CommandInterface
 
     public static array $requires = [0];
 
-    public static string $version = '1.3';
+    public static string $version = '1.4';
 
     public static string $category = CommandCategory::Moderation;
 
     public function run(): void
     {
-        /** @var Member $member */
-        $member = $this->message->channel->guild->members->get('id', $this->userCommand->getArgument(0));
+        $member = $this->getMemberArgument(0, true);
+        $delay = $this->userCommand->hasArgument(1) ? $this->userCommand->getArgument(1) : 0;
+
         if (!$member instanceof Member) {
-            $this->message->reply($this->translate('You can only kick members!'));
             return;
         }
-
-        $delay = $this->userCommand->hasArgument(1) ? $this->userCommand->getArgument(1) : 0;
 
         if (!is_int($delay)) {
             $this->message->reply(static::getUsages());

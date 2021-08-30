@@ -27,5 +27,9 @@
     "Hi; :members!": "Merhaba; :members 👋👋",
     "You can only use in members!": "You can only use in members!",
     "User (:member) warned by reason: :reason": "User (:member) warned by reason: :reason",
-    "You can only use: :constants": "You can only use: :constants"
+    "You can only use: :constants": "You can only use: :constants",
+    "A error occurred.": "A error occurred.",
+    ":from is :to": ":from is :to",
+    "Are you serious to kick user: :member": "Are you serious to kick user: :member",
+    "Kicking progress is canceled.": "Kicking progress is canceled."
 }
