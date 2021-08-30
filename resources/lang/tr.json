@@ -31,5 +31,6 @@
     "A error occurred.": "A error occurred.",
     ":from is :to": ":from is :to",
     "Are you serious to kick user: :member": "Are you serious to kick user: :member",
-    "Kicking progress is canceled.": "Kicking progress is canceled."
+    "Kicking progress is canceled.": "Kicking progress is canceled.",
+    "Banned user: \":member\"": "Banned user: \":member\""
 }
