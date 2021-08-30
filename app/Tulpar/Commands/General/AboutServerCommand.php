@@ -55,22 +55,22 @@ class AboutServerCommand extends BaseCommand implements CommandInterface
         $embed = new Embed($this->discord);
         $embed->setAuthor($this->message->user->username, $this->message->user->avatar);
 
-        $embed->addFieldValues('Owner', Helpers::userTag($owner->id), true);
-        $embed->addFieldValues('Region', $region, true);
-        $embed->addFieldValues('Emojis', $emojis->count(), true);
+        $embed->addFieldValues($this->translate('Owner'), Helpers::userTag($owner->id), true);
+        $embed->addFieldValues($this->translate('Region'), $region, true);
+        $embed->addFieldValues($this->translate('Emojis'), $emojis->count(), true);
 
-        $embed->addFieldValues('Users', $total_users, true);
-        $embed->addFieldValues('Max Users', $max_total_users, true);
-        $embed->addFieldValues('Total Channels', $channels->count(), true);
+        $embed->addFieldValues($this->translate('Users'), $total_users, true);
+        $embed->addFieldValues($this->translate('Max Users'), $max_total_users, true);
+        $embed->addFieldValues($this->translate('Total Channels'), $channels->count(), true);
 
-        $embed->addFieldValues('Text Channels', $channelCount(0), true);
-        $embed->addFieldValues('Voice Channels', $channelCount(2), true);
-        $embed->addFieldValues('Category Channels', $channelCount(4), true);
-        $embed->addFieldValues('News Channels', $channelCount(5), true);
-        $embed->addFieldValues('Public Channels', $channelCount(11), true);
-        $embed->addFieldValues('Private Channels', $channelCount(12), true);
+        $embed->addFieldValues($this->translate('Text Channels'), $channelCount(0), true);
+        $embed->addFieldValues($this->translate('Voice Channels'), $channelCount(2), true);
+        $embed->addFieldValues($this->translate('Category Channels'), $channelCount(4), true);
+        $embed->addFieldValues($this->translate('News Channels'), $channelCount(5), true);
+        $embed->addFieldValues($this->translate('Public Channels'), $channelCount(11), true);
+        $embed->addFieldValues($this->translate('Private Channels'), $channelCount(12), true);
 
-        $embed->addFieldValues('Roles', implode(' ', $_roles));
+        $embed->addFieldValues($this->translate('Roles'), implode(' ', $_roles));
 
         $this->message->channel->sendEmbed($embed);
     }
