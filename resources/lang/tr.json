@@ -47,5 +47,7 @@
     "Latency": "Latency",
     "Memory Usage": "Memory Usage",
     "Creation Date": "Creation Date",
-    "Author": "Author"
+    "Author": "Author",
+    "Commands of in the category: :category": "Commands of in the category: :category",
+    ":count Total Members": ":count Total Members"
 }

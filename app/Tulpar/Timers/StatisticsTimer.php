@@ -24,7 +24,7 @@ class StatisticsTimer
             $guild->channels->fetch($statisticsChannel->channel_id)->done(function (Channel $channel) use ($statisticsChannel) {
                 switch ($statisticsChannel->type) {
                     case 'total_users':
-                        $channel->name = $channel->guild->member_count . ' Total Members';
+                        $channel->name = _text($channel->guild, ':count Total Members', ['count' => $channel->guild->member_count]);
                         $channel->guild->channels->save($channel);
                         break;
 
@@ -39,7 +39,7 @@ class StatisticsTimer
                                 }
                             }
 
-                            $channel->name = $count . ' Bot\'s';
+                            $channel->name = _text($channel->guild, ':count Bot\'s', ['count' => $count]);
                             $channel->guild->channels->save($channel);
                         });
                         break;
@@ -55,7 +55,7 @@ class StatisticsTimer
                                 }
                             }
 
-                            $channel->name = $count . ' Online Members';
+                            $channel->name = _text($channel->guild, ':count Online Members', ['count' => $count]);
                             $channel->guild->channels->save($channel);
                         });
                         break;
