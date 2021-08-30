@@ -50,9 +50,11 @@ use App\Tulpar\Commands\Music\PlayCommand;
 use App\Tulpar\Commands\Other\ExchangeCommand;
 use App\Tulpar\Commands\Other\TwitchCommand;
 use App\Tulpar\Commands\Rank\RankCommand;
+use App\Tulpar\Filters\Chat\LinkFilter;
 use App\Tulpar\Filters\Chat\ProfanityFilter;
 use App\Tulpar\Filters\Chat\RepeatFilter;
 use App\Tulpar\Filters\Chat\UppercaseFilter;
+use App\Tulpar\Filters\Chat\ZalgoFilter;
 use App\Tulpar\Restricts\CommandRestrict;
 use App\Tulpar\Restricts\ImageRestrict;
 use App\Tulpar\Restricts\LinkRestrict;
@@ -449,6 +451,8 @@ return [
         UppercaseFilter::class,
         RepeatFilter::class,
         ProfanityFilter::class,
+        LinkFilter::class,
+        ZalgoFilter::class,
     ],
 
     'requires' => [
