@@ -92,7 +92,7 @@ class HelpCommand extends BaseCommand implements CommandInterface
 
                                     $content = '```' . $content . '```';
                                     if (mb_strlen($command::getDescription()) > 0) {
-                                        $content .= PHP_EOL . $command::getDescription();
+                                        $content .= PHP_EOL . _text($this->message->guild, $command::getDescription());
                                     }
 
                                     $embed->setDescription($content);

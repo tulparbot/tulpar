@@ -53,14 +53,28 @@ class Translator
         $replacements['locale'] = $locale;
         $translation_file = resource_path('lang/' . $locale . '.json');
 
+        if ($locale == 'en' && !file_exists($translation_file)) {
+            file_put_contents($translation_file, json_encode([]));
+        }
+
+        if (!array_key_exists($locale, static::$translations)) {
+            static::$translations[$locale] = [];
+        }
+
+        if (array_key_exists($translation, static::$translations[$locale]) && config('app.env') === 'production') {
+            return static::format(static::$translations[$locale][$translation], $replacements);
+        }
+
         if (file_exists($translation_file)) {
-            if (!array_key_exists($translation, static::$translations)) {
-                static::$translations = json_decode(file_get_contents(resource_path('lang/' . $locale . '.json')), true);
+            static::$translations[$locale] = json_decode(file_get_contents($translation_file), true, flags: JSON_UNESCAPED_UNICODE);
+
+            if (!array_key_exists($translation, static::$translations[$locale])) {
+                static::$translations[$locale][$translation] = $translation;
+                file_put_contents($translation_file, json_encode(static::$translations[$locale], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+                return static::translate($translation, $locale, $replacements);
             }
 
-            if (array_key_exists($translation, static::$translations)) {
-                return static::format(static::$translations[$translation], $replacements);
-            }
+            return static::format(static::$translations[$locale][$translation], $replacements);
         }
 
         return static::format($translation, $replacements);
