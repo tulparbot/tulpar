@@ -7,15 +7,17 @@ namespace App\Tulpar\Commands\General;
 use App\Enums\CommandCategory;
 use App\Models\UserRank;
 use App\Tulpar\Commands\BaseCommand;
+use App\Tulpar\CommandTraits\HasMemberArgument;
 use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Helpers;
 use Discord\Parts\Embed\Embed;
 use Discord\Parts\Guild\Role;
-use Discord\Parts\User\Member;
 use Illuminate\Support\Carbon;
 
 class AboutUserCommand extends BaseCommand implements CommandInterface
 {
+    use HasMemberArgument;
+
     public static string $command = 'about-user';
 
     public static string $description = 'Show about user.';
@@ -31,16 +33,8 @@ class AboutUserCommand extends BaseCommand implements CommandInterface
 
     public function run(): void
     {
-        if ($this->userCommand->hasArgument(0)) {
-            /** @var Member $member */
-            $member = $this->message->channel->guild->members->get('id', $this->userCommand->getArgument(0));
-        }
-        else {
-            $member = $this->message->member;
-        }
-
-        if (!$member instanceof Member) {
-            $this->message->reply('You can only use in members!');
+        $member = $this->getMemberArgument(failMessage: true);
+        if ($member === null) {
             return;
         }
 

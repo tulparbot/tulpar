@@ -24,5 +24,6 @@
     "Help menu for user: :user": ":user kullanıcısı için yardım menüsü",
     "You are ``GLOBAL ROOT`` :member ☠️": "Siz, ``Üst Düzey Yöneticisiniz`` :member ☠️",
     "Hi!": "Merhaba 👋👋",
-    "Hi; :members!": "Merhaba; :members 👋👋"
+    "Hi; :members!": "Merhaba; :members 👋👋",
+    "You can only use in members!": "You can only use in members!"
 }
