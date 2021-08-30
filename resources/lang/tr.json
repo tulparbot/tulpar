@@ -39,5 +39,13 @@
     "Rank": "Rank",
     "Messages in ````:server````": "Messages in ````:server````",
     "Messages in ````:channel````": "Messages in ````:channel````",
-    "Roles [:count]": "Roles [:count]"
+    "Roles [:count]": "Roles [:count]",
+    "Bot ID: :id - Runtime: :runtime": "Bot ID: :id - Runtime: :runtime",
+    "Version": "Version",
+    "Server Count": "Server Count",
+    "User Count": "User Count",
+    "Latency": "Latency",
+    "Memory Usage": "Memory Usage",
+    "Creation Date": "Creation Date",
+    "Author": "Author"
 }
