@@ -53,6 +53,8 @@ use App\Tulpar\Commands\Rank\RankCommand;
 use App\Tulpar\Filters\Chat\LinkFilter;
 use App\Tulpar\Filters\Chat\ProfanityFilter;
 use App\Tulpar\Filters\Chat\RepeatFilter;
+use App\Tulpar\Filters\Chat\RepeatTextFilter;
+use App\Tulpar\Filters\Chat\SpoilerFilter;
 use App\Tulpar\Filters\Chat\UppercaseFilter;
 use App\Tulpar\Filters\Chat\ZalgoFilter;
 use App\Tulpar\Restricts\CommandRestrict;
@@ -453,6 +455,8 @@ return [
         ProfanityFilter::class,
         LinkFilter::class,
         ZalgoFilter::class,
+        RepeatTextFilter::class,
+        SpoilerFilter::class,
     ],
 
     'requires' => [
