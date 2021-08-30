@@ -9,6 +9,7 @@ use App\Enums\InfractionType;
 use App\Models\Infraction;
 use App\Tulpar\Commands\BaseCommand;
 use App\Tulpar\CommandTraits\HasEnumArgument;
+use App\Tulpar\CommandTraits\HasMemberArgument;
 use App\Tulpar\Contracts\CommandInterface;
 use App\Tulpar\Guard;
 use App\Tulpar\Helpers;
@@ -17,6 +18,7 @@ use Discord\Parts\User\Member;
 
 class WarnCommand extends BaseCommand implements CommandInterface
 {
+    use HasMemberArgument;
     use HasEnumArgument;
 
     public static string $command = 'warn';
@@ -32,23 +34,17 @@ class WarnCommand extends BaseCommand implements CommandInterface
 
     public static array $requires = [0, 1];
 
-    public static string $version = '1.0';
+    public static string $version = '1.3';
 
     public static string $category = CommandCategory::Moderation;
 
     public function run(): void
     {
-        /** @var Member $member */
-        $member = $this->message->channel->guild->members->get('id', $this->userCommand->getArgument(0));
+        $member = $this->getMemberArgument(0, true);
         $reason = $this->userCommand->getArgument(1);
         $type = $this->getEnumArgument(2, InfractionType::class, InfractionType::Custom, true);
-        
-        if ($type == null) {
-            return;
-        }
 
-        if (!$member instanceof Member || !in_array($type, [InfractionType::Custom, InfractionType::TempBan, InfractionType::Ban, InfractionType::HardBan, InfractionType::Kick, InfractionType::Mute])) {
-            $this->message->reply(static::getUsages());
+        if ($type == null || !$member instanceof Member || !in_array($type, [InfractionType::Custom, InfractionType::TempBan, InfractionType::Ban, InfractionType::HardBan, InfractionType::Kick, InfractionType::Mute])) {
             return;
         }
 
