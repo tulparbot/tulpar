@@ -37,7 +37,8 @@
         "socialiteproviders/discord": "^4.1",
         "socialiteproviders/zoho": "^4.1",
         "spatie/color": "^1.2",
-        "team-reflex/discord-php": "dev-develop"
+        "team-reflex/discord-php": "dev-develop",
+        "xpaw/php-source-query-class": "^2.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

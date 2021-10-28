@@ -26,6 +26,8 @@ use App\Tulpar\Commands\Development\TestCommand;
 use App\Tulpar\Commands\Game\ActivityCommand;
 use App\Tulpar\Commands\Game\HangmanCommand;
 use App\Tulpar\Commands\Game\HeadsTailsCommand;
+use App\Tulpar\Commands\Game\GoldSrcCommand;
+use App\Tulpar\Commands\Game\GSourceQueryCommand;
 use App\Tulpar\Commands\General\AboutCommand;
 use App\Tulpar\Commands\General\AboutServerCommand;
 use App\Tulpar\Commands\General\AboutUserCommand;
@@ -180,6 +182,8 @@ return [
         LogCommand::class,
         BotCommand::class,
 
+        GoldSrcCommand::class,
+        GSourceQueryCommand::class,
         RegisterCommand::class,
         HelloCommand::class,
         AboutCommand::class,
@@ -282,6 +286,8 @@ return [
                 ActivityCommand::class,
                 HangmanCommand::class,
                 HeadsTailsCommand::class,
+                GoldSrcCommand::class,
+                GSourceQueryCommand::class,
             ],
         ],
         CommandCategory::General => (object)[
@@ -391,6 +397,8 @@ return [
         StopCommand::class => ['botudurdur', 'botst', 'botstop'],
         ClearChannelCommand::class => ['sil', 'temizle', 'yoket'],
         ActivityCommand::class => ['aktivite'],
+        GoldSrcCommand::class => ['serverbilgi'],
+        GSourceQueryCommand::class => ['serverbilgiip'],
     ],
 
     /*
