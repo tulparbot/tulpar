@@ -60,7 +60,9 @@ class GSourceQueryCommand extends BaseCommand implements CommandInterface
 		'valve' => 'Half-Life',
 		'cstrike' => 'Counter-Strike',
 		'csgo' => 'Counter-Strike: Global Offensive',
-		'l4d2' => 'Left 4 Dead 2',
+		'left4dead2' => 'Left 4 Dead 2',
+		'hl2mp' => 'Half-Life 2: Multiplayer',
+		'tf' => 'Team Fortress 2',
 	};
 	if ($Info["ModDir"] == "valve"){
 		$thumbnail = "https://www.kindpng.com/picc/m/204-2045030_half-life-logo-png-transparent-background-dollar-sign.png";
@@ -72,6 +74,12 @@ class GSourceQueryCommand extends BaseCommand implements CommandInterface
 		$thumbnail = "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/95516a47-8cd4-4460-8bde-0392d01ee6f0/d8xd5lx-8917479a-25de-44de-a99b-a1b07a68d5cd.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzk1NTE2YTQ3LThjZDQtNDQ2MC04YmRlLTAzOTJkMDFlZTZmMFwvZDh4ZDVseC04OTE3NDc5YS0yNWRlLTQ0ZGUtYTk5Yi1hMWIwN2E2OGQ1Y2QucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.62CjDA4cRGZTQU_ZsDReQSylixAiVsdmDW5wNdU2nuI";
 	}elseif ($Info["ModDir"] == "csgo"){
 		$thumbnail = "https://external-preview.redd.it/2C3LuiF_EFkpTxcZ7a3nSI7k8ABzUBIPw40763JnrRs.png?auto=webp&s=3d1b48f4c2ceb533791c7c840bb5db6a49dd2f94";
+	}elseif ($Info["ModDir"] == "left4dead2"){
+		$thumbnail = "https://i1.sndcdn.com/artworks-000402598008-4og8u7-t500x500.jpg";
+	}elseif ($Info["ModDir"] == "tf"){
+		$thumbnail = "https://www.pngkey.com/png/detail/25-257666_tf2-crosshair-orange-team-fortress-2-logo-png.png";
+	}elseif ($Info["ModDir"] == "hl2mp"){
+		$thumbnail = "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/a2c1193c-58ba-4062-934b-54fd2ec8c993/d1jhx20-dc797b78-5feb-4005-b206-64c2406b4166.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2EyYzExOTNjLTU4YmEtNDA2Mi05MzRiLTU0ZmQyZWM4Yzk5M1wvZDFqaHgyMC1kYzc5N2I3OC01ZmViLTQwMDUtYjIwNi02NGMyNDA2YjQxNjYuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.qMoc8FF_QTzfT1-VSruLabYZTqezzLcUFgq5tI6r0ag";
 	}else{
 		$thumbnail = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOj15lhy_7nSE5m0QHSybEBRJoYdhvy85en11WtZcLVH3JzxZgP10XKk49LckNgU-1wAU&usqp=CAU";
 
