@@ -182,6 +182,14 @@
         "options": []
     },
     "App\\Tulpar\\Commands\\Chat\\TemporaryChannelCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Game\\GoldSrcCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Game\\GSourceQueryCommand": {
         "arguments": {},
         "options": {}
     }
