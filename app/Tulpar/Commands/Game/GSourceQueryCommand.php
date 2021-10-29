@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 use Discord\Parts\Embed\Embed;
 use GuzzleHttp\Client;
 use xPaw\SourceQuery\SourceQuery;
-	
+
 class GSourceQueryCommand extends BaseCommand implements CommandInterface
 {
     public static string $command = 'sourcequery';
@@ -25,7 +25,7 @@ class GSourceQueryCommand extends BaseCommand implements CommandInterface
     public static array $usages = [''];
 
     public static string $version = '1.0';
-	
+
 	public static array $requires = [0];
 
     public static string $category = CommandCategory::Game;
@@ -34,23 +34,23 @@ class GSourceQueryCommand extends BaseCommand implements CommandInterface
     {
 	$ip = $this->userCommand->getArgument(0);
 	$port = $this->userCommand->getArgument(1);
-	
+
 	// Edit this ->
 	$SQ_TIMEOUT = 1;
 	$SQ_ENGINE = SourceQuery::SOURCE;
 	// Edit this <-
 	$Timer = microtime( true );
-	
+
 	$Query = new SourceQuery( );
-	
+
 	$Info    = [];
 	$Rules   = [];
 	$Players = [];
 	$Exception = null;
-	
+
 		$Query->Connect( $ip, $port='27015', $SQ_TIMEOUT, $SQ_ENGINE );
 		$Query->SetUseOldGetChallengeMethod( true); // Use this when players/rules retrieval fails on games like Starbound
-		
+
 		$Info    = $Query->GetInfo( );
 	$Timer = number_format( microtime( true ) - $Timer, 4, '.', '' );
 	$gamedir = match ($Info["ModDir"]) {
@@ -94,8 +94,7 @@ class GSourceQueryCommand extends BaseCommand implements CommandInterface
         $embed->addFieldValues($this->translate('Description'), $Info["ModDesc"], true);
 
         $this->message->channel->sendEmbed($embed);
-		
 		$Query->Disconnect( );
-	
+
     }
 }
