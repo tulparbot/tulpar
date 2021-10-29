@@ -13,9 +13,9 @@ use xPaw\SourceQuery\SourceQuery;
 	
 class GoldSrcCommand extends BaseCommand implements CommandInterface
 {
-    public static string $command = 'svencoop';
+    public static string $command = 'svencoopserver';
 
-    public static string $description = 'server info';
+    public static string $description = 'Sven Co-op sunucu bilgilerini getirir.';
 
     public static array $permissions = [];
 
@@ -63,7 +63,7 @@ class GoldSrcCommand extends BaseCommand implements CommandInterface
 	}
 	
 	$Timer = number_format( microtime( true ) - $Timer, 4, '.', '' );
-	$oyunculistesi = "";
+	$oyunculistesi = "Sunucu Boş!";
 	foreach ($Players as $Player) {
 		$oyunculistesi.= $Player["Name"] . "\r\n";
 	}
@@ -71,6 +71,7 @@ class GoldSrcCommand extends BaseCommand implements CommandInterface
 		default =>  $this->translate('Other'),
 		'svencoop' => 'Sven Co-op',
 	};
+	
 		$embed = new Embed($this->discord);
         $embed->setAuthor($this->message->user->username, $this->message->user->avatar);
         $embed->setThumbnail("https://yt3.ggpht.com/ytc/AKedOLRcv_UAxEe4LS1FHQuaNCuNWDAUHu-TI5J2R36I=s900-c-k-c0x00ffffff-no-rj");
