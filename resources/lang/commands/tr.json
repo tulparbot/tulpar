@@ -190,6 +190,10 @@
         "options": []
     },
     "App\\Tulpar\\Commands\\Game\\GSourceQueryCommand": {
+        "arguments": [],
+        "options": []
+    },
+    "App\\Tulpar\\Commands\\Music\\PlayCommand": {
         "arguments": {},
         "options": {}
     }

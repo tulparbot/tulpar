@@ -15,4 +15,8 @@ abstract class BaseFilter implements FilterInterface
     {
         // ...
     }
+    public function translate(string $translation, array $replacements = []): string
+    {
+        return _text($this->message->guild, $translation, $replacements);
+    }
 }

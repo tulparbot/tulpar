@@ -27,7 +27,7 @@ class LinkFilter extends BaseFilter
     public function run(): Message
     {
         if ($this->check()) {
-            $this->message->reply('Do not send links!');
+            $this->message->reply($this->translate('Do not send links!'));
         }
 
         return $this->message;
