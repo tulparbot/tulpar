@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Extensions\FileStore;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
+use Tulpar\Extension\Container;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,7 +16,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        app()->singleton('extensions', function () {
+            return new Container();
+        });
+
+        foreach (config('tulpar.extensions') as $extension) {
+            app('extensions')->add(new $extension());
+        }
     }
 
     /**

@@ -24,10 +24,10 @@ use App\Tulpar\Commands\Development\StatusCommand;
 use App\Tulpar\Commands\Development\StopCommand;
 use App\Tulpar\Commands\Development\TestCommand;
 use App\Tulpar\Commands\Game\ActivityCommand;
-use App\Tulpar\Commands\Game\HangmanCommand;
-use App\Tulpar\Commands\Game\HeadsTailsCommand;
 use App\Tulpar\Commands\Game\GoldSrcCommand;
 use App\Tulpar\Commands\Game\GSourceQueryCommand;
+use App\Tulpar\Commands\Game\HangmanCommand;
+use App\Tulpar\Commands\Game\HeadsTailsCommand;
 use App\Tulpar\Commands\General\AboutCommand;
 use App\Tulpar\Commands\General\AboutServerCommand;
 use App\Tulpar\Commands\General\AboutUserCommand;
@@ -166,61 +166,6 @@ return [
     |--------------------------------------------------------------------------
     */
     'commands' => [
-        BirthdayCommand::class,
-        ForgetCommand::class,
-        NextBirthdaysCommand::class,
-        RememberCommand::class,
-        SetUserBirthdayCommand::class,
-        UnsetUserBirthdayCommand::class,
-
-        ClearFileSystemCommand::class,
-        TestCommand::class,
-        WhoamiCommand::class,
-        StopCommand::class,
-        RestartCommand::class,
-        RootCommand::class,
-        LogCommand::class,
-        BotCommand::class,
-
-        GoldSrcCommand::class,
-        GSourceQueryCommand::class,
-        RegisterCommand::class,
-        HelloCommand::class,
-        AboutCommand::class,
-        VersionCommand::class,
-        EmoticonsCommand::class,
-        InviteCommand::class,
-        ClearChannelCommand::class,
-        HelpCommand::class,
-        PingCommand::class,
-        AboutUserCommand::class,
-        AboutServerCommand::class,
-        BugCommand::class,
-
-        MusicCommand::class,
-
-        WarnCommand::class,
-        RestrictChannelCommand::class,
-        SlowModeCommand::class,
-        TempBanCommand::class,
-        BanCommand::class,
-        UnbanCommand::class,
-        KickCommand::class,
-
-        HangmanCommand::class,
-
-        RankCommand::class,
-        PrefixCommand::class,
-        GiveawayCommand::class,
-        AnnounceCommand::class,
-
-        HeadsTailsCommand::class,
-        ActivityCommand::class,
-        MoveCommand::class,
-        TwitchCommand::class,
-        StatusCommand::class,
-        ExchangeCommand::class,
-        TemporaryChannelCommand::class,
     ],
 
     /*
@@ -229,7 +174,7 @@ return [
     |--------------------------------------------------------------------------
     */
     'categories' => [
-        CommandCategory::Authorization => (object)[
+        CommandCategory::Authorization => (object) [
             'name' => 'Authorization',
             'emoticon' => '🔐',
             'guard' => '*',
@@ -239,7 +184,7 @@ return [
                 WhoamiCommand::class,
             ],
         ],
-        CommandCategory::Birthdays => (object)[
+        CommandCategory::Birthdays => (object) [
             'name' => 'Birthdays',
             'emoticon' => '🎂',
             'guard' => '*',
@@ -252,7 +197,7 @@ return [
                 UnsetUserBirthdayCommand::class,
             ],
         ],
-        CommandCategory::Chat => (object)[
+        CommandCategory::Chat => (object) [
             'name' => 'Chat',
             'emoticon' => '✉️',
             'guard' => '*',
@@ -264,7 +209,7 @@ return [
                 TemporaryChannelCommand::class,
             ],
         ],
-        CommandCategory::Development => (object)[
+        CommandCategory::Development => (object) [
             'name' => 'Development',
             'emoticon' => '🧑‍💻',
             'guard' => 'root',
@@ -278,7 +223,7 @@ return [
                 TestCommand::class,
             ],
         ],
-        CommandCategory::Game => (object)[
+        CommandCategory::Game => (object) [
             'name' => 'Game',
             'emoticon' => '🎮',
             'guard' => '*',
@@ -290,7 +235,7 @@ return [
                 GSourceQueryCommand::class,
             ],
         ],
-        CommandCategory::General => (object)[
+        CommandCategory::General => (object) [
             'name' => 'General',
             'emoticon' => '🌍',
             'guard' => '*',
@@ -307,7 +252,7 @@ return [
                 VersionCommand::class,
             ],
         ],
-        CommandCategory::Management => (object)[
+        CommandCategory::Management => (object) [
             'name' => 'Management',
             'emoticon' => '🧑‍💼',
             'guard' => 'moderator',
@@ -315,7 +260,7 @@ return [
                 PrefixCommand::class,
             ],
         ],
-        CommandCategory::Moderation => (object)[
+        CommandCategory::Moderation => (object) [
             'name' => 'Moderation',
             'emoticon' => '👮',
             'guard' => 'moderator',
@@ -329,7 +274,7 @@ return [
                 WarnCommand::class,
             ],
         ],
-        CommandCategory::Music => (object)[
+        CommandCategory::Music => (object) [
             'name' => 'Music',
             'emoticon' => '🎧',
             'guard' => '*',
@@ -339,7 +284,7 @@ return [
                 PlayCommand::class,
             ],
         ],
-        CommandCategory::Rank => (object)[
+        CommandCategory::Rank => (object) [
             'name' => 'Rank',
             'emoticon' => '🆙',
             'guard' => '*',
@@ -347,7 +292,7 @@ return [
                 RankCommand::class,
             ],
         ],
-        CommandCategory::Other => (object)[
+        CommandCategory::Other => (object) [
             'name' => 'Other',
             'emoticon' => '🌐',
             'guard' => '*',
@@ -407,23 +352,23 @@ return [
     |--------------------------------------------------------------------------
     */
     'activities' => [
-        (object)[
+        (object) [
             'name' => 'Tulpar Bot top.gg',
             'type' => Activity::TYPE_COMPETING,
         ],
-        (object)[
+        (object) [
             'name' => '{prefix}yardım',
             'type' => Activity::TYPE_PLAYING,
         ],
-        (object)[
+        (object) [
             'name' => 'Toplam {guild_count} Sunucuda!',
             'type' => Activity::TYPE_LISTENING,
         ],
-        (object)[
+        (object) [
             'name' => 'Toplam {member_count} Kullanıcı!',
             'type' => Activity::TYPE_STREAMING,
         ],
-        (object)[
+        (object) [
             'name' => 'Toplam {command_count} Komut!',
             'type' => Activity::TYPE_WATCHING,
         ],
@@ -469,7 +414,7 @@ return [
 
     'requires' => [
         'guild' => [
-            'permissions' => (array)[
+            'permissions' => (array) [
                 'connect',
                 'speak',
                 'mute_members',
@@ -496,5 +441,9 @@ return [
                 'view_channel',
             ],
         ],
+    ],
+
+    'extensions' => [
+        Tulpar\Extension\Hello\Hello::class,
     ],
 ];

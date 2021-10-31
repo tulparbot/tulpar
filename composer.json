@@ -38,6 +38,8 @@
         "socialiteproviders/zoho": "^4.1",
         "spatie/color": "^1.2",
         "team-reflex/discord-php": "dev-master",
+        "tulparbot/extension-container": "dev-master",
+        "tulparbot/extension-hello": "dev-master",
         "xpaw/php-source-query-class": "^2.1"
     },
     "require-dev": {

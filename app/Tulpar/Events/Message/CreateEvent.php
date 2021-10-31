@@ -38,7 +38,7 @@ class CreateEvent
     public static array $history = [];
 
     /**
-     * @param bool $force
+     * @param  bool  $force
      */
     public static function flushCommandHistory(bool $force = false): void
     {
@@ -60,7 +60,7 @@ class CreateEvent
     }
 
     /**
-     * @param Message $message
+     * @param  Message  $message
      * @return Message
      */
     public static function addHistory(Message $message): Message
@@ -75,8 +75,8 @@ class CreateEvent
     }
 
     /**
-     * @param Guild|string|null $guild
-     * @param Channel|null      $channel
+     * @param  Guild|string|null  $guild
+     * @param  Channel|null  $channel
      * @return bool
      */
     public static function isRateLimited(Guild|string|null $guild, Channel|null $channel = null): bool
@@ -89,7 +89,7 @@ class CreateEvent
             $guild = $guild->id;
         }
 
-        if (Cache::has('rate-limited-' . $guild) == true) {
+        if (Cache::has('rate-limited-'.$guild) == true) {
             return true;
         }
 
@@ -113,16 +113,16 @@ class CreateEvent
         if ($isLimited) {
             $seconds = 10;
             static::$history[$guild] = [];
-            Cache::put('rate-limited-' . $guild, true, Carbon::make("+$seconds seconds"));
-            $channel?->sendMessage('Your server is rate limited! Please wait ``' . $seconds . ' seconds``.');
+            Cache::put('rate-limited-'.$guild, true, Carbon::make("+$seconds seconds"));
+            $channel?->sendMessage('Your server is rate limited! Please wait ``'.$seconds.' seconds``.');
         }
 
         return $isLimited;
     }
 
     /**
-     * @param Message $message
-     * @param Discord $discord
+     * @param  Message  $message
+     * @param  Discord  $discord
      * @throws Exception
      */
     public function __invoke(Message $message, Discord $discord)
@@ -133,8 +133,10 @@ class CreateEvent
         }
 
         // restricts
-        $restrict = ChannelRestrict::where('enable', true)->where('server_id', $message->guild_id)->where('channel_id', $message->channel_id)->first();
-        if ($restrict !== null && !str_starts_with(mb_strtolower($message->content), Tulpar::getPrefix($message->guild))) {
+        $restrict = ChannelRestrict::where('enable', true)->where('server_id', $message->guild_id)->where('channel_id',
+            $message->channel_id)->first();
+        if ($restrict !== null && !str_starts_with(mb_strtolower($message->content),
+                Tulpar::getPrefix($message->guild))) {
             foreach (config('tulpar.restricts') as $class) {
                 if ((new $class($restrict, $message, $discord))->run()) {
                     return;
@@ -155,12 +157,12 @@ class CreateEvent
             }
 
             /** @var CommandInterface $command */
-            foreach (config('tulpar.commands', []) as $command) {
+            foreach (Tulpar::getInstance()->getCommands() as $command) {
                 Helpers::call(function () use ($command, $message, $discord) {
                     /** @var BaseCommand $instance */
                     $instance = new $command($message, $discord);
                     $check = $instance->check();
-                    static::$commandHistory[$message->id] = (object)['check' => $check, 'command' => $instance];
+                    static::$commandHistory[$message->id] = (object) ['check' => $check, 'command' => $instance];
 
                     if ($check == CommandValidation::Success || $check == CommandValidation::InvalidArguments) {
                         if ($message->channel->is_private) {
@@ -172,12 +174,11 @@ class CreateEvent
 
                         if ($instance->userCommand->hasFlag('help') || $check == CommandValidation::InvalidArguments) {
                             $message->channel->sendMessage($instance->getHelp());
-                        }
-                        else {
-                            Logger::info('Running command: ' . $instance::class);
+                        } else {
+                            Logger::info('Running command: '.$instance::class);
                             $message->react(Helpers::getRandomEmoticon())->done(function () use ($instance) {
                                 new Promise(function () use ($instance) {
-                                    Helpers::call(fn () => $instance->run());
+                                    Helpers::call(fn() => $instance->run());
                                 });
                             });
                         }
@@ -186,14 +187,14 @@ class CreateEvent
             }
 
             if (isset(static::$commandHistory[$message->id]) && static::$commandHistory[$message->id]?->check == CommandValidation::NotCommand) {
-                $customCommand = CustomCommand::find($message->guild_id, mb_substr($message->content, mb_strlen($prefix)));
+                $customCommand = CustomCommand::find($message->guild_id,
+                    mb_substr($message->content, mb_strlen($prefix)));
 
                 if ($customCommand == null) {
                     if (config('tulpar.command.unknown_alert') == true) {
                         $message->reply('Sorry unknown command requested. :(');
                     }
-                }
-                else {
+                } else {
                     $customCommand->execute($message, $discord);
                 }
             }
@@ -202,7 +203,9 @@ class CreateEvent
         }
 
         // Send emoji if message contains bot name.
-        if (str_contains(mb_strtolower($message->content), mb_strtolower(config('app.name'))) || str_contains(mb_strtolower($message->content), mb_strtolower($discord->id))) {
+        if (str_contains(mb_strtolower($message->content),
+                mb_strtolower(config('app.name'))) || str_contains(mb_strtolower($message->content),
+                mb_strtolower($discord->id))) {
             // Log::debug('The command contains bot name. ' . config('app.name'));
             $message->react('💖')->otherwise(function ($exception) {
                 Logger::error($exception);
@@ -220,7 +223,8 @@ class CreateEvent
             $userRank->save();
 
             if ($userRank->getLevelAttribute() > $level) {
-                $message->channel->sendMessage(Rank::make($message->guild, $message->member, true, false)->setContent('LEVEL UP!')->setReplyTo($message));
+                $message->channel->sendMessage(Rank::make($message->guild, $message->member, true,
+                    false)->setContent('LEVEL UP!')->setReplyTo($message));
             }
         }
 

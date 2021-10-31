@@ -85,7 +85,7 @@ class BaseCommand implements CommandInterface
         $loop = 0;
         foreach (static::$usages as $usage) {
             $loop++;
-            $usages .= $prefix . $command . ' ' . $usage;
+            $usages .= $prefix.$command.' '.$usage;
 
             if (count(static::$usages) > $loop) {
                 $usages .= PHP_EOL;
@@ -142,16 +142,16 @@ HELP;
     public function __construct(
         public Message $message,
         public Discord $discord,
-    )
-    {
-        $this->userCommand = new Strargs(substr($this->message->content, mb_strlen(Tulpar::getPrefix($this->message->guild_id))));
+    ) {
+        $this->userCommand = new Strargs(substr($this->message->content,
+            mb_strlen(Tulpar::getPrefix($this->message->guild_id))));
         $this->userCommand->decode();
         $this->userCommand = Translator::translateCommandArgs($this->message->guild, $this::class, $this->userCommand);
     }
 
     /**
-     * @param string $translation
-     * @param array  $replacements
+     * @param  string  $translation
+     * @param  array  $replacements
      * @return string
      * @throws IntentException
      */
@@ -206,7 +206,8 @@ HELP;
     {
         if (str_starts_with($this->message->content, Tulpar::getPrefix($this->message->guild_id))) {
             $baseCheck = mb_strtolower($this->userCommand->getCommand()) == mb_strtolower(static::getCommand());
-            $aliasCheck = isset(config('tulpar.aliases')[static::class]) && in_array(mb_strtolower($this->userCommand->getCommand()), config('tulpar.aliases')[static::class]);
+            $aliasCheck = isset(config('tulpar.aliases')[static::class]) && in_array(mb_strtolower($this->userCommand->getCommand()),
+                    config('tulpar.aliases')[static::class]);
 
             if ($baseCheck || $aliasCheck) {
 
